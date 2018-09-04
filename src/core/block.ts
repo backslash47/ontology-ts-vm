@@ -11,6 +11,9 @@ export class Block implements Interop {
   private header: Header;
   private transactions: Transaction[];
 
+  getHeader() {
+    return this.header;
+  }
   getTransactions() {
     return this.transactions;
   }

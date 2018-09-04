@@ -2,7 +2,7 @@ import { createHash, Hash } from 'crypto';
 import * as Long from 'long';
 import * as errors from '../errors';
 import { ExecutionEngine } from '../interfaces/engine';
-import { isInterop, Interop } from '../interfaces/interop';
+import { Interop, isInterop } from '../interfaces/interop';
 import * as O from '../opCode';
 import { ArrayType, isArrayType } from '../types/array';
 import { BooleanType, isBooleanType } from '../types/boolean';
