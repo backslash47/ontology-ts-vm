@@ -1,0 +1,29 @@
+export const ERR_BAD_VALUE = new Error('bad value');
+export const ERR_BAD_TYPE = new Error('bad type');
+export const ERR_OVER_STACK_LEN = new Error('the count over the stack length');
+export const ERR_OVER_CODE_LEN = new Error('the count over the code length');
+export const ERR_UNDER_STACK_LEN = new Error('the count under the stack length');
+export const ERR_FAULT = new Error('the exceution meet fault');
+export const ERR_NOT_SUPPORT_SERVICE = new Error('the service is not registered');
+export const ERR_NOT_SUPPORT_OPCODE = new Error('does not support the operation code');
+export const ERR_OVER_LIMIT_STACK = new Error('the stack over max size');
+export const ERR_OVER_MAX_ITEM_SIZE = new Error('the item over max size');
+export const ERR_OVER_MAX_ARRAY_SIZE = new Error('the array over max size');
+export const ERR_OVER_MAX_BIGINTEGER_SIZE = new Error('the biginteger over max size 32bit');
+export const ERR_OUT_OF_GAS = new Error('out of gas');
+export const ERR_NOT_ARRAY = new Error('not array');
+export const ERR_TABLE_IS_NIL = new Error('table is nil');
+export const ERR_SERVICE_IS_NIL = new Error('service is nil');
+export const ERR_DIV_MOD_BY_ZERO = new Error('div or mod by zero');
+export const ERR_SHIFT_BY_NEG = new Error('shift by negtive value');
+export const ERR_EXECUTION_CONTEXT_NIL = new Error('execution context is nil');
+export const ERR_CURRENT_CONTEXT_NIL = new Error('current context is nil');
+export const ERR_CALLING_CONTEXT_NIL = new Error('calling context is nil');
+export const ERR_ENTRY_CONTEXT_NIL = new Error('entry context is nil');
+export const ERR_APPEND_NOT_ARRAY = new Error('append not array');
+export const ERR_NOT_SUPPORT_TYPE = new Error('not a supported type');
+export const ERR_MAP_NOT_EXIST = new Error('map not contain key');
+// tslint:disable-next-line:quotemark
+export const ERR_NOT_MAP_KEY = new Error("type cann't as map key");
+// tslint:disable-next-line:quotemark
+export const ERR_REMOVE_NOT_SUPPORT = new Error("type don't support remove");
