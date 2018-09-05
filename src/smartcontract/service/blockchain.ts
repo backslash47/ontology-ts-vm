@@ -1,6 +1,6 @@
+import { Address } from '../../common/address';
 import { Uint256 } from '../../common/uint256';
 import { bigIntFromBytes } from '../../common/utils';
-import { Address } from '../../core/address';
 import { Block } from '../../core/block';
 import { Header } from '../../core/header';
 import { evaluationStackCount, popByteArray, pushData } from '../../vm/func/common';

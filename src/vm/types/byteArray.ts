@@ -2,6 +2,7 @@ import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
 export class ByteArrayType implements StackItem {
+  static id = 0x00;
   type: string;
   value: Buffer;
 

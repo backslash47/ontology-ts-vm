@@ -1,8 +1,10 @@
 import * as Long from 'long';
+import { bigIntToBytes } from '../../common/utils';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
 export class IntegerType implements StackItem {
+  static id = 0x02;
   type: string;
   value: Long;
 
@@ -38,7 +40,7 @@ export class IntegerType implements StackItem {
   }
 
   getByteArray(): Buffer {
-    return bigIntToNeoBytes(this.value);
+    return bigIntToBytes(this.value);
   }
 
   getInterface(): Interop {

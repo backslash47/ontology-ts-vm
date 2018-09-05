@@ -144,5 +144,5 @@ export function headerGetNextConsensus(service: VmService, engine: ExecutionEngi
     throw new Error('[headerGetVersion] Wrong type!');
   }
 
-  pushData(engine, data.getNextBookkeeper().toArray()); // TODO: check if properly changed
+  pushData(engine, data.getNextBookkeeper().toArray());
 }

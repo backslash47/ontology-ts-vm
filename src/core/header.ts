@@ -1,10 +1,10 @@
 import * as Long from 'long';
+import { Address } from '../common/address';
 import { Uint256 } from '../common/uint256';
 import { PublicKey } from '../crypto/publicKey';
 import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
-import { Address } from './address';
 
 /**
  * FIXME: implement

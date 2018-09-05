@@ -3,6 +3,7 @@ import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
 export class BooleanType implements StackItem {
+  static id = 0x01;
   type: string;
   value: boolean;
 

@@ -18,7 +18,7 @@ export class Reader {
     return new Buffer(this.reader.readBytes(count).toBuffer());
   }
 
-  readUint16(): number {
+  readUInt16(): number {
     return this.reader.readUint16();
   }
 
@@ -36,6 +36,10 @@ export class Reader {
 
   readInt32(): number {
     return this.reader.readInt32();
+  }
+
+  readInt64(): Long {
+    return this.reader.readInt64();
   }
 
   position(): number {
@@ -56,22 +60,18 @@ export class Reader {
     }
   }
 
-  readVarBytes(max: number): Buffer {
-    const n = this.readVarInt(Long.fromNumber(max)).toNumber();
+  readVarBytes(max?: number): Buffer {
+    const n = this.readVarUInt(max !== undefined ? Long.fromNumber(max) : undefined).toNumber();
     return this.readBytes(n);
   }
 
-  /**
-   * TODO: shouldn't readInt16 be readUInt16
-   * @param max
-   */
-  readVarInt(max: Long): Long {
+  readVarInt(max?: Long): Long {
     const fb = this.readByte();
     let value: Long;
 
     switch (fb) {
       case 0xfd:
-        value = Long.fromNumber(this.readInt16());
+        value = Long.fromNumber(this.readUInt16());
       case 0xfe:
         value = Long.fromNumber(this.readUInt32());
       case 0xff:
@@ -80,7 +80,28 @@ export class Reader {
       default:
         value = Long.fromNumber(fb);
     }
-    if (value.gt(max)) {
+    if (max !== undefined && value.gt(max)) {
+      return Long.ZERO;
+    }
+    return value;
+  }
+
+  readVarUInt(max?: Long): Long {
+    const fb = this.readByte();
+    let value: Long;
+
+    switch (fb) {
+      case 0xfd:
+        value = Long.fromNumber(this.readInt16());
+      case 0xfe:
+        value = Long.fromNumber(this.readInt32());
+      case 0xff:
+        value = this.readInt64();
+
+      default:
+        value = Long.fromNumber(fb);
+    }
+    if (max !== undefined && value.gt(max)) {
       return Long.ZERO;
     }
     return value;

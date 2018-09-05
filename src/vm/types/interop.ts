@@ -3,6 +3,7 @@ import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
 export class InteropType implements StackItem {
+  static id = 0x40;
   type: string;
   value: Interop;
 

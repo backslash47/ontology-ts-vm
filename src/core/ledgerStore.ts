@@ -1,9 +1,9 @@
 import { Uint256 } from '../common/uint256';
-import { Address } from './address';
 import { Block } from './block';
 import { Header } from './header';
 import { DeployCode } from './payload/deployCode';
 import { Transaction } from './transaction';
+import { Address } from '../common/address';
 
 /**
  * FIXME: implement

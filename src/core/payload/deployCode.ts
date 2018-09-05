@@ -1,6 +1,19 @@
+import { Interop } from '../../vm/interfaces/interop';
+import { Reader } from '../../vm/utils/reader';
+import { Writer } from '../../vm/utils/writer';
 import { StateValue } from '../state/stateValue';
 
-export class DeployCode implements StateValue {
+export interface DeployCodeOptions {
+  code: Buffer;
+  needStorage: boolean;
+  name: string;
+  version: string;
+  author: string;
+  email: string;
+  description: string;
+}
+
+export class DeployCode implements StateValue, Interop {
   private code: Buffer;
   private needStorage: boolean;
   private name: string;
@@ -9,12 +22,27 @@ export class DeployCode implements StateValue {
   private email: string;
   private description: string;
 
-  serialize(w: any) {
+  constructor(options: DeployCodeOptions) {
+    this.code = options.code;
+    this.needStorage = options.needStorage;
+    this.name = options.name;
+    this.author = options.author;
+    this.email = options.email;
+    this.description = options.description;
+  }
+
+  serialize(w: Writer) {
     throw new Error('Unsuported');
   }
 
-  deserialize(r: any) {
+  deserialize(r: Reader) {
     throw new Error('Unsuported');
+  }
+
+  toArray(): Buffer {
+    const bf = new Writer();
+    this.serialize(bf);
+    return new Buffer(bf.getBytes());
   }
 
   getCode() {
@@ -22,6 +50,6 @@ export class DeployCode implements StateValue {
   }
 }
 
-export function isDeployCode(item: StateValue): item is DeployCode {
+export function isDeployCode(item: any): item is DeployCode {
   return item instanceof DeployCode;
 }

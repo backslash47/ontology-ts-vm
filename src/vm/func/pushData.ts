@@ -24,7 +24,7 @@ export function getPushData(e: ExecutionEngine) {
       data = reader.readBytes(d);
       break;
     case O.PUSHDATA2:
-      data = reader.readBytes(reader.readUint16());
+      data = reader.readBytes(reader.readUInt16());
       break;
     case O.PUSHDATA4:
       const i = reader.readInt32();

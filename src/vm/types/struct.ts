@@ -2,7 +2,11 @@ import * as Long from 'long';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
+export const MAX_STRUCT_DEPTH = 10;
+export const MAX_CLONE_LENGTH = 1024;
+
 export class StructType implements StackItem {
+  static id = 0x81;
   type: string;
   value: StackItem[];
 
@@ -77,22 +81,17 @@ export class StructType implements StackItem {
     return this.value.length;
   }
 
-  /**
-   * FIXME: check for self reference and too much depth is not implemented
-   */
-  clone(): StackItem {
-    // if (checkStructRef(make(map[uintptr]bool), 0)) {
-    //   throw new Error('struct contain self reference or over max depth!');
-    // }
-    return this.cloneInternal();
-  }
+  clone(length: number): StackItem {
+    if (length > MAX_CLONE_LENGTH) {
+      throw new Error('over max struct clone length');
+    }
 
-  private cloneInternal(): StackItem {
     const arr: StackItem[] = [];
 
     for (const v of this.value) {
+      length++;
       if (isStructType(v)) {
-        const vc = v.cloneInternal();
+        const vc = v.clone(length);
         arr.push(vc);
       } else {
         arr.push(v);

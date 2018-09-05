@@ -8,3 +8,10 @@ export function bigIntFromBytes(bytes: Buffer): Long {
   const buffer = ByteBuffer.wrap(bytes);
   return buffer.readInt64();
 }
+
+/**
+ * TODO: check if the same as in Go
+ */
+export function bigIntToBytes(value: Long) {
+  return new Buffer(value.toBytes());
+}

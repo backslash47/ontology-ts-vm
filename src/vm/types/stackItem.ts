@@ -14,14 +14,6 @@ export interface StackItem {
   isMapKey(): boolean;
 }
 
-export const ByteArrayType = 0x00;
-export const BooleanType = 0x01;
-export const IntegerType = 0x02;
-export const InterfaceType = 0x40;
-export const ArrayType = 0x80;
-export const StructType = 0x81;
-export const MapType = 0x82;
-
 export function isStackItemType(item: any): item is StackItem {
   return item.type !== undefined && item.equals !== undefined;
 }

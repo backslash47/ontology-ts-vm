@@ -3,6 +3,7 @@ import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
 export class ArrayType implements StackItem {
+  static id = 0x80;
   type: string;
   value: StackItem[];
 

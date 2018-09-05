@@ -1,4 +1,4 @@
-import { Address } from '../core/address';
+import { Address } from '../common/address';
 import { LedgerStore } from '../core/ledgerStore';
 import { Transaction } from '../core/transaction';
 import { NotifyEventInfo } from '../event/notifyEvents';

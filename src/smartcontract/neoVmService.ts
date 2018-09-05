@@ -1,4 +1,4 @@
-import { Address } from '../core/address';
+import { Address } from '../common/address';
 import { LedgerStore } from '../core/ledgerStore';
 import { isDeployCode } from '../core/payload/deployCode';
 import { ST_CONTRACT } from '../core/state/dataEntryPrefix';
@@ -58,8 +58,24 @@ export class NeoVmService implements VmService {
     this.engine = options.engine;
   }
 
+  getTx() {
+    return this.tx;
+  }
+
+  getTime() {
+    return this.time;
+  }
+
   getEngine() {
     return this.engine;
+  }
+
+  getContextRef() {
+    return this.contextRef;
+  }
+
+  getCloneCache() {
+    return this.cloneCache;
   }
 
   getStore() {
@@ -261,5 +277,9 @@ export class NeoVmService implements VmService {
       return false;
     }
     return true;
+  }
+
+  addNotification(event: NotifyEventInfo) {
+    this.notifications.push(event);
   }
 }

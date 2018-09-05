@@ -1,4 +1,5 @@
 import * as Long from 'long';
+import { bigIntToBytes } from '../../common/utils';
 import { MAX_ARRAY_SIZE, MAX_BYTEARRAY_SIZE, MAX_INVOCATION_STACK_SIZE, MAX_SIZE_FOR_BIGINTEGER } from '../consts';
 import * as errors from '../errors';
 import { ExecutionEngine } from '../interfaces/engine';
@@ -227,8 +228,8 @@ export function validateMul(e: ExecutionEngine) {
   const x2 = peekBigInteger(e);
   const x1 = peekNBigInt(1, e);
 
-  const lx2 = bigIntToNeoBytes(x2).length;
-  const lx1 = bigIntToNeoBytes(x1).length;
+  const lx2 = bigIntToBytes(x2).length;
+  const lx1 = bigIntToBytes(x1).length;
   if (lx2 > MAX_SIZE_FOR_BIGINTEGER || lx1 > MAX_SIZE_FOR_BIGINTEGER || lx1 + lx2 > MAX_SIZE_FOR_BIGINTEGER) {
     throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE;
   }
@@ -439,7 +440,7 @@ export function checkBigInteger(value: Long | undefined): boolean {
   if (value === undefined) {
     return false;
   }
-  if (bigIntToNeoBytes(value).length > MAX_SIZE_FOR_BIGINTEGER) {
+  if (bigIntToBytes(value).length > MAX_SIZE_FOR_BIGINTEGER) {
     return false;
   }
   return true;

@@ -3,6 +3,7 @@ import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
 export class MapType implements StackItem {
+  static id = 0x82;
   type: string;
   value: Map<StackItem, StackItem>;
 
