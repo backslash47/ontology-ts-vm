@@ -9,18 +9,13 @@ export const Script = 0x20;
 export const DescriptionUrl = 0x81;
 export const Description = 0x90;
 
-/**
- * FIXME: implement if necessary
- */
 export class TransactionAttribute implements Interop {
   private usage: TransactionAttributeUsage;
   private data: Buffer;
-  private size: number;
 
   constructor(u: TransactionAttributeUsage, d: Buffer) {
     this.usage = u;
     this.data = this.data;
-    this.size = this.getSize();
   }
 
   getSize(): number {
@@ -39,13 +34,42 @@ export class TransactionAttribute implements Interop {
   }
 
   serialize(w: Writer) {
-    throw new Error('Unsupported');
+    try {
+      w.writeUint8(this.usage);
+    } catch (e) {
+      throw new Error(`Transaction attribute Usage serialization error: ${e}`);
+    }
+
+    if (!isTransactionAttributeUsage(this.usage)) {
+      throw new Error(`Unsupported attribute Description.`);
+    }
+
+    try {
+      w.writeVarBytes(this.data);
+    } catch (e) {
+      throw new Error(`Transaction attribute Data serialization error: ${e}`);
+    }
   }
 
-  deserialize(w: Reader) {
-    throw new Error('Unsupported');
-  }
+  deserialize(r: Reader) {
+    try {
+      const val = r.readByte();
 
+      if (!isTransactionAttributeUsage(this.usage)) {
+        throw new Error('[TxAttribute] Unsupported attribute Description.');
+      }
+
+      this.usage = val;
+    } catch (e) {
+      throw new Error(`Transaction attribute Usage deserialization error: ${e}`);
+    }
+
+    try {
+      this.data = r.readVarBytes();
+    } catch (e) {
+      throw new Error(`Transaction attribute Data deserialization error: ${e}`);
+    }
+  }
   toArray(): Buffer {
     const bf = new Writer();
     this.serialize(bf);
@@ -55,4 +79,8 @@ export class TransactionAttribute implements Interop {
 
 export function isTransactionAttribute(item: Interop): item is TransactionAttribute {
   return item instanceof TransactionAttribute;
+}
+
+export function isTransactionAttributeUsage(item: number): item is TransactionAttributeUsage {
+  return item === Nonce || item === Script || item === DescriptionUrl || item === Description;
 }

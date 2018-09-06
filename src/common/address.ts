@@ -1,5 +1,6 @@
 import { PublicKey } from '../crypto/publicKey';
 
+export const ADDR_LEN = 20;
 /**
  * FIXME:
  */

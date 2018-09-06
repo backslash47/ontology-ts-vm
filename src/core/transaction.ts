@@ -1,9 +1,14 @@
-import { Address } from '../common/address';
+import { createHash } from 'crypto';
+import * as Long from 'long';
+import { ADDR_LEN, Address } from '../common/address';
 import { Uint256 } from '../common/uint256';
 import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
+import { DeployCode } from './payload/deployCode';
+import { InvokeCode } from './payload/invokeCode';
 
+export const TX_MAX_SIG_SIZE = 16;
 export type TransactionType = number;
 
 export const Bookkeeper = 0x02;
@@ -23,14 +28,28 @@ export interface Payload {
   deserialize(r: Reader): void;
 }
 
-export interface RawSig {
-  invoke: Buffer;
-  verify: Buffer;
+class RawSig {
+  private invoke: Buffer;
+  private verify: Buffer;
+
+  getVerify() {
+    return this.verify;
+  }
+
+  serialize(w: Writer) {
+    w.writeVarBytes(this.invoke);
+    w.writeVarBytes(this.verify);
+  }
+
+  deserialize(r: Reader) {
+    const invoke = r.readVarBytes();
+    const verify = r.readVarBytes();
+
+    this.invoke = invoke;
+    this.verify = verify;
+  }
 }
 
-/**
- * FIXME: implement
- */
 export class Transaction implements Interop {
   private version: number;
   private txType: TransactionType;
@@ -48,10 +67,25 @@ export class Transaction implements Interop {
   private raw: Buffer; // raw transaction data
 
   private hash: Uint256;
-  private signedAddr: Address[]; // this is assigned when passed signature verification
+  // private signedAddr: Address[]; - unused, computed on the fly
 
   private nonDirectConstracted: boolean; // used to check literal construction like `tx := &Transaction{...}`
 
+  getVersion() {
+    return this.version;
+  }
+
+  getNonce() {
+    return this.nonce;
+  }
+
+  getGasPrice(): Long {
+    return this.gasPrice;
+  }
+
+  getGasLimit(): Long {
+    return this.gasLimit;
+  }
   getHash() {
     return this.hash;
   }
@@ -60,22 +94,103 @@ export class Transaction implements Interop {
     return this.txType;
   }
 
+  getPayer() {
+    return this.payer;
+  }
+
+  getPayload() {
+    return this.payload;
+  }
+
+  getAttributes() {
+    return this.attributes;
+  }
+
   getSignatureAddresses(): Address[] {
-    throw new Error('Unsupported');
+    const addrs: Address[] = [];
+
+    for (const sig of this.sigs) {
+      addrs.push(Address.parseFromVmCode(sig.getVerify()));
+    }
+
+    return addrs;
   }
 
   serialize(w: Writer) {
-    throw new Error('Unsupported');
+    if (this.nonDirectConstracted === false || this.raw.length === 0) {
+      throw new Error('wrong constructed transaction');
+    }
+
+    w.writeBytes(this.raw);
   }
 
-  deserialize(w: Reader) {
-    throw new Error('Unsupported');
+  deserialize(r: Reader) {
+    const pstart = r.position();
+    this.deserializeUnsigned(r);
+    const pos = r.position();
+    const lenUnsigned = pos - pstart;
+    r.seek(-lenUnsigned, 'relative');
+    const rawUnsigned = r.readBytes(lenUnsigned);
+
+    const sh = createHash('sha256');
+    sh.update(rawUnsigned);
+    this.hash = Uint256.parseFromBytes(sh.digest());
+
+    // tx sigs
+    const length = r.readVarUInt().toNumber();
+
+    if (length > TX_MAX_SIG_SIZE) {
+      throw new Error(`transaction signature number ${length} execced ${TX_MAX_SIG_SIZE}`);
+    }
+
+    for (let i = 0; i < length; i++) {
+      const sig = new RawSig();
+      sig.deserialize(r);
+      this.sigs.push(sig);
+    }
+
+    const pend = r.position();
+    const lenAll = pend - pstart;
+    r.seek(-lenAll, 'relative');
+    this.raw = r.readBytes(lenAll);
+
+    this.nonDirectConstracted = true;
   }
 
   toArray(): Buffer {
     const bf = new Writer();
     this.serialize(bf);
     return new Buffer(bf.getBytes());
+  }
+
+  private deserializeUnsigned(r: Reader) {
+    this.version = r.readByte();
+    this.txType = r.readByte();
+    this.nonce = r.readUInt32();
+    this.gasPrice = r.readUInt64();
+    this.gasLimit = r.readUInt64();
+
+    const buf = r.readBytes(ADDR_LEN);
+    this.payer = Address.parseFromBytes(buf);
+
+    if (this.txType === Invoke) {
+      const pl = new InvokeCode();
+      pl.deserialize(r);
+      this.payload = pl;
+    } else if (this.txType === Deploy) {
+      const pl = new DeployCode();
+      pl.deserialize(r);
+      this.payload = pl;
+    } else {
+      throw new Error(`unsupported tx type ${this.getTxType()}`);
+    }
+
+    const length = r.readVarUInt();
+
+    if (!length.isZero()) {
+      throw new Error('transaction attribute must be 0, got %d');
+    }
+    this.attributes = 0;
   }
 }
 

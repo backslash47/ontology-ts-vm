@@ -31,7 +31,7 @@ interface NeoVmServiceOptions {
   code: Buffer;
   tx: Transaction;
   time: number;
-  height: number;
+  // height: number; - unused
   engine: ExecutionEngine;
 }
 
@@ -44,7 +44,7 @@ export class NeoVmService implements VmService {
   private code: Buffer;
   private tx: Transaction;
   private time: number;
-  private height: number;
+  // private height: number; - unused
   private engine: ExecutionEngine;
 
   constructor(options: NeoVmServiceOptions) {
@@ -54,7 +54,7 @@ export class NeoVmService implements VmService {
     this.code = options.code;
     this.tx = options.tx;
     this.time = options.time;
-    this.height = options.height;
+    // this.height = options.height;
     this.engine = options.engine;
   }
 

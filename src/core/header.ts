@@ -6,9 +6,6 @@ import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
 
-/**
- * FIXME: implement
- */
 export class Header implements Interop {
   private version: number;
   private prevBlockHash: Uint256;
@@ -59,7 +56,27 @@ export class Header implements Interop {
   }
 
   serialize(w: Writer) {
-    throw new Error('Unsupported');
+    this.serializeUnsigned(w);
+
+    try {
+      w.writeVarUint(Long.fromNumber(this.bookkeepers.length));
+    } catch (e) {
+      throw new Error('serialize sig pubkey length failed');
+    }
+
+    for (const pubKey of this.bookkeepers) {
+      w.writeVarBytes(pubKey.serialize());
+    }
+
+    try {
+      w.writeVarUint(Long.fromNumber(this.sigData.length));
+    } catch (e) {
+      throw new Error('serialize sig pubkey length failed');
+    }
+
+    for (const sig of this.sigData) {
+      w.writeVarBytes(sig);
+    }
   }
 
   deserialize(w: Reader) {
@@ -69,6 +86,18 @@ export class Header implements Interop {
     const bf = new Writer();
     this.serialize(bf);
     return new Buffer(bf.getBytes());
+  }
+
+  private serializeUnsigned(w: Writer) {
+    w.writeUint32(this.version);
+    w.writeBytes(this.prevBlockHash.toArray());
+    w.writeBytes(this.transactionsRoot.toArray());
+    w.writeBytes(this.blockRoot.toArray());
+    w.writeUint32(this.timestamp);
+    w.writeUint32(this.height);
+    w.writeUint64(this.consensusData);
+    w.writeVarBytes(this.consensusPayload);
+    w.writeBytes(this.nextBookkeeper.toArray());
   }
 }
 

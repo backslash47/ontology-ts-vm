@@ -16,6 +16,9 @@ export class Writer {
   writeVarBytes(value: Buffer) {
     throw new Error('Unsupported');
   }
+  writeBytes(value: Buffer) {
+    throw new Error('Unsupported');
+  }
   writeString(value: string) {
     throw new Error('Unsupported');
   }

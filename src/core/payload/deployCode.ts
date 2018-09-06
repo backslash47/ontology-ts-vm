@@ -5,30 +5,30 @@ import { StateValue } from '../state/stateValue';
 
 export interface DeployCodeOptions {
   code: Buffer;
-  needStorage: boolean;
-  name: string;
-  version: string;
-  author: string;
-  email: string;
-  description: string;
+  needStorage?: boolean;
+  name?: string;
+  version?: string;
+  author?: string;
+  email?: string;
+  description?: string;
 }
 
 export class DeployCode implements StateValue, Interop {
   private code: Buffer;
-  private needStorage: boolean;
-  private name: string;
-  private version: string;
-  private author: string;
-  private email: string;
-  private description: string;
+  // private needStorage: boolean; - unused
+  // private name: string; - unused
+  // private version: string; - unused
+  // private author: string; - unused
+  // private email: string; - unused
+  // private description: string; - unused
 
-  constructor(options: DeployCodeOptions) {
+  constructor(options: DeployCodeOptions = { code: new Buffer('') }) {
     this.code = options.code;
-    this.needStorage = options.needStorage;
-    this.name = options.name;
-    this.author = options.author;
-    this.email = options.email;
-    this.description = options.description;
+    // this.needStorage = options.needStorage; - unused
+    // this.name = options.name; - unused
+    // this.author = options.author; - unused
+    // this.email = options.email; - unused
+    // this.description = options.description; - unused
   }
 
   serialize(w: Writer) {

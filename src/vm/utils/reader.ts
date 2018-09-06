@@ -1,7 +1,7 @@
 import * as ByteBuffer from 'bytebuffer';
 import * as Long from 'long';
 
-export type Whence = 'start';
+export type Whence = 'start' | 'relative';
 
 export class Reader {
   reader: ByteBuffer;
@@ -54,6 +54,10 @@ export class Reader {
     if (whence === 'start') {
       const oldOffset = this.reader.offset;
       this.reader.offset = offset;
+      return oldOffset;
+    } else if (whence === 'relative') {
+      const oldOffset = this.reader.offset;
+      this.reader.offset = oldOffset + offset;
       return oldOffset;
     } else {
       throw new Error('Unsupported Whence');

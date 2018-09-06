@@ -13,7 +13,7 @@ import { NeoVmService } from './neoVmService';
  */
 export class Config {
   time: number; // current block timestamp
-  height: number; // current block height
+  // height: number; // current block height - unused
   tx: Transaction; // current transaction
 }
 
@@ -110,7 +110,7 @@ export class SmartContract implements ContextRef {
       code,
       tx: this.config.tx,
       time: this.config.time,
-      height: this.config.height,
+      // height: this.config.height, - unused
       engine: new VMEngine()
     });
     return service;
