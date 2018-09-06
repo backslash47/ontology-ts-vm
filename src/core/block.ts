@@ -23,7 +23,7 @@ export class Block implements Interop {
     try {
       w.writeUint32(this.transactions.length);
     } catch (e) {
-      return new Error(`Block item Transactions length serialization failed: ${e}`);
+      throw new Error(`Block item Transactions length serialization failed: ${e}`);
     }
 
     for (const transaction of this.transactions) {

@@ -1,31 +1,59 @@
+import { createHash } from 'crypto';
 import { PublicKey } from '../crypto/publicKey';
+import { Reader } from '../vm/utils/reader';
+import { Writer } from '../vm/utils/writer';
+import { programFromPubKey } from './program';
 
-export const ADDR_LEN = 20;
-/**
- * FIXME: implement
- */
+const ADDR_LEN = 20;
+
 export class Address {
-  static parseFromBytes(bytes: Buffer): Address {
-    throw new Error('Unsupported');
+  static parseFromBytes(b: Buffer): Address {
+    const r = new Reader(b);
+    const a = new Address();
+    a.deserialize(r);
+
+    return a;
   }
 
   static parseFromVmCode(code: Buffer): Address {
-    throw new Error('Unsupported');
+    const addr: Address = new Address();
+
+    const sha256 = createHash('sha256');
+    const md = createHash('ripemd160');
+
+    const temp = sha256.update(code).digest();
+    addr.value = md.update(temp).digest();
+
+    return addr;
   }
 
   static fromPubKey(key: PublicKey): Address {
-    throw new Error('Unsupported');
+    const prog = programFromPubKey(key);
+
+    return Address.parseFromVmCode(prog);
   }
 
-  private data: Buffer;
+  private value: Buffer;
 
   equals(other: Address): boolean {
-    return this.data.equals(other.data);
+    return this.value.equals(other.value);
+  }
+
+  serialize(w: Writer) {
+    w.writeBytes(this.value);
+  }
+
+  deserialize(r: Reader) {
+    try {
+      this.value = r.readBytes(ADDR_LEN);
+    } catch (e) {
+      throw new Error('deserialize Uint256 error');
+    }
   }
 
   toArray() {
-    const buffer = new Buffer(this.data.length);
-    this.data.copy(buffer);
+    const buffer = new Buffer(this.value.length);
+    this.value.copy(buffer);
     return buffer;
   }
 }

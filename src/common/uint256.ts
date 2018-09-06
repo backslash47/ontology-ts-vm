@@ -1,7 +1,7 @@
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
 
-export const UINT256_SIZE = 32;
+const UINT256_SIZE = 32;
 
 export class Uint256 {
   static parseFromBytes(b: Buffer): Uint256 {
@@ -11,7 +11,7 @@ export class Uint256 {
 
     return u;
   }
-  value: Buffer;
+  private value: Buffer;
 
   toArray(): Buffer {
     const bf = new Writer();

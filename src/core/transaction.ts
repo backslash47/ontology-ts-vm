@@ -1,6 +1,6 @@
 import { createHash } from 'crypto';
 import * as Long from 'long';
-import { ADDR_LEN, Address } from '../common/address';
+import { Address } from '../common/address';
 import { Uint256 } from '../common/uint256';
 import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
@@ -170,8 +170,8 @@ export class Transaction implements Interop {
     this.gasPrice = r.readUInt64();
     this.gasLimit = r.readUInt64();
 
-    const buf = r.readBytes(ADDR_LEN);
-    this.payer = Address.parseFromBytes(buf);
+    this.payer = new Address();
+    this.payer.deserialize(r);
 
     if (this.txType === Invoke) {
       const pl = new InvokeCode();
