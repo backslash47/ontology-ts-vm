@@ -1,3 +1,5 @@
+import * as Long from 'long';
+import { bigIntFromBytes } from '../../common/utils';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
@@ -26,8 +28,8 @@ export class ByteArrayType implements StackItem {
     }
   }
 
-  getBigInteger() {
-    return bigIntFromNeoBytes(this.value);
+  getBigInteger(): Long {
+    return bigIntFromBytes(this.value);
   }
 
   getBoolean() {

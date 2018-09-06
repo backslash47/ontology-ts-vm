@@ -4,7 +4,6 @@ import { isBooleanType } from '../vm/types/boolean';
 import { isByteArrayType } from '../vm/types/byteArray';
 import { isIntegerType } from '../vm/types/integer';
 import { isInteropType } from '../vm/types/interop';
-import { isMapType } from '../vm/types/map';
 import { StackItem } from '../vm/types/stackItem';
 import { isStructType } from '../vm/types/struct';
 

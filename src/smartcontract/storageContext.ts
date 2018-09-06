@@ -18,7 +18,7 @@ export class StorageContext implements Interop {
   }
 
   isReadOnly() {
-    return this.isReadOnly;
+    return this.readOnly;
   }
 
   setReadOnly(readOnly: boolean) {

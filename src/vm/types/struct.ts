@@ -81,7 +81,10 @@ export class StructType implements StackItem {
     return this.value.length;
   }
 
-  clone(length: number): StackItem {
+  clone() {
+    return this.cloneInternal(0);
+  }
+  cloneInternal(length: number): StackItem {
     if (length > MAX_CLONE_LENGTH) {
       throw new Error('over max struct clone length');
     }
@@ -91,7 +94,7 @@ export class StructType implements StackItem {
     for (const v of this.value) {
       length++;
       if (isStructType(v)) {
-        const vc = v.clone(length);
+        const vc = v.cloneInternal(length);
         arr.push(vc);
       } else {
         arr.push(v);

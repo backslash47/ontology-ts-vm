@@ -127,7 +127,7 @@ export function blockChainGetTransactionHeight(service: VmService, engine: Execu
   const hash = Uint256.parseFromBytes(d);
 
   try {
-    const [_, h] = service.getStore().getTransaction(hash);
+    const [, h] = service.getStore().getTransaction(hash);
     pushData(engine, h);
   } catch (e) {
     throw new Error(`[BlockChainGetTransaction] GetTransaction error: ${e}`);
