@@ -1,41 +1,58 @@
 import * as ByteBuffer from 'bytebuffer';
 import * as Long from 'long';
 
-/**
- * FIXME: implement and move
- */
 export class Writer {
-  private bytes: ByteBuffer;
+  private writer: ByteBuffer;
+
+  constructor() {
+    this.writer = new ByteBuffer(undefined, true);
+  }
+
   getBytes() {
-    return new Buffer(this.bytes.toBuffer());
+    return new Buffer(this.writer.toBuffer());
   }
 
   writeVarUint(value: Long) {
-    throw new Error('Unsupported');
+    if (value.lt(0xfd)) {
+      this.writer.writeUint8(value.toNumber());
+    } else if (value.lte(0xffff)) {
+      this.writer.writeUint8(0xfd);
+      this.writer.writeUint16(value.toNumber());
+    } else if (value.lte(0xffffffff)) {
+      this.writer.writeUint8(0xfe);
+      this.writer.writeUint32(value.toNumber());
+    } else {
+      this.writer.writeUint8(0xff);
+      this.writer.writeUint64(value);
+    }
   }
   writeVarBytes(value: Buffer) {
-    throw new Error('Unsupported');
-  }
-  writeBytes(value: Buffer) {
-    throw new Error('Unsupported');
+    this.writeVarUint(Long.fromNumber(value.length));
+    this.writeBytes(value);
   }
   writeString(value: string) {
-    throw new Error('Unsupported');
+    return this.writeVarBytes(new Buffer(value, 'utf-8'));
+  }
+  writeBytes(value: Buffer) {
+    this.writer.writeBytes(value);
   }
   writeUint8(val: number) {
-    throw new Error('Unsupported');
+    this.writer.writeUint8(val);
   }
   writeUint16(val: number) {
-    throw new Error('Unsupported');
+    this.writer.writeUint16(val);
   }
   writeUint32(val: number) {
-    throw new Error('Unsupported');
+    this.writer.writeUint32(val);
   }
   writeUint64(val: Long) {
-    throw new Error('Unsupported');
+    this.writer.writeUint64(val);
   }
 }
 
+/**
+ * TODO: might implement
+ */
 export class LimitedWriter extends Writer {
   limit: number;
 

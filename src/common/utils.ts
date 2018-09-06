@@ -5,7 +5,7 @@ import * as Long from 'long';
  * TODO: check if the same as in Go
  */
 export function bigIntFromBytes(bytes: Buffer): Long {
-  const buffer = ByteBuffer.wrap(bytes);
+  const buffer = ByteBuffer.wrap(bytes, undefined, true);
   return buffer.readInt64();
 }
 
@@ -13,5 +13,7 @@ export function bigIntFromBytes(bytes: Buffer): Long {
  * TODO: check if the same as in Go
  */
 export function bigIntToBytes(value: Long) {
-  return new Buffer(value.toBytes());
+  const buffer = new ByteBuffer(undefined, true);
+  buffer.writeUint64(value);
+  return new Buffer(buffer.toBuffer());
 }

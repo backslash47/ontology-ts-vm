@@ -35,6 +35,10 @@ export class Header implements Interop {
     return this.transactionsRoot;
   }
 
+  setTransactionsRoot(transactionsRoot: Uint256) {
+    this.transactionsRoot = transactionsRoot;
+  }
+
   getHeight() {
     return this.height;
   }

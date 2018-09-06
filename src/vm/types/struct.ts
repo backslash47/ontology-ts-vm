@@ -16,7 +16,7 @@ export class StructType implements StackItem {
   }
 
   /**
-   * FIXME: check if implemented correctly
+   * TODO: check if implemented correctly
    * @param other
    */
   equals(other: StackItem): boolean {

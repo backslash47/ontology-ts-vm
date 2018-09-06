@@ -7,7 +7,7 @@ export class Reader {
   reader: ByteBuffer;
 
   constructor(b: Buffer) {
-    this.reader = ByteBuffer.wrap(b);
+    this.reader = ByteBuffer.wrap(b, undefined, true);
   }
 
   readByte(): number {

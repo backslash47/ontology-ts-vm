@@ -1,12 +1,11 @@
+import { computeMerkleRoot } from '../common/merkleTree';
+import { Uint256 } from '../common/uint256';
 import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
 import { Header } from './header';
 import { Transaction } from './transaction';
 
-/**
- * FIXME: implement
- */
 export class Block implements Interop {
   private header: Header;
   private transactions: Transaction[];
@@ -19,11 +18,37 @@ export class Block implements Interop {
   }
 
   serialize(w: Writer) {
-    throw new Error('Unsupported');
+    this.header.serialize(w);
+
+    try {
+      w.writeUint32(this.transactions.length);
+    } catch (e) {
+      return new Error(`Block item Transactions length serialization failed: ${e}`);
+    }
+
+    for (const transaction of this.transactions) {
+      transaction.serialize(w);
+    }
   }
 
-  deserialize(w: Reader) {
-    throw new Error('Unsupported');
+  deserialize(r: Reader) {
+    this.header = new Header();
+    this.header.deserialize(r);
+
+    const length = r.readUInt32();
+
+    const hashes: Uint256[] = [];
+
+    for (let i = 0; i < length; i++) {
+      const transaction = new Transaction();
+
+      transaction.deserialize(r);
+      const txhash = transaction.getHash();
+      hashes.push(txhash);
+      this.transactions.push(transaction);
+    }
+
+    this.header.setTransactionsRoot(computeMerkleRoot(hashes));
   }
   toArray(): Buffer {
     const bf = new Writer();
