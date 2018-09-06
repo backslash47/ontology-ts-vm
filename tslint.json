@@ -12,6 +12,7 @@
     "member-access": false,
     "max-classes-per-file": false,
     "object-literal-sort-keys": false,
+    "no-bitwise": false,
     "whitespace": [
       true,
       "check-branch",
