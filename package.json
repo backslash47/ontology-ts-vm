@@ -21,7 +21,9 @@
     },
     "testEnvironment": "node",
     "testRegex": "/test/.*\\.(ts|tsx|js)$",
-    "moduleDirectories": ["<rootDir>/node_modules"]
+    "moduleDirectories": [
+      "<rootDir>/node_modules"
+    ]
   },
   "author": "Matus Zamborsky <zamborsky@gmail.com>",
   "license": "ISC",
@@ -58,6 +60,8 @@
   },
   "dependencies": {
     "bytebuffer": "~5",
+    "elliptic": "^6.4.1",
+    "js-sha3": "^0.8.0",
     "long": "~3"
   }
 }

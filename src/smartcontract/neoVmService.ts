@@ -132,7 +132,7 @@ export class NeoVmService implements VmService {
           const data = popByteArray(this.engine);
 
           const signature = Signature.deserialize(sig);
-          if (!signature.verify(key, data)) {
+          if (!key.verify(data, signature)) {
             pushData(this.engine, false);
           } else {
             pushData(this.engine, true);
