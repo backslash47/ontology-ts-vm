@@ -9,7 +9,11 @@ export class Writer {
   }
 
   getBytes() {
-    return new Buffer(this.writer.toBuffer());
+    this.writer.mark();
+    this.writer.flip();
+    const buffer = new Buffer(this.writer.toBuffer());
+    this.writer.reset();
+    return buffer;
   }
 
   writeVarUint(value: Long) {

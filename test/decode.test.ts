@@ -1,15 +1,23 @@
 import 'babel-polyfill';
-import { readFileSync } from 'fs';
-import { WasmParser } from '../src/wasm/wasmParser';
+import * as ByteBuffer from 'bytebuffer';
+import * as Long from 'long';
 
 // tslint:disable : no-console
-describe('Decoder test', () => {
-  test('simple', async () => {
-    // const input = readFileSync('./test/source.wast', 'utf8');
-    const input = readFileSync('./test/source.wasm');
-    const parser = new WasmParser();
-    const module = parser.parseWasm(input);
+describe('Bytebuffer test', () => {
+  test('Long interaction', async () => {
+    const buffer = new ByteBuffer();
 
-    console.log(JSON.stringify(module, null, 2));
+    buffer.writeUint64(Long.ZERO);
+  });
+
+  test('Capacity handling', async () => {
+    const buffer = new ByteBuffer(4);
+
+    buffer.writeInt32(0);
+    buffer.flip();
+
+    const result = new Buffer(buffer.toBuffer());
+
+    expect(result.length).toBe(4);
   });
 });

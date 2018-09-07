@@ -1,9 +1,6 @@
 import { Address } from '../common/address';
 import { Interop } from '../vm/interfaces/interop';
 
-/**
- * FIXME: implement
- */
 export class StorageContext implements Interop {
   private address: Address;
   private readOnly: boolean;

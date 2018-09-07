@@ -15,5 +15,6 @@ export function bigIntFromBytes(bytes: Buffer): Long {
 export function bigIntToBytes(value: Long) {
   const buffer = new ByteBuffer(undefined, true);
   buffer.writeUint64(value);
+  buffer.flip();
   return new Buffer(buffer.toBuffer());
 }

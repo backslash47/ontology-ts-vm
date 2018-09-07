@@ -46,5 +46,6 @@ export function getStorageKey(address: Address, key: Buffer): Buffer {
   buf.writeByte(ST_STORAGE);
   buf.writeBytes(address.toArray());
   buf.writeBytes(key);
+  buf.flip();
   return new Buffer(buf.toBuffer());
 }
