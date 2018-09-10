@@ -1,8 +1,11 @@
 import * as Long from 'long';
 
+// tslint:disable:no-bitwise
+
 export function bigIntFromBytes(bytes: Buffer): Long {
   let data = Array.from(bytes.subarray(0));
   const b = data[data.length - 1];
+
   if (b >> 7 === 1) {
     data = data.concat(Array(8 - data.length).fill(255));
   }
@@ -28,6 +31,7 @@ export function bigIntToBytes(value: Long) {
     }
   }
   data = data.slice(0, pos);
+
   if (b >> 7 === 1) {
     data.push(value.isNegative() ? 255 : 0);
   }
