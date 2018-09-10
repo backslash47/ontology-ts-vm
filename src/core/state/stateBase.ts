@@ -1,6 +1,6 @@
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
-import { StateValue } from './stateValue';
+import { StateValue } from './stateStore';
 
 export class StateBase implements StateValue {
   stateVersion: number;

@@ -38,7 +38,7 @@
   "devDependencies": {
     "@types/bytebuffer": "~5",
     "@types/jest": "^23.3.1",
-    "@types/long": "~3",
+    "@types/long": "~4",
     "@types/node": "^8.5.2",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
@@ -62,6 +62,6 @@
     "bytebuffer": "~5",
     "elliptic": "^6.4.1",
     "js-sha3": "^0.8.0",
-    "long": "~3"
+    "long": "~4"
   }
 }

@@ -1,6 +1,6 @@
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
-import { StateValue } from '../state/stateValue';
+import { StateValue } from '../state/stateStore';
 
 export class InvokeCode implements StateValue {
   private code: Buffer;

@@ -1,7 +1,7 @@
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
 import { StateBase } from './stateBase';
-import { StateValue } from './stateValue';
+import { StateValue } from './stateStore';
 
 export class StorageItem extends StateBase {
   private value: Buffer;

@@ -1,10 +1,10 @@
 import { Address } from '../common/address';
 import { LedgerStore } from '../core/ledgerStore';
+import { StateStore } from '../core/state/stateStore';
+import { Transaction } from '../core/transaction';
 import { NotifyEventInfo } from '../event/notifyEvents';
 import { ExecutionEngine } from '../vm/interfaces/engine';
 import { StackItem } from '../vm/types/stackItem';
-import { CloneCache } from './cloneCache';
-import { Transaction } from '../core/transaction';
 
 export interface ContextRef {
   pushContext(context: Context): void;
@@ -24,7 +24,7 @@ export interface VmService {
   getEngine(): ExecutionEngine;
   getStore(): LedgerStore;
 
-  getCloneCache(): CloneCache;
+  getStateStore(): StateStore;
   getContextRef(): ContextRef;
 
   getTx(): Transaction;

@@ -1,9 +1,9 @@
 import { Address } from '../common/address';
 import { LedgerStore } from '../core/ledgerStore';
+import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
 import { NotifyEventInfo } from '../event/notifyEvents';
 import { VMEngine } from '../vm/vmEngine';
-import { CloneCache } from './cloneCache';
 import { MAX_EXECUTE_ENGINE, VM_STEP_LIMIT } from './consts';
 import { Context, ContextRef, VmService } from './context';
 import { NeoVmService } from './neoVmService';
@@ -19,7 +19,7 @@ export class Config {
 
 export class SmartContract implements ContextRef {
   private contexts: Context[]; // all execute smart contract context
-  private cloneCache: CloneCache; // state cache
+  private stateStore: StateStore; // state store
   private store: LedgerStore; // ledger store
   private config: Config;
   private notifications: NotifyEventInfo[]; // all execute smart contract event notify info
@@ -105,7 +105,7 @@ export class SmartContract implements ContextRef {
     }
     const service = new NeoVmService({
       store: this.store,
-      cloneCache: this.cloneCache,
+      stateStore: this.stateStore,
       contextRef: this,
       code,
       tx: this.config.tx,

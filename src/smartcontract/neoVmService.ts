@@ -2,7 +2,7 @@ import { Address } from '../common/address';
 import { LedgerStore } from '../core/ledgerStore';
 import { isDeployCode } from '../core/payload/deployCode';
 import { ST_CONTRACT } from '../core/state/dataEntryPrefix';
-import { StateItem } from '../core/state/stateStore';
+import { StateItem, StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
 import { PublicKey } from '../crypto/publicKey';
 import { Signature } from '../crypto/signature';
@@ -15,7 +15,6 @@ import * as O from '../vm/opCode';
 import { isArrayType } from '../vm/types/array';
 import { StackItem } from '../vm/types/stackItem';
 import { isStructType } from '../vm/types/struct';
-import { CloneCache } from './cloneCache';
 import { MAX_STACK_SIZE, OPCODE_GAS } from './consts';
 import { ContextRef, VmService } from './context';
 import * as errors from './errors';
@@ -26,7 +25,7 @@ const BYTE_ZERO_20: Buffer = new Buffer([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
 
 interface NeoVmServiceOptions {
   store: LedgerStore;
-  cloneCache: CloneCache;
+  stateStore: StateStore;
   contextRef: ContextRef;
   code: Buffer;
   tx: Transaction;
@@ -37,7 +36,7 @@ interface NeoVmServiceOptions {
 
 export class NeoVmService implements VmService {
   private store: LedgerStore;
-  private cloneCache: CloneCache;
+  private stateStore: StateStore;
   private contextRef: ContextRef;
 
   private notifications: NotifyEventInfo[];
@@ -49,7 +48,7 @@ export class NeoVmService implements VmService {
 
   constructor(options: NeoVmServiceOptions) {
     this.store = options.store;
-    this.cloneCache = options.cloneCache;
+    this.stateStore = options.stateStore;
     this.contextRef = options.contextRef;
     this.code = options.code;
     this.tx = options.tx;
@@ -74,8 +73,8 @@ export class NeoVmService implements VmService {
     return this.contextRef;
   }
 
-  getCloneCache() {
-    return this.cloneCache;
+  getStateStore() {
+    return this.stateStore;
   }
 
   getStore() {
@@ -228,7 +227,7 @@ export class NeoVmService implements VmService {
   getContract(address: Buffer): Buffer {
     let item: StateItem;
     try {
-      item = this.cloneCache.getStore().tryGet(ST_CONTRACT, address);
+      item = this.stateStore.get(ST_CONTRACT, address);
     } catch (e) {
       throw new Error('[getContract] Get contract context error!');
     }

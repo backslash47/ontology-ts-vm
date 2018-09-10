@@ -1,7 +1,7 @@
 import { Interop } from '../../vm/interfaces/interop';
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
-import { StateValue } from '../state/stateValue';
+import { StateValue } from '../state/stateStore';
 
 export interface DeployCodeOptions {
   code: Buffer;

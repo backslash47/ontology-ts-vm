@@ -1,25 +1,26 @@
 import * as ByteBuffer from 'bytebuffer';
 import { Address } from '../../common/address';
+import { Reader } from '../../vm/utils/reader';
+import { Writer } from '../../vm/utils/writer';
 import { DataEntryPrefix, ST_STORAGE } from './dataEntryPrefix';
-import { StateValue } from './stateValue';
 
 /**
  * FIXME: implement
  */
 export interface StateStore {
-  tryAdd(prefix: DataEntryPrefix, key: Buffer, value: StateValue): void;
+  add(prefix: DataEntryPrefix, key: Buffer, value: StateValue): void;
   /**
    * Get key from state store, if not exist, add it to store
    */
-  tryGetOrAdd(prefix: DataEntryPrefix, key: Buffer, value: StateValue): void;
+  getOrAdd(prefix: DataEntryPrefix, key: Buffer, value: StateValue): void;
   /**
    * Get key from state store
    */
-  tryGet(prefix: DataEntryPrefix, key: Buffer): StateItem;
+  get(prefix: DataEntryPrefix, key: Buffer): StateItem;
   /**
    * Delete key in store
    */
-  tryDelete(prefix: DataEntryPrefix, key: Buffer): void;
+  delete(prefix: DataEntryPrefix, key: Buffer): void;
   /**
    * iterator key in store
    */
@@ -28,14 +29,19 @@ export interface StateStore {
 
 type ItemState = number;
 
+export interface StateValue {
+  serialize(w: Writer): void;
+  deserialize(r: Reader): void;
+}
+
 /**
  * State item struct
  */
 export interface StateItem {
-  key: string; // State key
+  prefix: DataEntryPrefix;
+  key: Buffer; // State key
   value: StateValue; // State value
   state: ItemState; // Status
-  trie: boolean; // no use
 }
 
 /**

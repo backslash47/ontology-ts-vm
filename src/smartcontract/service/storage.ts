@@ -36,7 +36,7 @@ export function storagePut(service: VmService, engine: ExecutionEngine) {
 
     const value = popByteArray(engine);
 
-    service.getCloneCache().add(ST_STORAGE, getStorageKey(context.getAddress(), key), new StorageItem(value));
+    service.getStateStore().add(ST_STORAGE, getStorageKey(context.getAddress(), key), new StorageItem(value));
   } catch (e) {
     throw new Error('[StoragePut] get pop context error!');
   }
@@ -63,7 +63,7 @@ export function storageDelete(service: VmService, engine: ExecutionEngine) {
     }
     const ba = popByteArray(engine);
 
-    service.getCloneCache().delete(ST_STORAGE, getStorageKey(context.getAddress(), ba));
+    service.getStateStore().delete(ST_STORAGE, getStorageKey(context.getAddress(), ba));
   } catch (e) {
     throw new Error('[StorageDelete] get pop context error!');
   }
@@ -81,13 +81,13 @@ export function storageGet(service: VmService, engine: ExecutionEngine) {
     const context = getContext(engine);
 
     const ba = popByteArray(engine);
-    const item = service.getCloneCache().get(ST_STORAGE, getStorageKey(context.getAddress(), ba));
+    const item = service.getStateStore().get(ST_STORAGE, getStorageKey(context.getAddress(), ba));
 
     if (item === undefined) {
       pushData(engine, new Buffer(''));
     } else {
-      if (isStorageItem(item)) {
-        pushData(engine, item.getValue());
+      if (isStorageItem(item.value)) {
+        pushData(engine, item.value.getValue());
       }
     }
   } catch (e) {
@@ -121,7 +121,7 @@ export function storageGetReadOnlyContext(service: VmService, engine: ExecutionE
 
 export function checkStorageContext(service: VmService, context: StorageContext) {
   try {
-    const item = service.getCloneCache().get(ST_CONTRACT, context.getAddress().toArray());
+    const item = service.getStateStore().get(ST_CONTRACT, context.getAddress().toArray());
     if (item === undefined) {
       throw new Error('[CheckStorageContext] get context null!');
     }

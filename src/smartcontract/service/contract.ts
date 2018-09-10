@@ -16,7 +16,7 @@ export function contractCreate(service: VmService, engine: ExecutionEngine) {
 
     const contractAddress = Address.parseFromVmCode(contract.getCode());
     try {
-      const state = service.getCloneCache().getOrAdd(ST_CONTRACT, contractAddress.toArray(), contract);
+      const state = service.getStateStore().getOrAdd(ST_CONTRACT, contractAddress.toArray(), contract);
       pushData(engine, state);
     } catch (e) {
       throw new Error(`[ContractCreate] GetOrAdd error: ${e}`);
@@ -43,15 +43,15 @@ export function contractMigrate(service: VmService, engine: ExecutionEngine) {
         throw new Error('[ContractMigrate] current contract context invalid!');
       }
 
-      service.getCloneCache().add(ST_CONTRACT, contractAddress.toArray(), contract);
+      service.getStateStore().add(ST_CONTRACT, contractAddress.toArray(), contract);
 
       try {
         const items = storeMigration(service, context.contractAddress, contractAddress);
 
-        service.getCloneCache().delete(ST_CONTRACT, context.contractAddress.toArray());
+        service.getStateStore().delete(ST_CONTRACT, context.contractAddress.toArray());
 
         for (const v of items) {
-          service.getCloneCache().delete(ST_STORAGE, new Buffer(v.key));
+          service.getStateStore().delete(ST_STORAGE, v.key);
         }
 
         pushData(engine, contract);
@@ -76,25 +76,19 @@ export function contractDestroy(service: VmService, engine: ExecutionEngine) {
   }
 
   try {
-    const item = service
-      .getCloneCache()
-      .getStore()
-      .tryGet(ST_CONTRACT, context.contractAddress.toArray());
+    const item = service.getStateStore().get(ST_CONTRACT, context.contractAddress.toArray());
 
     if (item === undefined) {
       throw new Error('[ContractDestroy] get current contract null!');
     }
 
-    service.getCloneCache().delete(ST_CONTRACT, context.contractAddress.toArray());
+    service.getStateStore().delete(ST_CONTRACT, context.contractAddress.toArray());
 
     try {
-      const stateValues = service
-        .getCloneCache()
-        .getStore()
-        .find(ST_STORAGE, context.contractAddress.toArray());
+      const stateValues = service.getStateStore().find(ST_STORAGE, context.contractAddress.toArray());
 
       for (const v of stateValues) {
-        service.getCloneCache().delete(ST_STORAGE, new Buffer(v.key));
+        service.getStateStore().delete(ST_STORAGE, v.key);
       }
     } catch (e) {
       throw new Error(`[ContractDestory] find error: ${e}`);
@@ -117,10 +111,7 @@ export function contractGetStorageContext(service: VmService, engine: ExecutionE
     const address = Address.parseFromVmCode(opInterface.getCode());
 
     try {
-      const item = service
-        .getCloneCache()
-        .getStore()
-        .tryGet(ST_CONTRACT, address.toArray());
+      const item = service.getStateStore().get(ST_CONTRACT, address.toArray());
 
       if (item === undefined) {
         throw new Error('[GetStorageContext] Get StorageContext null');
@@ -199,7 +190,7 @@ function isContractParamValid(engine: ExecutionEngine): DeployCode {
 
 function isContractExist(service: VmService, contractAddress: Address) {
   try {
-    const item = service.getCloneCache().get(ST_CONTRACT, contractAddress.toArray());
+    const item = service.getStateStore().get(ST_CONTRACT, contractAddress.toArray());
 
     if (item !== undefined) {
       throw new Error(`[Contract] Get ${contractAddress} contract exist!`);
@@ -211,14 +202,11 @@ function isContractExist(service: VmService, contractAddress: Address) {
 
 function storeMigration(service: VmService, oldAddr: Address, newAddr: Address): StateItem[] {
   try {
-    const stateValues = service
-      .getCloneCache()
-      .getStore()
-      .find(ST_STORAGE, oldAddr.toArray());
+    const stateValues = service.getStateStore().find(ST_STORAGE, oldAddr.toArray());
 
     for (const v of stateValues) {
-      const subKey = new Buffer(v.key).slice(20);
-      service.getCloneCache().add(ST_STORAGE, getStorageKey(newAddr, subKey), v.value);
+      const subKey = v.key.slice(20);
+      service.getStateStore().add(ST_STORAGE, getStorageKey(newAddr, subKey), v.value);
     }
 
     return stateValues;
