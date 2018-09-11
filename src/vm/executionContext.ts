@@ -18,9 +18,9 @@ export class ExecutionContext {
     this.opReader.seek(offset, 'start');
   }
 
-  nextInstruction(): OpCode {
-    return this.code[this.opReader.position()];
-  }
+  // nextInstruction(): OpCode {
+  //   return this.code[this.opReader.position()];
+  // }
 
   clone(): ExecutionContext {
     const executionContext = new ExecutionContext(this.code);

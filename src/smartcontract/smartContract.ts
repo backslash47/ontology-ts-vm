@@ -7,24 +7,40 @@ import { VMEngine } from '../vm/vmEngine';
 import { MAX_EXECUTE_ENGINE, VM_STEP_LIMIT } from './consts';
 import { Context, ContextRef, VmService } from './context';
 import { NeoVmService } from './neoVmService';
+import { RuntimeLedgerStore } from './runtime/runtimeLedgerStore';
+import { RuntimeStateStore } from './runtime/runtimeStateStore';
 
-/**
- * Config describe smart contract need parameters configuration
- */
-export class Config {
-  time: number; // current block timestamp
-  // height: number; // current block height - unused
-  tx: Transaction; // current transaction
+export interface SmartContractConfig {
+  store?: LedgerStore;
+  stateStore?: StateStore;
+  time: number;
+  tx: Transaction;
+  gas: Long;
 }
 
 export class SmartContract implements ContextRef {
   private contexts: Context[]; // all execute smart contract context
   private stateStore: StateStore; // state store
   private store: LedgerStore; // ledger store
-  private config: Config;
+  private time: number; // current block timestamp
+  // height: number; // current block height - unused
+  private tx: Transaction; // current transaction
   private notifications: NotifyEventInfo[]; // all execute smart contract event notify info
   private gas: Long;
   private execStep: number;
+
+  constructor(config: SmartContractConfig) {
+    this.contexts = [];
+    this.notifications = [];
+    this.execStep = 0;
+
+    this.time = config.time;
+    this.tx = config.tx;
+    this.gas = config.gas;
+
+    this.store = config.store !== undefined ? config.store : new RuntimeLedgerStore();
+    this.stateStore = config.stateStore !== undefined ? config.stateStore : new RuntimeStateStore();
+  }
 
   // PushContext push current context to smart contract
   pushContext(context: Context) {
@@ -108,8 +124,8 @@ export class SmartContract implements ContextRef {
       stateStore: this.stateStore,
       contextRef: this,
       code,
-      tx: this.config.tx,
-      time: this.config.time,
+      tx: this.tx,
+      time: this.time,
       // height: this.config.height, - unused
       engine: new VMEngine()
     });
@@ -134,7 +150,7 @@ export class SmartContract implements ContextRef {
 
   checkAccountAddress(address: Address): boolean {
     try {
-      const addresses = this.config.tx.getSignatureAddresses();
+      const addresses = this.tx.getSignatureAddresses();
 
       for (const v of addresses) {
         if (v.equals(address)) {

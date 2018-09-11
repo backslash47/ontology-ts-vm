@@ -113,12 +113,16 @@ export function bigIntOp(bi: Long, op: O.OpCode): Long {
   switch (op) {
     case O.INC:
       nb = bi.add(Long.ONE);
+      break;
     case O.DEC:
       nb = bi.sub(Long.ONE);
+      break;
     case O.NEGATE:
       nb = bi.neg();
+      break;
     case O.ABS:
       nb = bi.isPositive() ? bi : bi.neg();
+      break;
     default:
       nb = bi;
   }

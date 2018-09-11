@@ -27,9 +27,14 @@ export class Stack<T> {
       return undefined;
     }
 
-    return this.store[this.store.length - n];
+    return this.store[this.store.length - n - 1];
   }
 
+  /**
+   * TODO: check if properly implemented.
+   * @param index
+   * @param t
+   */
   insert(index: number, t: T | undefined) {
     if (t === undefined) {
       return;
@@ -51,7 +56,7 @@ export class Stack<T> {
 
     index = this.store.length - index;
 
-    return this.store.splice(index, 1)[0];
+    return this.store.splice(index - 1, 1)[0];
   }
 
   /**

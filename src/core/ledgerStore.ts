@@ -5,10 +5,7 @@ import { Header } from './header';
 import { DeployCode } from './payload/deployCode';
 import { Transaction } from './transaction';
 
-/**
- * FIXME: implement
- */
-export class LedgerStore {
+export abstract class LedgerStore {
   private currBlockHeight: number;
   private headerIndex: Map<number, Uint256>;
 
@@ -46,28 +43,20 @@ export class LedgerStore {
   /**
    * GetHeaderByHash return the block header by block hash
    */
-  getHeaderByHash(blockHash: Uint256): Header {
-    throw new Error('Unsupported');
-  }
+  abstract getHeaderByHash(blockHash: Uint256): Header;
 
   /**
    * GetBlockByHash return block by block hash. Wrap function of BlockStore.GetBlockByHash
    */
-  getBlockByHash(blockHash: Uint256): Block {
-    throw new Error('Unsupported');
-  }
+  abstract getBlockByHash(blockHash: Uint256): Block;
 
   /**
    * GetTransaction return transaction by transaction hash. Wrap function of BlockStore.GetTransaction
    */
-  getTransaction(txHash: Uint256): [Transaction, number] {
-    throw new Error('Unsupported');
-  }
+  abstract getTransaction(txHash: Uint256): [Transaction, number];
 
   /**
    * GetContractState return contract by contract address. Wrap function of StateStore.GetContractState
    */
-  getContractState(contractHash: Address): DeployCode {
-    throw new Error('Unsupported');
-  }
+  abstract getContractState(contractHash: Address): DeployCode;
 }

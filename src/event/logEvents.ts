@@ -14,6 +14,8 @@ export interface LogEventArgs {
 /**
  * FIXME: implement
  */
-export function pushSmartCodeEvent(txHash: Uint256, errcode: Long, action: string, result: LogEventArgs) {}
+export function pushSmartCodeEvent(txHash: Uint256, errcode: Long, action: string, result: LogEventArgs) {
+  throw new Error('Unsupported');
+}
 
 export const EVENT_LOG = 'Log';

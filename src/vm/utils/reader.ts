@@ -7,11 +7,11 @@ export class Reader {
   reader: ByteBuffer;
 
   constructor(b: Buffer) {
-    this.reader = ByteBuffer.wrap(b, undefined, true);
+    this.reader = ByteBuffer.wrap(b, 'utf-8', true);
   }
 
   readByte(): number {
-    return this.reader.readByte();
+    return this.reader.readUint8();
   }
 
   readBytes(count: number): Buffer {
@@ -76,11 +76,13 @@ export class Reader {
     switch (fb) {
       case 0xfd:
         value = Long.fromNumber(this.readUInt16());
+        break;
       case 0xfe:
         value = Long.fromNumber(this.readUInt32());
+        break;
       case 0xff:
         value = this.readUInt64();
-
+        break;
       default:
         value = Long.fromNumber(fb);
     }
@@ -97,10 +99,13 @@ export class Reader {
     switch (fb) {
       case 0xfd:
         value = Long.fromNumber(this.readInt16());
+        break;
       case 0xfe:
         value = Long.fromNumber(this.readInt32());
+        break;
       case 0xff:
         value = this.readInt64();
+        break;
 
       default:
         value = Long.fromNumber(fb);

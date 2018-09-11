@@ -38,7 +38,7 @@ export class Writer {
     return this.writeVarBytes(new Buffer(value, 'utf-8'));
   }
   writeBytes(value: Buffer) {
-    this.writer.writeBytes(value);
+    this.writer.append(value);
   }
   writeUint8(val: number) {
     this.writer.writeUint8(val);

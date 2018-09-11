@@ -12,7 +12,7 @@ export interface StateStore {
   /**
    * Get key from state store, if not exist, add it to store
    */
-  getOrAdd(prefix: DataEntryPrefix, key: Buffer, value: StateValue): void;
+  getOrAdd(prefix: DataEntryPrefix, key: Buffer, value: StateValue): StateValue;
   /**
    * Get key from state store
    */

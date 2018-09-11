@@ -16,11 +16,15 @@ export class VMEngine implements ExecutionEngine {
   private opCode: OpCode;
   private opExec: OpExec;
 
+  private debug: boolean;
+
   constructor() {
+    this.contexts = [];
     this.evaluationStack = new Stack();
     this.altStack = new Stack();
     this.state = BREAK;
     this.opCode = 0;
+    this.debug = true;
   }
 
   getContext() {
@@ -99,6 +103,10 @@ export class VMEngine implements ExecutionEngine {
       throw errors.ERR_NOT_SUPPORT_OPCODE;
     }
     this.opExec = opExec;
+
+    if (this.debug) {
+      console.log('OP: ', opExec.name);
+    }
   }
 
   stepInto(): Error | undefined {
@@ -118,6 +126,10 @@ export class VMEngine implements ExecutionEngine {
   executeOp() {
     if (this.opCode >= O.PUSHBYTES1 && this.opCode <= O.PUSHBYTES75) {
       pushData(this, this.context.getReader().readBytes(this.opCode));
+
+      if (this.debug) {
+        console.log(`OP: PUSHBYTES${this.opCode}`);
+      }
       return;
     }
 
@@ -125,8 +137,16 @@ export class VMEngine implements ExecutionEngine {
       this.opExec.validator(this);
     }
 
+    if (this.debug) {
+      console.log('Validated');
+    }
+
     if (this.opExec.exec !== undefined) {
       this.opExec.exec(this);
+    }
+
+    if (this.debug) {
+      console.log('Executed');
     }
   }
 }

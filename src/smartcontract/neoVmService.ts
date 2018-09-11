@@ -55,6 +55,7 @@ export class NeoVmService implements VmService {
     this.time = options.time;
     // this.height = options.height;
     this.engine = options.engine;
+    this.notifications = [];
   }
 
   getTx() {
@@ -166,6 +167,7 @@ export class NeoVmService implements VmService {
           this.engine.getEvaluationStack().copyTo(service.getEngine().getEvaluationStack());
           const result = service.invoke();
 
+          console.log('result of app call', result);
           if (result !== undefined) {
             pushData(this.engine, result);
           }
@@ -183,6 +185,7 @@ export class NeoVmService implements VmService {
     this.contextRef.popContext();
     this.contextRef.pushNotifications(this.notifications);
     if (this.engine.getEvaluationStack().count() !== 0) {
+      console.log('remaining stack', this.engine.getEvaluationStack());
       return this.engine.getEvaluationStack().peek(0);
     }
   }

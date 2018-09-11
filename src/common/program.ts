@@ -2,7 +2,7 @@ import { PublicKey } from '../crypto/publicKey';
 import { CHECKSIG, OpCode, PUSHBYTES1, PUSHBYTES75, PUSHDATA1, PUSHDATA2, PUSHDATA4 } from '../vm/opCode';
 import { Writer } from '../vm/utils/writer';
 
-class ProgramBuilder {
+export class ProgramBuilder {
   w: Writer;
 
   constructor() {
@@ -13,8 +13,12 @@ class ProgramBuilder {
     this.pushBytes(key.serialize());
   }
 
-  pushOpCode(opCode: OpCode) {
+  writeOpCode(opCode: OpCode) {
     this.w.writeUint8(opCode);
+  }
+
+  writeBytes(b: Buffer) {
+    this.w.writeBytes(b);
   }
 
   pushBytes(data: Buffer) {
