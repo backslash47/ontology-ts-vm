@@ -42,6 +42,10 @@ export class SmartContract implements ContextRef {
     this.stateStore = config.stateStore !== undefined ? config.stateStore : new RuntimeStateStore();
   }
 
+  getNotifications() {
+    return this.notifications;
+  }
+
   // PushContext push current context to smart contract
   pushContext(context: Context) {
     this.contexts.push(context);

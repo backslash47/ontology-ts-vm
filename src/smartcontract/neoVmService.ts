@@ -82,6 +82,10 @@ export class NeoVmService implements VmService {
     return this.store;
   }
 
+  getNotifications() {
+    return this.notifications;
+  }
+
   // Invoke a smart contract
   invoke(): StackItem | undefined {
     if (this.code.length === 0) {
@@ -95,9 +99,9 @@ export class NeoVmService implements VmService {
       if (!this.contextRef.checkExecStep()) {
         throw errors.VM_EXEC_STEP_EXCEED;
       }
-      // if (this.engine.getContexts().length === 0 || this.engine.getContext() === nil) {
-      // 	break;
-      // }
+      if (this.engine.getContexts().length === 0) {
+        break;
+      }
       if (this.engine.getContext().getInstructionPointer() >= this.engine.getContext().getCode().length) {
         break;
       }
@@ -167,7 +171,6 @@ export class NeoVmService implements VmService {
           this.engine.getEvaluationStack().copyTo(service.getEngine().getEvaluationStack());
           const result = service.invoke();
 
-          console.log('result of app call', result);
           if (result !== undefined) {
             pushData(this.engine, result);
           }
@@ -185,7 +188,6 @@ export class NeoVmService implements VmService {
     this.contextRef.popContext();
     this.contextRef.pushNotifications(this.notifications);
     if (this.engine.getEvaluationStack().count() !== 0) {
-      console.log('remaining stack', this.engine.getEvaluationStack());
       return this.engine.getEvaluationStack().peek(0);
     }
   }

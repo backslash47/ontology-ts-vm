@@ -31,6 +31,7 @@ export interface VmService {
   getTime(): number;
 
   addNotification(event: NotifyEventInfo): void;
+  getNotifications(): NotifyEventInfo[];
 }
 
 export interface Context {

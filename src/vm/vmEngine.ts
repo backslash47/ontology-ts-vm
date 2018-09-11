@@ -1,7 +1,7 @@
 import * as errors from './errors';
 import { ExecutionContext } from './executionContext';
 import { pushData } from './func/common';
-import { BREAK, ExecutionEngine, FAULT, HALT, RandomAccessStack, VMState } from './interfaces/engine';
+import { BREAK, ExecutionEngine, FAULT, HALT, RandomAccessStack, VMState, NONE } from './interfaces/engine';
 import { OpCode } from './opCode';
 import * as O from './opCode';
 import { OpExec, OpExecList } from './opExec';
@@ -68,6 +68,8 @@ export class VMEngine implements ExecutionEngine {
 
     if (this.contexts.length !== 0) {
       this.context = this.currentContext();
+    } else {
+      this.state = NONE;
     }
   }
 
@@ -105,7 +107,7 @@ export class VMEngine implements ExecutionEngine {
     this.opExec = opExec;
 
     if (this.debug) {
-      console.log('OP: ', opExec.name);
+      console.log(opExec.name);
     }
   }
 
@@ -128,7 +130,7 @@ export class VMEngine implements ExecutionEngine {
       pushData(this, this.context.getReader().readBytes(this.opCode));
 
       if (this.debug) {
-        console.log(`OP: PUSHBYTES${this.opCode}`);
+        console.log(`PUSHBYTES${this.opCode}`);
       }
       return;
     }
@@ -137,16 +139,8 @@ export class VMEngine implements ExecutionEngine {
       this.opExec.validator(this);
     }
 
-    if (this.debug) {
-      console.log('Validated');
-    }
-
     if (this.opExec.exec !== undefined) {
       this.opExec.exec(this);
-    }
-
-    if (this.debug) {
-      console.log('Executed');
     }
   }
 }
