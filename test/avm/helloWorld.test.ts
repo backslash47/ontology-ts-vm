@@ -3,7 +3,6 @@ import { ScEnvironment } from '../../src/scEnvironment';
 import { isIntegerType } from '../../src/vm/types/integer';
 import { loadContract } from '../utils';
 
-// tslint:disable : no-console
 describe('Hello world test', () => {
   test('Hello', async () => {
     const contract = loadContract('./test/avm/helloWorld.avm');

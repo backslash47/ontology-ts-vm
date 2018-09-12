@@ -24,8 +24,6 @@ export class ScEnvironment {
   ledgerStore: LedgerStore;
   store: StateStore;
 
-  rootSc: SmartContract;
-
   constructor({ ledgerStore = new RuntimeLedgerStore(), store = new RuntimeStateStore() }: EnvironmentOptions = {}) {
     this.ledgerStore = ledgerStore;
     this.store = store;
