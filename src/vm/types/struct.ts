@@ -10,7 +10,7 @@ export class StructType implements StackItem {
   type: string;
   value: StackItem[];
 
-  constructor(value: StackItem[]) {
+  constructor(value: StackItem[] = []) {
     this.value = value;
     this.type = 'StructType';
   }

@@ -99,7 +99,7 @@ export function runtimeGetTrigger(service: VmService, engine: ExecutionEngine) {
   pushData(engine, 0);
 }
 
-function serializeStackItem(item: StackItem): Buffer {
+export function serializeStackItem(item: StackItem): Buffer {
   if (circularRefAndDepthDetection(item)) {
     throw new Error('runtime serialize: can not serialize circular reference data');
   }
@@ -279,7 +279,7 @@ function deserializeStackItemInternal(r: Reader): StackItem {
   }
 }
 
-function circularRefAndDepthDetection(value: StackItem): boolean {
+export function circularRefAndDepthDetection(value: StackItem): boolean {
   return circularRefAndDepthDetectionInternal(value, new Map(), 0);
 }
 

@@ -8,7 +8,7 @@ export class ByteArrayType implements StackItem {
   type: string;
   value: Buffer;
 
-  constructor(value: Buffer) {
+  constructor(value: Buffer = new Buffer(0)) {
     this.value = value;
     this.type = 'ByteArrayType';
   }
