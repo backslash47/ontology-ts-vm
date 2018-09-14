@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import { ScEnvironment } from '../../src/scEnvironment';
 import { isIntegerType } from '../../src/vm/types/integer';
-import { loadContract } from '../utils';
+import { loadContract, opLogger } from '../utils';
 
 describe('Arith test', () => {
   test('Add', async () => {
@@ -12,7 +12,7 @@ describe('Arith test', () => {
 
     // call Add with params 3 and 4
     const call = Buffer.concat([new Buffer('545352c10341646467', 'hex'), address]);
-    const { result, notifications } = env.execute(call);
+    const { result, notifications } = await env.execute(call, { inspect: opLogger });
 
     expect(isIntegerType(result)).toBeTruthy();
     expect(result.getBigInteger().toNumber()).toBe(7);

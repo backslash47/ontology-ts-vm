@@ -11,7 +11,7 @@ describe('Hello world test', () => {
     const address = env.deployContract(contract);
 
     const call = Buffer.concat([new Buffer('05576f726c6451c10548656c6c6f67', 'hex'), address]);
-    const { result, notifications } = env.execute(call);
+    const { result, notifications } = await env.execute(call);
 
     expect(isIntegerType(result)).toBeTruthy();
     expect(result.getBoolean()).toBeTruthy();
@@ -28,7 +28,7 @@ describe('Hello world test', () => {
 
     // call wrong method
     const call = Buffer.concat([new Buffer('05576f726c6451c10548616c6c6f67', 'hex'), address]);
-    const { result, notifications } = env.execute(call);
+    const { result, notifications } = await env.execute(call);
 
     expect(isIntegerType(result)).toBeTruthy();
     expect(result.getBoolean()).toBeFalsy();

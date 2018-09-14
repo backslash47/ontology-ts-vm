@@ -1,7 +1,7 @@
 import * as errors from './errors';
 import { ExecutionContext } from './executionContext';
 import { pushData } from './func/common';
-import { BREAK, ExecutionEngine, FAULT, HALT, RandomAccessStack, VMState, NONE } from './interfaces/engine';
+import { BREAK, ExecutionEngine, FAULT, HALT, NONE, RandomAccessStack, VMState } from './interfaces/engine';
 import { OpCode } from './opCode';
 import * as O from './opCode';
 import { OpExec, OpExecList } from './opExec';
@@ -16,15 +16,12 @@ export class VMEngine implements ExecutionEngine {
   private opCode: OpCode;
   private opExec: OpExec;
 
-  private debug: boolean;
-
   constructor() {
     this.contexts = [];
     this.evaluationStack = new Stack();
     this.altStack = new Stack();
     this.state = BREAK;
     this.opCode = 0;
-    this.debug = true;
   }
 
   getContext() {
@@ -105,10 +102,6 @@ export class VMEngine implements ExecutionEngine {
       throw errors.ERR_NOT_SUPPORT_OPCODE;
     }
     this.opExec = opExec;
-
-    if (this.debug) {
-      console.log(opExec.name);
-    }
   }
 
   stepInto(): Error | undefined {
@@ -129,9 +122,6 @@ export class VMEngine implements ExecutionEngine {
     if (this.opCode >= O.PUSHBYTES1 && this.opCode <= O.PUSHBYTES75) {
       pushData(this, this.context.getReader().readBytes(this.opCode));
 
-      if (this.debug) {
-        console.log(`PUSHBYTES${this.opCode}`);
-      }
       return;
     }
 

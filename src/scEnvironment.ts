@@ -5,6 +5,7 @@ import { DeployCode } from './core/payload/deployCode';
 import { ST_CONTRACT } from './core/state/dataEntryPrefix';
 import { StateStore } from './core/state/stateStore';
 import { Transaction } from './core/transaction';
+import { Inspect } from './smartcontract/context';
 import { RuntimeLedgerStore } from './smartcontract/runtime/runtimeLedgerStore';
 import { RuntimeStateStore } from './smartcontract/runtime/runtimeStateStore';
 import { SmartContract } from './smartcontract/smartContract';
@@ -18,6 +19,7 @@ export interface ExecuteOptions {
   time?: number;
   tx?: Transaction;
   gas?: Long;
+  inspect?: Inspect;
 }
 
 export class ScEnvironment {
@@ -38,7 +40,10 @@ export class ScEnvironment {
     return address.toArray();
   }
 
-  execute(code: Buffer, { time = 10, tx = new Transaction(), gas = Long.fromNumber(100000) }: ExecuteOptions = {}) {
+  async execute(
+    code: Buffer,
+    { time = 10, tx = new Transaction(), gas = Long.fromNumber(100000), inspect }: ExecuteOptions = {}
+  ) {
     const sc = new SmartContract({
       time,
       tx,
@@ -48,7 +53,7 @@ export class ScEnvironment {
 
     const vmService = sc.newExecuteEngine(code);
 
-    const result = vmService.invoke();
+    const result = await vmService.invoke({ inspect });
     const notifications = sc.getNotifications();
 
     return { result, notifications };

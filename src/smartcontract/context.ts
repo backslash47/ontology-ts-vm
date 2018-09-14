@@ -4,6 +4,7 @@ import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
 import { NotifyEventInfo } from '../event/notifyEvents';
 import { ExecutionEngine } from '../vm/interfaces/engine';
+import { OpCode } from '../vm/opCode';
 import { StackItem } from '../vm/types/stackItem';
 
 export interface ContextRef {
@@ -19,8 +20,21 @@ export interface ContextRef {
   checkExecStep(): boolean;
 }
 
+export interface InspectData {
+  opCode: OpCode;
+  opName: string;
+
+  contractAddress: Address;
+}
+
+export type Inspect = (data: InspectData) => Promise<boolean>;
+
+export interface InvokeOptions {
+  inspect?: Inspect;
+}
+
 export interface VmService {
-  invoke(): StackItem | undefined;
+  invoke(options?: InvokeOptions): Promise<StackItem | undefined>;
   getEngine(): ExecutionEngine;
   getStore(): LedgerStore;
 

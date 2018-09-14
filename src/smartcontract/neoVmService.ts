@@ -16,7 +16,7 @@ import { isArrayType } from '../vm/types/array';
 import { StackItem } from '../vm/types/stackItem';
 import { isStructType } from '../vm/types/struct';
 import { MAX_STACK_SIZE, OPCODE_GAS } from './consts';
-import { ContextRef, VmService } from './context';
+import { ContextRef, Inspect, InvokeOptions, VmService } from './context';
 import * as errors from './errors';
 import { gasPrice } from './gasCost';
 import { ServiceMap } from './serviceMap';
@@ -87,11 +87,14 @@ export class NeoVmService implements VmService {
   }
 
   // Invoke a smart contract
-  invoke(): StackItem | undefined {
+  async invoke({ inspect = () => Promise.resolve(true) }: InvokeOptions): Promise<StackItem | undefined> {
     if (this.code.length === 0) {
       throw errors.ERR_EXECUTE_CODE;
     }
-    this.contextRef.pushContext({ contractAddress: Address.parseFromVmCode(this.code), code: this.code });
+
+    const contractAddress = Address.parseFromVmCode(this.code);
+
+    this.contextRef.pushContext({ contractAddress, code: this.code });
     this.engine.pushContext(new ExecutionContext(this.code));
 
     while (true) {
@@ -112,18 +115,31 @@ export class NeoVmService implements VmService {
           throw errors.ERR_CHECK_STACK_SIZE;
         }
       }
-      if (this.engine.getOpCode() >= O.PUSHBYTES1 && this.engine.getOpCode() <= O.PUSHBYTES75) {
+
+      const opCode = this.engine.getOpCode();
+      let opName = '';
+      if (opCode >= O.PUSHBYTES1 && opCode <= O.PUSHBYTES75) {
+        opName = `PUSHBYTES${opCode}`;
+
         if (!this.contextRef.checkUseGas(OPCODE_GAS)) {
           throw errors.ERR_GAS_INSUFFICIENT;
         }
       } else {
         this.engine.validateOp();
 
-        const price = gasPrice(this.engine, this.engine.getOpExec().name);
+        opName = this.engine.getOpExec().name;
+
+        const price = gasPrice(this.engine, opName);
         if (!this.contextRef.checkUseGas(price)) {
           throw errors.ERR_GAS_INSUFFICIENT;
         }
       }
+
+      const inspectionResult = await inspect({ opCode, opName, contractAddress });
+      if (!inspectionResult) {
+        return;
+      }
+
       switch (this.engine.getOpCode()) {
         case O.VERIFY:
           if (evaluationStackCount(this.engine) < 3) {
@@ -169,7 +185,7 @@ export class NeoVmService implements VmService {
           const code = this.getContract(address);
           const service = this.contextRef.newExecuteEngine(code);
           this.engine.getEvaluationStack().copyTo(service.getEngine().getEvaluationStack());
-          const result = service.invoke();
+          const result = await service.invoke({ inspect });
 
           if (result !== undefined) {
             pushData(this.engine, result);
