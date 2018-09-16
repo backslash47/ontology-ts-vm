@@ -9,7 +9,7 @@ import { opCat, opLeft, opRight, opSize, opSubStr } from './func/splice';
 import * as S from './func/stack';
 import * as V from './func/validate';
 import { ExecutionEngine } from './interfaces/engine';
-import * as O from './opcode';
+import * as O from './opCode';
 
 export interface OpExec {
   opCode: O.OpCode;

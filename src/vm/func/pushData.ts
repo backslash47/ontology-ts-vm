@@ -1,5 +1,5 @@
 import { ExecutionEngine } from '../interfaces/engine';
-import * as O from '../opcode';
+import * as O from '../opCode';
 import { pushData } from './common';
 
 export function opPushData(e: ExecutionEngine) {
