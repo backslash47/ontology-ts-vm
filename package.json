@@ -20,7 +20,7 @@
       "\\.(ts|tsx)$": "ts-jest"
     },
     "testEnvironment": "node",
-    "testRegex": "/test/.*\\.(ts|tsx|js)$",
+    "testRegex": "/test/.*\\.test\\.(ts|tsx|js)$",
     "moduleDirectories": [
       "<rootDir>/node_modules"
     ]

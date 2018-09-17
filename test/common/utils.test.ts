@@ -1,6 +1,6 @@
 import * as Long from 'long';
 
-import { bigIntFromBytes, bigIntToBytes } from '../src/common/utils';
+import { bigIntFromBytes, bigIntToBytes } from '../../src/common/utils';
 
 describe('Long encoding test', () => {
   test('Long encoding', async () => {
