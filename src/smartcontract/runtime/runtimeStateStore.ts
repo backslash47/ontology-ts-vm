@@ -45,7 +45,12 @@ export class RuntimeStateStore implements StateStore {
   find(prefix: number, key: Buffer): StateItem[] {
     try {
       const item = this.get(prefix, key);
-      return [item];
+
+      if (item !== undefined) {
+        return [item];
+      } else {
+        return [];
+      }
     } catch (e) {
       return [];
     }
