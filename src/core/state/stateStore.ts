@@ -16,7 +16,7 @@ export interface StateStore {
   /**
    * Get key from state store
    */
-  get(prefix: DataEntryPrefix, key: Buffer): StateItem;
+  get(prefix: DataEntryPrefix, key: Buffer): StateItem | undefined;
   /**
    * Delete key in store
    */
@@ -50,8 +50,8 @@ export interface StateItem {
 export function getStorageKey(address: Address, key: Buffer): Buffer {
   const buf = new ByteBuffer();
   buf.writeByte(ST_STORAGE);
-  buf.writeBytes(address.toArray());
-  buf.writeBytes(key);
+  buf.append(address.toArray());
+  buf.append(key);
   buf.flip();
   return new Buffer(buf.toBuffer());
 }

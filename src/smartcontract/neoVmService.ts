@@ -247,7 +247,7 @@ export class NeoVmService implements VmService {
    * @param address
    */
   getContract(address: Buffer): Buffer {
-    let item: StateItem;
+    let item: StateItem | undefined;
     try {
       item = this.stateStore.get(ST_CONTRACT, address);
     } catch (e) {

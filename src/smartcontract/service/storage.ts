@@ -142,8 +142,8 @@ export function getContext(engine: ExecutionEngine): StorageContext {
 
 export function getStorageKey(address: Address, key: Buffer): Buffer {
   const buf = new ByteBuffer();
-  buf.writeBytes(address.toArray());
-  buf.writeBytes(key);
+  buf.append(address.toArray());
+  buf.append(key);
   buf.flip();
   return new Buffer(buf.toBuffer());
 }

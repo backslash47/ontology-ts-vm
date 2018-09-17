@@ -21,13 +21,13 @@ export class RuntimeStateStore implements StateStore {
       return value;
     }
   }
-  get(prefix: number, key: Buffer): StateItem {
+  get(prefix: number, key: Buffer): StateItem | undefined {
     const k = buildWholeKey(prefix, key);
 
     const item = this.data.get(k);
 
     if (item === undefined) {
-      throw new Error('StackItem not found');
+      return undefined;
     }
 
     return {

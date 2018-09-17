@@ -28,9 +28,20 @@ export interface Payload {
   deserialize(r: Reader): void;
 }
 
-class RawSig {
+export class RawSig {
+  static deserialize(r: Reader): RawSig {
+    const invoke = r.readVarBytes();
+    const verify = r.readVarBytes();
+
+    return new RawSig(invoke, verify);
+  }
   private invoke: Buffer;
   private verify: Buffer;
+
+  constructor(invoke: Buffer, verify: Buffer) {
+    this.invoke = invoke;
+    this.verify = verify;
+  }
 
   getVerify() {
     return this.verify;
@@ -39,14 +50,6 @@ class RawSig {
   serialize(w: Writer) {
     w.writeVarBytes(this.invoke);
     w.writeVarBytes(this.verify);
-  }
-
-  deserialize(r: Reader) {
-    const invoke = r.readVarBytes();
-    const verify = r.readVarBytes();
-
-    this.invoke = invoke;
-    this.verify = verify;
   }
 }
 
@@ -106,6 +109,10 @@ export class Transaction implements Interop {
     return this.attributes;
   }
 
+  setSigs(sigs: RawSig[]) {
+    this.sigs = sigs;
+  }
+
   getSignatureAddresses(): Address[] {
     const addrs: Address[] = [];
 
@@ -144,8 +151,7 @@ export class Transaction implements Interop {
     }
 
     for (let i = 0; i < length; i++) {
-      const sig = new RawSig();
-      sig.deserialize(r);
+      const sig = RawSig.deserialize(r);
       this.sigs.push(sig);
     }
 
