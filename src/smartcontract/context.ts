@@ -23,6 +23,7 @@ export interface ContextRef {
 export interface InspectData {
   opCode: OpCode;
   opName: string;
+  instructionPointer: number;
 
   contractAddress: Address;
 }

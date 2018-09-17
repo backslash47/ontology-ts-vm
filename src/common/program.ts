@@ -49,6 +49,6 @@ export class ProgramBuilder {
 export function programFromPubKey(key: PublicKey): Buffer {
   const b = new ProgramBuilder();
   b.pushPubKey(key);
-  b.pushOpCode(CHECKSIG);
+  b.writeOpCode(CHECKSIG);
   return b.getProgram();
 }

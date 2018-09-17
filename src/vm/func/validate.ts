@@ -405,7 +405,7 @@ export function validatorReverse(e: ExecutionEngine) {
 
   const arrItem = peekStackItem(e);
 
-  if (!isArrayType(arrItem) || !isStructType(arrItem)) {
+  if (!isArrayType(arrItem) && !isStructType(arrItem)) {
     throw errors.ERR_NOT_SUPPORT_TYPE;
   }
 }

@@ -16,7 +16,7 @@ import { isArrayType } from '../vm/types/array';
 import { StackItem } from '../vm/types/stackItem';
 import { isStructType } from '../vm/types/struct';
 import { MAX_STACK_SIZE, OPCODE_GAS } from './consts';
-import { ContextRef, Inspect, InvokeOptions, VmService } from './context';
+import { ContextRef, InvokeOptions, VmService } from './context';
 import * as errors from './errors';
 import { gasPrice } from './gasCost';
 import { ServiceMap } from './serviceMap';
@@ -135,7 +135,8 @@ export class NeoVmService implements VmService {
         }
       }
 
-      const inspectionResult = await inspect({ opCode, opName, contractAddress });
+      const instructionPointer = this.engine.getContext().getInstructionPointer();
+      const inspectionResult = await inspect({ opCode, opName, contractAddress, instructionPointer });
       if (!inspectionResult) {
         return;
       }

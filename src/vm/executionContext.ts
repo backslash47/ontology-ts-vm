@@ -1,4 +1,3 @@
-import { OpCode } from './opCode';
 import { Reader } from './utils/reader';
 
 export class ExecutionContext {

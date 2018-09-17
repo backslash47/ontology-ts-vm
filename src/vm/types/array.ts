@@ -7,7 +7,7 @@ export class ArrayType implements StackItem {
   type: string;
   value: StackItem[];
 
-  constructor(value: StackItem[]) {
+  constructor(value: StackItem[] = []) {
     this.value = value;
     this.type = 'ArrayType';
   }
