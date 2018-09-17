@@ -108,6 +108,7 @@ export class NeoVmService implements VmService {
       if (this.engine.getContext().getInstructionPointer() >= this.engine.getContext().getCode().length) {
         break;
       }
+      const instructionPointer = this.engine.getContext().getInstructionPointer();
       this.engine.executeCode();
 
       if (this.engine.getContext().getInstructionPointer() < this.engine.getContext().getCode().length) {
@@ -135,7 +136,6 @@ export class NeoVmService implements VmService {
         }
       }
 
-      const instructionPointer = this.engine.getContext().getInstructionPointer();
       const inspectionResult = await inspect({ opCode, opName, contractAddress, instructionPointer });
       if (!inspectionResult) {
         return;
