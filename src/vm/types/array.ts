@@ -59,6 +59,13 @@ export class ArrayType implements StackItem {
   count() {
     return this.value.length;
   }
+
+  toString() {
+    const children = this.value.map((child) => child.toString());
+    const childrenString = children.join(', ');
+
+    return `Array([${childrenString}])`;
+  }
 }
 
 export function isArrayType(item: StackItem): item is ArrayType {

@@ -103,6 +103,13 @@ export class StructType implements StackItem {
 
     return new StructType(arr);
   }
+
+  toString() {
+    const children = this.value.map((child) => child.toString());
+    const childrenString = children.join(', ');
+
+    return `Struct([${childrenString}])`;
+  }
 }
 
 export function isStructType(item: StackItem): item is StructType {

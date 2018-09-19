@@ -59,6 +59,10 @@ export class ByteArrayType implements StackItem {
   isMapKey(): boolean {
     return true;
   }
+
+  toString() {
+    return `ByteArray(${this.value.toString('hex')})`;
+  }
 }
 
 export function isByteArrayType(item: StackItem): item is ByteArrayType {

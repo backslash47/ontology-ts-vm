@@ -1,7 +1,7 @@
 import 'babel-polyfill';
 import { ScEnvironment } from '../../src/scEnvironment';
 import { isIntegerType } from '../../src/vm/types/integer';
-import { loadContract } from '../utils';
+import { loadContract, opLogger } from '../utils';
 
 describe('Hello world test', () => {
   test('Hello', async () => {
@@ -28,7 +28,7 @@ describe('Hello world test', () => {
 
     // call wrong method
     const call = Buffer.concat([new Buffer('05576f726c6451c10548616c6c6f67', 'hex'), address]);
-    const { result, notifications } = await env.execute(call);
+    const { result, notifications } = await env.execute(call, { inspect: opLogger });
 
     expect(isIntegerType(result)).toBeTruthy();
     expect(result.getBoolean()).toBeFalsy();

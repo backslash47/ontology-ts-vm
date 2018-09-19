@@ -1,12 +1,12 @@
 import * as Long from 'long';
+import { bigIntToBytes } from '../../../src/common/utils';
 import { ArrayType } from '../../../src/vm/types/array';
 import { BooleanType } from '../../../src/vm/types/boolean';
-import { IntegerType } from '../../../src/vm/types/integer';
 import { ByteArrayType } from '../../../src/vm/types/byteArray';
-import { StructType } from '../../../src/vm/types/struct';
-import { MapType } from '../../../src/vm/types/map';
+import { IntegerType } from '../../../src/vm/types/integer';
 import { InteropType } from '../../../src/vm/types/interop';
-import { bigIntToBytes } from '../../../src/common/utils';
+import { MapType } from '../../../src/vm/types/map';
+import { StructType } from '../../../src/vm/types/struct';
 
 describe('StackItem test', () => {
   test('Test boolean equals', async () => {

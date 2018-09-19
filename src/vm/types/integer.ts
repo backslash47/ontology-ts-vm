@@ -62,6 +62,10 @@ export class IntegerType implements StackItem {
   isMapKey(): boolean {
     return true;
   }
+
+  toString(): string {
+    return `Integer(${this.value.toString()})`;
+  }
 }
 
 export function isIntegerType(item: StackItem): item is IntegerType {

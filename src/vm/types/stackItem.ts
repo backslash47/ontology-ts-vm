@@ -12,6 +12,7 @@ export interface StackItem {
   getStruct(): StackItem[];
   getMap(): Map<StackItem, StackItem>;
   isMapKey(): boolean;
+  toString(): string;
 }
 
 export function isStackItemType(item: any): item is StackItem {

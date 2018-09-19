@@ -79,6 +79,19 @@ export class MapType implements StackItem {
       }
     }
   }
+
+  toString() {
+    const children: string[] = [];
+
+    this.value.forEach((value, key) => {
+      const child = `${key.toString()}: ${value.toString()}`;
+      children.push(child);
+    });
+
+    const childrenString = children.join(', ');
+
+    return `Map({${childrenString}})`;
+  }
 }
 
 export function isMapType(item: StackItem): item is MapType {

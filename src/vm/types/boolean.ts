@@ -60,6 +60,10 @@ export class BooleanType implements StackItem {
   isMapKey(): boolean {
     return true;
   }
+
+  toString(): string {
+    return `Boolean(${String(this.value)})`;
+  }
 }
 
 export function isBooleanType(item: StackItem): item is BooleanType {

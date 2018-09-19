@@ -67,6 +67,10 @@ export class InteropType implements StackItem {
   isMapKey(): boolean {
     return false;
   }
+
+  toString() {
+    return `Interop(${this.value.toArray().toString('hex')})`;
+  }
 }
 
 export function isInteropType(item: StackItem): item is InteropType {
