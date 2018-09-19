@@ -136,7 +136,17 @@ export class NeoVmService implements VmService {
         }
       }
 
-      const inspectionResult = await inspect({ opCode, opName, contractAddress, instructionPointer });
+      const evaluationStack = this.getEngine().getEvaluationStack();
+      const altStack = this.getEngine().getAltStack();
+
+      const inspectionResult = await inspect({
+        opCode,
+        opName,
+        contractAddress,
+        instructionPointer,
+        evaluationStack,
+        altStack
+      });
       if (!inspectionResult) {
         return;
       }

@@ -13,3 +13,11 @@ export function opLogger(data: InspectData) {
   console.log(data.contractAddress.toArray().toString('hex') + ': ' + data.opName);
   return Promise.resolve(true);
 }
+
+export function strToHex(value: string) {
+  return new Buffer(value).toString('hex');
+}
+
+export function hexToStr(value: string) {
+  return new Buffer(value, 'hex').toString();
+}

@@ -1,10 +1,10 @@
 import 'babel-polyfill';
 import { programFromPubKey } from '../../src/common/program';
 import { RawSig, Transaction } from '../../src/core/transaction';
+import { PublicKey } from '../../src/crypto/publicKey';
 import { ScEnvironment } from '../../src/scEnvironment';
 import { isIntegerType } from '../../src/vm/types/integer';
-import { loadContract, opLogger } from '../utils';
-import { PublicKey } from '../../src/crypto/publicKey';
+import { loadContract, opLogger, strToHex } from '../utils';
 
 // tslint:disable:max-line-length
 describe('Python domain auction test', () => {
@@ -34,12 +34,9 @@ describe('Python domain auction test', () => {
 
     const { result, notifications } = await env.execute(call, { inspect: opLogger, tx });
 
-    console.log('result', result);
-    console.log('notifications', notifications);
-    // expect(isIntegerType(result)).toBeTruthy();
-    // expect(result.getBigInteger().toNumber()).toBe(7);
-    // expect(notifications).toHaveLength(1);
-    // expect(notifications[0].states).toHaveLength(1);
-    // expect(notifications[0].states[0]).toBe('07');
+    expect(isIntegerType(result)).toBeTruthy();
+    expect(result.getBoolean()).toBeTruthy();
+    expect(notifications).toHaveLength(1);
+    expect(notifications[0].states).toBe(strToHex('register succeed!'));
   });
 });
