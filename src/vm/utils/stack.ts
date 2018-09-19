@@ -80,6 +80,10 @@ export class Stack<T> {
     if (j >= this.store.length) {
       return;
     }
+
+    const temp = this.store[i];
+    this.store[i] = this.store[j];
+    this.store[j] = temp;
   }
 
   copyTo(stack: Stack<T>) {
