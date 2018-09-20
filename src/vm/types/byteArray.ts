@@ -61,7 +61,7 @@ export class ByteArrayType implements StackItem {
   }
 
   toString() {
-    return `ByteArray(${this.value.toString('hex')})`;
+    return `ByteArray(0x${this.value.toString('hex')})`;
   }
 }
 

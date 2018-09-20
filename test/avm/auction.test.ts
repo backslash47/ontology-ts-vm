@@ -5,6 +5,7 @@ import { PublicKey } from '../../src/crypto/publicKey';
 import { ScEnvironment } from '../../src/scEnvironment';
 import { isIntegerType } from '../../src/vm/types/integer';
 import { loadContract, opLogger, strToHex } from '../utils';
+import { invokeMethod } from '../utils/invokeBuilder';
 
 // tslint:disable:max-line-length
 describe('Python domain auction test', () => {
@@ -17,12 +18,10 @@ describe('Python domain auction test', () => {
     // WIF L2uwqpzc8b3KgARF5gRBNiErFu3uQi87KJnSVt4rXZkVyjS2deEt
     // PK 02ece713405b19bb1ffb9123bd0309b28c7fc2f1e499934b5957e68e46638da8db
 
-    // Address AW6oWNxj1fSxLfeoWmymLiDZT4tRdfgQd5 (963ed9649124717043b822c8a265056a5735269d)
-
-    // call Register with params 963ed9649124717043b822c8a265056a5735269d and example.com
-    const call = Buffer.concat([
-      new Buffer('0b6578616d706c652e636f6d149d2635576a0565a2c822b8437071249164d93e9652c108726567697374657267', 'hex'),
-      address
+    // Address AW6oWNxj1fSxLfeoWmymLiDZT4tRdfgQd5 (9d2635576a0565a2c822b8437071249164d93e96)
+    const call = invokeMethod(address, 'register', [
+      { type: 'String', value: '9d2635576a0565a2c822b8437071249164d93e96' },
+      { type: 'String', value: strToHex('example.com') }
     ]);
     const tx = new Transaction();
 

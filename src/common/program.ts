@@ -1,6 +1,8 @@
+import * as Long from 'long';
 import { PublicKey } from '../crypto/publicKey';
-import { CHECKSIG, OpCode, PUSHBYTES1, PUSHBYTES75, PUSHDATA1, PUSHDATA2, PUSHDATA4 } from '../vm/opCode';
+import * as O from '../vm/opCode';
 import { Writer } from '../vm/utils/writer';
+import { bigIntToBytes } from './utils';
 
 export class ProgramBuilder {
   w: Writer;
@@ -13,12 +15,20 @@ export class ProgramBuilder {
     this.pushBytes(key.serialize());
   }
 
-  writeOpCode(opCode: OpCode) {
+  writeOpCode(opCode: O.OpCode) {
     this.w.writeUint8(opCode);
+  }
+
+  writeByte(val: number) {
+    this.w.writeUint8(val);
   }
 
   writeBytes(b: Buffer) {
     this.w.writeBytes(b);
+  }
+
+  writeVarUInt(val: Long) {
+    this.w.writeVarUint(val);
   }
 
   pushBytes(data: Buffer) {
@@ -26,21 +36,39 @@ export class ProgramBuilder {
       throw new Error('push data error: data is nil');
     }
 
-    if (data.length <= PUSHBYTES75 + 1 - PUSHBYTES1) {
-      this.w.writeUint8(data.length + PUSHBYTES1 - 1);
+    if (data.length <= O.PUSHBYTES75 + 1 - O.PUSHBYTES1) {
+      this.w.writeUint8(data.length + O.PUSHBYTES1 - 1);
     } else if (data.length < 0x100) {
-      this.w.writeUint8(PUSHDATA1);
+      this.w.writeUint8(O.PUSHDATA1);
       this.w.writeUint8(data.length);
     } else if (data.length < 0x10000) {
-      this.w.writeUint8(PUSHDATA2);
+      this.w.writeUint8(O.PUSHDATA2);
       this.w.writeUint16(data.length);
     } else {
-      this.w.writeUint8(PUSHDATA4);
+      this.w.writeUint8(O.PUSHDATA4);
       this.w.writeUint32(data.length);
     }
     this.w.writeBytes(data);
+    console.log('mybuff', data.toString('hex'));
   }
 
+  pushNum(num: number) {
+    if (num === 0) {
+      return this.writeOpCode(O.PUSH0);
+    } else if (num <= 16) {
+      return this.writeOpCode(num - 1 + O.PUSH1);
+    }
+
+    return this.pushBytes(bigIntToBytes(Long.fromNumber(num)));
+  }
+
+  pushBool(param: boolean) {
+    if (param) {
+      this.writeOpCode(O.PUSHT);
+    } else {
+      this.writeOpCode(O.PUSHF);
+    }
+  }
   getProgram(): Buffer {
     return this.w.getBytes();
   }
@@ -49,6 +77,6 @@ export class ProgramBuilder {
 export function programFromPubKey(key: PublicKey): Buffer {
   const b = new ProgramBuilder();
   b.pushPubKey(key);
-  b.writeOpCode(CHECKSIG);
+  b.writeOpCode(O.CHECKSIG);
   return b.getProgram();
 }

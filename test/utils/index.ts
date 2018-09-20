@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
-import { InspectData } from '../src/smartcontract/context';
-import { OpCode } from '../src/vm/opCode';
+import { InspectData } from '../../src/smartcontract/context';
+import { OpCode } from '../../src/vm/opCode';
 
 export function loadContract(path: string) {
   const codeBuffer = readFileSync(path);
@@ -10,7 +10,7 @@ export function loadContract(path: string) {
 
 export function opLogger(data: InspectData) {
   // tslint:disable-next-line:no-console
-  console.log(data.contractAddress.toArray().toString('hex') + ': ' + data.opName);
+  console.log('' + data.contexts.length + ' ' + data.contractAddress.toArray().toString('hex') + ': ' + data.opName);
   return Promise.resolve(true);
 }
 

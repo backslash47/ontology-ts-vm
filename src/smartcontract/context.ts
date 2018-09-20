@@ -3,6 +3,7 @@ import { LedgerStore } from '../core/ledgerStore';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
 import { NotifyEventInfo } from '../event/notifyEvents';
+import { ExecutionContext } from '../vm/executionContext';
 import { ExecutionEngine, RandomAccessStack } from '../vm/interfaces/engine';
 import { OpCode } from '../vm/opCode';
 import { StackItem } from '../vm/types/stackItem';
@@ -28,6 +29,7 @@ export interface InspectData {
   contractAddress: Address;
   evaluationStack: RandomAccessStack;
   altStack: RandomAccessStack;
+  contexts: ExecutionContext[];
 }
 
 export type Inspect = (data: InspectData) => Promise<boolean>;

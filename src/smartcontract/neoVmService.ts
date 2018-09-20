@@ -145,7 +145,8 @@ export class NeoVmService implements VmService {
         contractAddress,
         instructionPointer,
         evaluationStack,
-        altStack
+        altStack,
+        contexts: this.getEngine().getContexts()
       });
       if (!inspectionResult) {
         return;

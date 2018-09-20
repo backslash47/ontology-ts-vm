@@ -4,9 +4,9 @@ import { isIntegerType } from '../../src/vm/types/integer';
 import { loadContract, opLogger, strToHex } from '../utils';
 import { invokeMethod } from '../utils/invokeBuilder';
 
-describe('Hello world test', () => {
+describe('Hello world Python test', () => {
   test('Hello', async () => {
-    const contract = loadContract('./test/avm/helloWorld.avm');
+    const contract = loadContract('./test/avm/helloWorld.py.avm');
 
     const env = new ScEnvironment();
     const address = env.deployContract(contract);
@@ -15,14 +15,13 @@ describe('Hello world test', () => {
     const { result, notifications } = await env.execute(call, { inspect: opLogger });
 
     expect(isIntegerType(result)).toBeTruthy();
-    expect(result.getBoolean()).toBeTruthy();
+    expect(result.getBigInteger().toNumber()).toBe(33);
     expect(notifications).toHaveLength(1);
-    expect(notifications[0].states).toHaveLength(1);
-    expect(notifications[0].states[0]).toBe(strToHex('World'));
+    expect(notifications[0].states).toBe(strToHex('World'));
   });
 
   test('No hello', async () => {
-    const contract = loadContract('./test/avm/helloWorld.avm');
+    const contract = loadContract('./test/avm/helloWorld.py.avm');
 
     const env = new ScEnvironment();
     const address = env.deployContract(contract);
