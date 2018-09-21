@@ -49,17 +49,18 @@ export class ProgramBuilder {
       this.w.writeUint32(data.length);
     }
     this.w.writeBytes(data);
-    console.log('mybuff', data.toString('hex'));
   }
 
   pushNum(num: number) {
-    if (num === 0) {
-      return this.writeOpCode(O.PUSH0);
-    } else if (num <= 16) {
-      return this.writeOpCode(num - 1 + O.PUSH1);
+    if (num === -1) {
+      this.writeOpCode(O.PUSHM1);
+    } else if (num === 0) {
+      this.writeOpCode(O.PUSH0);
+    } else if (num > 0 && num < 16) {
+      this.writeOpCode(num - 1 + O.PUSH1);
+    } else {
+      this.pushBytes(bigIntToBytes(Long.fromNumber(num)));
     }
-
-    return this.pushBytes(bigIntToBytes(Long.fromNumber(num)));
   }
 
   pushBool(param: boolean) {

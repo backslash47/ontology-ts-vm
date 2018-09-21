@@ -14,6 +14,47 @@ export interface Parameter {
   value: any;
 }
 
+export function invokeContract(contractHash: Buffer, parameters: Parameter[]) {
+  const builder: ProgramBuilder = new ProgramBuilder();
+
+  parameters.reverse().forEach(({ type, value }) => {
+    switch (type) {
+      case 'Boolean':
+        builder.pushBool(value);
+        break;
+
+      case 'Integer':
+        builder.pushNum(value);
+        break;
+
+      case 'String':
+        builder.pushBytes(new Buffer(value, 'hex'));
+        break;
+
+      case 'ByteArray':
+        builder.pushBytes(value);
+        break;
+
+      case 'Map':
+        const mapBytes = getMapBytes(value);
+        builder.pushBytes(mapBytes);
+        break;
+
+      case 'Struct':
+        const structBytes = getStructBytes(value);
+        builder.pushBytes(structBytes);
+        break;
+      default:
+        throw new Error('Unsupported param type: ' + type);
+    }
+  });
+
+  builder.writeOpCode(APPCALL);
+  builder.writeBytes(contractHash);
+
+  return builder.getProgram();
+}
+
 export function invokeMethod(contractHash: Buffer, method: string, parameters: Parameter[]) {
   const builder: ProgramBuilder = new ProgramBuilder();
 

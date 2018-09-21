@@ -1,6 +1,7 @@
 import { readFileSync } from 'fs';
+import { ScEnvironment } from '../../src/scEnvironment';
 import { InspectData } from '../../src/smartcontract/context';
-import { OpCode } from '../../src/vm/opCode';
+import { invokeContract, Parameter } from './invokeBuilder';
 
 export function loadContract(path: string) {
   const codeBuffer = readFileSync(path);
@@ -20,4 +21,12 @@ export function strToHex(value: string) {
 
 export function hexToStr(value: string) {
   return new Buffer(value, 'hex').toString();
+}
+
+export async function testAndBuild(contract: Buffer, params: Parameter[]) {
+  const env = new ScEnvironment();
+  const address = env.deployContract(contract);
+
+  const call = invokeContract(address, params);
+  return await env.execute(call, { inspect: opLogger });
 }
