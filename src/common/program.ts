@@ -32,9 +32,10 @@ export class ProgramBuilder {
   }
 
   pushBytes(data: Buffer) {
-    if (data.length === 0) {
-      throw new Error('push data error: data is nil');
-    }
+    // pushing empty buffer should not do any damage
+    // if (data.length === 0) {
+    //   throw new Error('push data error: data is nil');
+    // }
 
     if (data.length <= O.PUSHBYTES75 + 1 - O.PUSHBYTES1) {
       this.w.writeUint8(data.length + O.PUSHBYTES1 - 1);

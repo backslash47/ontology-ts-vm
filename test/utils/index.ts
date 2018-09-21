@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs';
 import { ScEnvironment } from '../../src/scEnvironment';
 import { InspectData } from '../../src/smartcontract/context';
-import { invokeContract, Parameter } from './invokeBuilder';
+import { invokeContract, invokeMethod, Parameter } from './invokeBuilder';
 
 export function loadContract(path: string) {
   const codeBuffer = readFileSync(path);
@@ -11,7 +11,7 @@ export function loadContract(path: string) {
 
 export function opLogger(data: InspectData) {
   // tslint:disable-next-line:no-console
-  console.log('' + data.contexts.length + ' ' + data.contractAddress.toArray().toString('hex') + ': ' + data.opName);
+  // console.log('' + data.contexts.length + ' ' + data.contractAddress.toArray().toString('hex') + ': ' + data.opName);
   return Promise.resolve(true);
 }
 
@@ -28,5 +28,13 @@ export async function testAndBuild(contract: Buffer, params: Parameter[]) {
   const address = env.deployContract(contract);
 
   const call = invokeContract(address, params);
+  return await env.execute(call, { inspect: opLogger });
+}
+
+export async function testAndBuildMethod(contract: Buffer, method: string, params: Parameter[]) {
+  const env = new ScEnvironment();
+  const address = env.deployContract(contract);
+
+  const call = invokeMethod(address, method, params);
   return await env.execute(call, { inspect: opLogger });
 }

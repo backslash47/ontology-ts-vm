@@ -35,9 +35,9 @@ describe('StackItem toString test', () => {
     const b = new ByteArrayType(new Buffer('01', 'hex'));
     const c = new ByteArrayType(new Buffer('01020304', 'hex'));
 
-    expect(a.toString()).toBe('ByteArray()');
-    expect(b.toString()).toBe('ByteArray(01)');
-    expect(c.toString()).toBe('ByteArray(01020304)');
+    expect(a.toString()).toBe('ByteArray(0x)');
+    expect(b.toString()).toBe('ByteArray(0x01)');
+    expect(c.toString()).toBe('ByteArray(0x01020304)');
   });
 
   test('Struct', async () => {
@@ -51,7 +51,7 @@ describe('StackItem toString test', () => {
     const a = new StructType([first, second, third, fourth, sixth]);
 
     expect(a.toString()).toBe(
-      'Struct([Boolean(true), Integer(9175052165852779861), ByteArray(01020304), Struct([]), Struct([Integer(10)])])'
+      'Struct([Boolean(true), Integer(9175052165852779861), ByteArray(0x01020304), Struct([]), Struct([Integer(10)])])'
     );
   });
 
@@ -66,7 +66,7 @@ describe('StackItem toString test', () => {
     const a = new ArrayType([first, second, third, fourth, sixth]);
 
     expect(a.toString()).toBe(
-      'Array([Boolean(true), Integer(9175052165852779861), ByteArray(01020304), Array([]), Array([Integer(10)])])'
+      'Array([Boolean(true), Integer(9175052165852779861), ByteArray(0x01020304), Array([]), Array([Integer(10)])])'
     );
   });
 
@@ -87,7 +87,7 @@ describe('StackItem toString test', () => {
     const a = new MapType(map);
 
     expect(a.toString()).toBe(
-      'Map({Boolean(true): Integer(9175052165852779861), ByteArray(01020304): Array([]), Integer(1): Array([Integer(10)])})'
+      'Map({Boolean(true): Integer(9175052165852779861), ByteArray(0x01020304): Array([]), Integer(1): Array([Integer(10)])})'
     );
   });
 
