@@ -74,7 +74,7 @@ export class StructType implements StackItem {
   }
 
   removeAt(index: number) {
-    this.value = this.value.slice(0, index - 1).concat(this.value.slice(index, this.value.length));
+    this.value.splice(index, 1);
   }
 
   count() {

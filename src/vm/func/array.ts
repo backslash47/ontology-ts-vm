@@ -7,6 +7,7 @@ import { isMapType, MapType } from '../types/map';
 import { StackItem } from '../types/stackItem';
 import { isStructType, StructType } from '../types/struct';
 import { popArray, popBigInt, popInt, popStackItem, push, pushData } from './common';
+import { isIntegerType } from '../types/integer';
 
 export function opArraySize(e: ExecutionEngine) {
   const item = popStackItem(e);
@@ -150,6 +151,12 @@ export function opRemove(e: ExecutionEngine) {
 
   if (isMapType(item)) {
     item.remove(index);
+  } else if (isArrayType(item) || isStructType(item)) {
+    if (!isIntegerType(index)) {
+      throw errors.ERR_BAD_TYPE;
+    }
+
+    item.removeAt(index.getBigInteger().toNumber());
   } else {
     throw errors.ERR_BAD_TYPE;
   }

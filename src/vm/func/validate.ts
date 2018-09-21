@@ -14,6 +14,7 @@ import {
   peekNStackItem,
   peekStackItem
 } from './common';
+import { isIntegerType } from '../types/integer';
 
 export function validateCount1(e: ExecutionEngine) {
   logStackTrace(e, 1, '[validateCount1]');
@@ -395,7 +396,7 @@ export function validateAppend(e: ExecutionEngine) {
 
   const arrItem = peekNStackItem(1, e);
 
-  if (!isArrayType(arrItem) || !isStructType(arrItem)) {
+  if (!isArrayType(arrItem) && !isStructType(arrItem)) {
     throw errors.ERR_NOT_SUPPORT_TYPE;
   }
 }
@@ -427,7 +428,11 @@ export function validatorRemove(e: ExecutionEngine) {
     throw errors.ERR_BAD_VALUE;
   }
 
-  if (!isMapType(item)) {
+  if (isArrayType(item) || isStructType(item)) {
+    if (!isIntegerType(value)) {
+      throw errors.ERR_BAD_TYPE;
+    }
+  } else if (!isMapType(item)) {
     throw errors.ERR_REMOVE_NOT_SUPPORT;
   }
 }
