@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import { isByteArrayType } from '../../src/vm/types/byteArray';
-import { loadContract, deployAndInvoke } from '../utils';
+import { deployAndInvoke, loadContract } from '../utils';
 
 describe('Concat test', () => {
   test('test Concat1', async () => {

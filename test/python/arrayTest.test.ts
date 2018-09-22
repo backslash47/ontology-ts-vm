@@ -3,7 +3,7 @@ import { isArrayType } from '../../src/vm/types/array';
 import { isBooleanType } from '../../src/vm/types/boolean';
 import { isByteArrayType } from '../../src/vm/types/byteArray';
 import { isIntegerType } from '../../src/vm/types/integer';
-import { loadContract, deployAndInvoke } from '../utils';
+import { deployAndInvoke, loadContract } from '../utils';
 
 describe('ArrayTest test', () => {
   test('testList0', async () => {

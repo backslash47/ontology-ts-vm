@@ -1,6 +1,6 @@
 import 'babel-polyfill';
 import { isIntegerType } from '../../src/vm/types/integer';
-import { loadContract, deployAndInvoke } from '../utils';
+import { deployAndInvoke, loadContract } from '../utils';
 
 describe('AddTest test', () => {
   test('AddTest', async () => {
