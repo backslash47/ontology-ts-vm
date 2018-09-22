@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import { ScEnvironment } from '../../src/scEnvironment';
 import { isIntegerType } from '../../src/vm/types/integer';
 import { loadContract, opLogger } from '../utils';
-import { invokeMethod } from '../utils/invokeBuilder';
+import { invokeContract } from '../utils/invokeBuilder';
 
 describe('Arith test', () => {
   test('Add', async () => {
@@ -11,7 +11,7 @@ describe('Arith test', () => {
     const env = new ScEnvironment();
     const address = env.deployContract(contract);
 
-    const call = invokeMethod(address, 'Add', [{ type: 'Integer', value: 3 }, { type: 'Integer', value: 4 }]);
+    const call = invokeContract(address, 'Add', [3, 4]);
     const { result, notifications } = await env.execute(call, { inspect: opLogger });
 
     expect(isIntegerType(result)).toBeTruthy();

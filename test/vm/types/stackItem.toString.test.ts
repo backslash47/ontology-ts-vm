@@ -1,5 +1,4 @@
 import * as Long from 'long';
-import { bigIntToBytes } from '../../../src/common/utils';
 import { ArrayType } from '../../../src/vm/types/array';
 import { BooleanType } from '../../../src/vm/types/boolean';
 import { ByteArrayType } from '../../../src/vm/types/byteArray';

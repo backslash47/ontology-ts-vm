@@ -3,11 +3,11 @@ import * as errors from '../errors';
 import { ExecutionEngine } from '../interfaces/engine';
 import { ArrayType, isArrayType } from '../types/array';
 import { BooleanType } from '../types/boolean';
+import { isIntegerType } from '../types/integer';
 import { isMapType, MapType } from '../types/map';
 import { StackItem } from '../types/stackItem';
 import { isStructType, StructType } from '../types/struct';
 import { popArray, popBigInt, popInt, popStackItem, push, pushData } from './common';
-import { isIntegerType } from '../types/integer';
 
 export function opArraySize(e: ExecutionEngine) {
   const item = popStackItem(e);

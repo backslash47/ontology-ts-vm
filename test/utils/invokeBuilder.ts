@@ -4,50 +4,12 @@ import { APPCALL, PACK } from '../../src/vm/opCode';
 import { ByteArrayType } from '../../src/vm/types/byteArray';
 import { IntegerType } from '../../src/vm/types/integer';
 import { MapType } from '../../src/vm/types/map';
-import { StructType } from '../../src/vm/types/struct';
 import { Writer } from '../../src/vm/utils/writer';
 
-export type ParameterType = 'Boolean' | 'Integer' | 'Long' | 'ByteArray' | 'Struct' | 'Map' | 'String';
-
-export interface Parameter {
-  type: ParameterType;
-  value: any;
-}
-
-export function invokeContract(contractHash: Buffer, parameters: Parameter[]) {
+export function invokeContract(contractHash: Buffer, ...parameters: any[]) {
   const builder: ProgramBuilder = new ProgramBuilder();
 
-  parameters.reverse().forEach(({ type, value }) => {
-    switch (type) {
-      case 'Boolean':
-        builder.pushBool(value);
-        break;
-
-      case 'Integer':
-        builder.pushNum(value);
-        break;
-
-      case 'String':
-        builder.pushBytes(new Buffer(value, 'hex'));
-        break;
-
-      case 'ByteArray':
-        builder.pushBytes(value);
-        break;
-
-      case 'Map':
-        const mapBytes = getMapBytes(value);
-        builder.pushBytes(mapBytes);
-        break;
-
-      case 'Struct':
-        const structBytes = getStructBytes(value);
-        builder.pushBytes(structBytes);
-        break;
-      default:
-        throw new Error('Unsupported param type: ' + type);
-    }
-  });
+  parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
 
   builder.writeOpCode(APPCALL);
   builder.writeBytes(contractHash);
@@ -55,74 +17,33 @@ export function invokeContract(contractHash: Buffer, parameters: Parameter[]) {
   return builder.getProgram();
 }
 
-export function invokeMethod(contractHash: Buffer, method: string, parameters: Parameter[]) {
-  const builder: ProgramBuilder = new ProgramBuilder();
+function pushParam(parameter: any, builder: ProgramBuilder) {
+  if (typeof parameter === 'number') {
+    builder.pushNum(parameter);
+  } else if (typeof parameter === 'string') {
+    builder.pushBytes(new Buffer(parameter));
+  } else if (typeof parameter === 'boolean') {
+    builder.pushBool(parameter);
+  } else if (parameter instanceof Buffer) {
+    builder.pushBytes(parameter);
+  } else if (parameter instanceof Map) {
+    const mapBytes = getMapBytes(parameter);
+    builder.pushBytes(mapBytes);
+  } else if (Array.isArray(parameter)) {
+    pushStruct(parameter, builder);
+  } else {
+    throw new Error('Unsupported param type');
+  }
+}
 
-  parameters.reverse().forEach(({ type, value }) => {
-    switch (type) {
-      case 'Boolean':
-        builder.pushBool(value);
-        break;
-
-      case 'Integer':
-        builder.pushNum(value);
-        break;
-
-      case 'String':
-        builder.pushBytes(new Buffer(value, 'hex'));
-        break;
-
-      case 'ByteArray':
-        builder.pushBytes(value);
-        break;
-
-      case 'Map':
-        const mapBytes = getMapBytes(value);
-        builder.pushBytes(mapBytes);
-        break;
-
-      case 'Struct':
-        const structBytes = getStructBytes(value);
-        builder.pushBytes(structBytes);
-        break;
-      default:
-        throw new Error('Unsupported param type: ' + type);
-    }
-  });
+function pushStruct(parameters: any[], builder: ProgramBuilder) {
+  parameters.reverse().forEach((parameter) => pushParam(parameter, builder));
 
   builder.pushNum(parameters.length);
   builder.writeOpCode(PACK);
-  builder.pushBytes(new Buffer(method));
-
-  builder.writeOpCode(APPCALL);
-  builder.writeBytes(contractHash);
-
-  return builder.getProgram();
 }
 
-function getStructBytes(val: any[]) {
-  const writer = new Writer();
-
-  writer.writeUint8(StructType.id);
-  writer.writeUint8(val.length);
-
-  for (const v of val) {
-    if (typeof v === 'string') {
-      // consider as hex string
-      writer.writeUint8(ByteArrayType.id);
-      writer.writeBytes(new Buffer(v, 'hex'));
-    } else if (typeof v === 'number') {
-      writer.writeUint8(ByteArrayType.id);
-      writer.writeVarUint(Long.fromNumber(v));
-    } else {
-      throw new Error('Invalid params');
-    }
-  }
-
-  return writer.getBytes();
-}
-
-function getMapBytes(val: Map<string, Parameter>) {
+function getMapBytes(val: Map<string, any>) {
   const writer = new Writer();
 
   writer.writeUint8(MapType.id);

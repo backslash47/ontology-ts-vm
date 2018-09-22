@@ -5,7 +5,7 @@ import { PublicKey } from '../../src/crypto/publicKey';
 import { ScEnvironment } from '../../src/scEnvironment';
 import { isIntegerType } from '../../src/vm/types/integer';
 import { loadContract, opLogger, strToHex } from '../utils';
-import { invokeMethod } from '../utils/invokeBuilder';
+import { invokeContract } from '../utils/invokeBuilder';
 
 // tslint:disable:max-line-length
 describe('Python domain auction test', () => {
@@ -19,9 +19,9 @@ describe('Python domain auction test', () => {
     // PK 02ece713405b19bb1ffb9123bd0309b28c7fc2f1e499934b5957e68e46638da8db
 
     // Address AW6oWNxj1fSxLfeoWmymLiDZT4tRdfgQd5 (9d2635576a0565a2c822b8437071249164d93e96)
-    const call = invokeMethod(address, 'register', [
-      { type: 'String', value: '9d2635576a0565a2c822b8437071249164d93e96' },
-      { type: 'String', value: strToHex('example.com') }
+    const call = invokeContract(address, 'register', [
+      new Buffer('9d2635576a0565a2c822b8437071249164d93e96', 'hex'),
+      'example.com'
     ]);
     const tx = new Transaction();
 

@@ -2,7 +2,7 @@ import 'babel-polyfill';
 import { ScEnvironment } from '../../src/scEnvironment';
 import { isIntegerType } from '../../src/vm/types/integer';
 import { loadContract, opLogger, strToHex } from '../utils';
-import { invokeMethod } from '../utils/invokeBuilder';
+import { invokeContract } from '../utils/invokeBuilder';
 
 describe('Hello world Python test', () => {
   test('Hello', async () => {
@@ -11,7 +11,7 @@ describe('Hello world Python test', () => {
     const env = new ScEnvironment();
     const address = env.deployContract(contract);
 
-    const call = invokeMethod(address, 'Hello', [{ type: 'String', value: strToHex('World') }]);
+    const call = invokeContract(address, 'Hello', ['World']);
     const { result, notifications } = await env.execute(call, { inspect: opLogger });
 
     expect(isIntegerType(result)).toBeTruthy();
@@ -27,7 +27,7 @@ describe('Hello world Python test', () => {
     const address = env.deployContract(contract);
 
     // call wrong method
-    const call = invokeMethod(address, 'Hallo', [{ type: 'String', value: strToHex('World') }]);
+    const call = invokeContract(address, 'Hallo', ['World']);
     const { result, notifications } = await env.execute(call, { inspect: opLogger });
 
     expect(isIntegerType(result)).toBeTruthy();
