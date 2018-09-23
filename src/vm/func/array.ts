@@ -161,3 +161,16 @@ export function opRemove(e: ExecutionEngine) {
     throw errors.ERR_BAD_TYPE;
   }
 }
+
+export function opHasKey(e: ExecutionEngine) {
+  const index = popStackItem(e);
+  const item = popStackItem(e);
+
+  if (isMapType(item)) {
+    pushData(e, item.tryGetValue(index) !== undefined);
+  } else if (isArrayType(item) || isStructType(item)) {
+    pushData(e, item.contains(index));
+  } else {
+    throw errors.ERR_BAD_TYPE;
+  }
+}

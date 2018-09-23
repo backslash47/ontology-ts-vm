@@ -359,9 +359,9 @@ export function validatorSetItem(e: ExecutionEngine) {
     }
     if (!key.isMapKey()) {
       throw errors.ERR_NOT_MAP_KEY;
-    } else {
-      throw errors.ERR_NOT_SUPPORT_TYPE;
     }
+  } else {
+    throw errors.ERR_NOT_SUPPORT_TYPE;
   }
 }
 
@@ -434,6 +434,26 @@ export function validatorRemove(e: ExecutionEngine) {
     }
   } else if (!isMapType(item)) {
     throw errors.ERR_REMOVE_NOT_SUPPORT;
+  }
+}
+
+export function validatorHasKey(e: ExecutionEngine) {
+  const value = peekNStackItem(0, e);
+  if (value === undefined) {
+    throw errors.ERR_BAD_VALUE;
+  }
+
+  const item = peekNStackItem(1, e);
+  if (item === undefined) {
+    throw errors.ERR_BAD_VALUE;
+  }
+
+  if (isMapType(item)) {
+    if (!value.isMapKey()) {
+      throw errors.ERR_NOT_MAP_KEY;
+    }
+  } else if (!isArrayType(item) && !isStructType(item)) {
+    throw errors.ERR_BAD_VALUE;
   }
 }
 

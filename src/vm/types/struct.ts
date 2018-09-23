@@ -81,6 +81,16 @@ export class StructType implements StackItem {
     return this.value.length;
   }
 
+  contains(item: StackItem) {
+    for (const val of this.value) {
+      if (val.equals(item)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   clone() {
     return this.cloneInternal(0);
   }

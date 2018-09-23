@@ -60,6 +60,16 @@ export class ArrayType implements StackItem {
     return this.value.length;
   }
 
+  contains(item: StackItem) {
+    for (const val of this.value) {
+      if (val.equals(item)) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   toString() {
     const children = this.value.map((child) => child.toString());
     const childrenString = children.join(', ');
