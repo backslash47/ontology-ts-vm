@@ -1,7 +1,5 @@
 import 'babel-polyfill';
 import { isBooleanType } from '../../src/vm/types/boolean';
-import { isByteArrayType } from '../../src/vm/types/byteArray';
-import { isIntegerType } from '../../src/vm/types/integer';
 import { deployAndInvoke, loadContract } from '../utils';
 
 describe('CompareIn test', () => {
