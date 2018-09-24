@@ -169,7 +169,10 @@ export function opHasKey(e: ExecutionEngine) {
   if (isMapType(item)) {
     pushData(e, item.tryGetValue(index) !== undefined);
   } else if (isArrayType(item) || isStructType(item)) {
-    pushData(e, item.contains(index));
+    // todo: this implements HASKEY the same way as NEOVM in C# and Go, but it is against the logic
+    pushData(e, index.getBigInteger().toNumber() < item.count());
+    // correct implementation
+    // pushData(e, item.contains(index));
   } else {
     throw errors.ERR_BAD_TYPE;
   }

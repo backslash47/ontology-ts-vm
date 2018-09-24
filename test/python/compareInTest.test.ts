@@ -18,11 +18,11 @@ describe('CompareIn test', () => {
 
     response = await deployAndInvoke(contract, 3);
     expect(isBooleanType(response.result)).toBeTruthy();
-    expect(response.result.getBoolean()).toBeFalsy();
+    expect(response.result.getBoolean()).toBeTruthy();
 
     response = await deployAndInvoke(contract, 4);
     expect(isBooleanType(response.result)).toBeTruthy();
-    expect(response.result.getBoolean()).toBeTruthy();
+    expect(response.result.getBoolean()).toBeFalsy();
 
     response = await deployAndInvoke(contract, 5);
     expect(isBooleanType(response.result)).toBeTruthy();
@@ -30,7 +30,7 @@ describe('CompareIn test', () => {
 
     response = await deployAndInvoke(contract, 6);
     expect(isBooleanType(response.result)).toBeTruthy();
-    expect(response.result.getBoolean()).toBeFalsy();
+    expect(response.result.getBoolean()).toBeTruthy();
 
     response = await deployAndInvoke(contract, 7);
     expect(isBooleanType(response.result)).toBeTruthy();
