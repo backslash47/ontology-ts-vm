@@ -10,7 +10,7 @@ export function opNop(e: ExecutionEngine) {
 export function opJmp(e: ExecutionEngine) {
   const context = e.getContext();
   const opCode = e.getOpCode();
-  let offset = context.getReader().readUInt16();
+  let offset = context.getReader().readInt16();
 
   offset = context.getInstructionPointer() + offset - 3;
 
