@@ -4,6 +4,7 @@ import { MAX_ARRAY_SIZE, MAX_BYTEARRAY_SIZE, MAX_INVOCATION_STACK_SIZE, MAX_SIZE
 import * as errors from '../errors';
 import { ExecutionEngine } from '../interfaces/engine';
 import { isArrayType } from '../types/array';
+import { isIntegerType } from '../types/integer';
 import { isMapType } from '../types/map';
 import { isStructType } from '../types/struct';
 import {
@@ -14,7 +15,6 @@ import {
   peekNStackItem,
   peekStackItem
 } from './common';
-import { isIntegerType } from '../types/integer';
 
 export function validateCount1(e: ExecutionEngine) {
   logStackTrace(e, 1, '[validateCount1]');
@@ -453,6 +453,28 @@ export function validatorHasKey(e: ExecutionEngine) {
       throw errors.ERR_NOT_MAP_KEY;
     }
   } else if (!isArrayType(item) && !isStructType(item)) {
+    throw errors.ERR_BAD_VALUE;
+  }
+}
+
+export function validatorKeys(e: ExecutionEngine) {
+  const item = peekNStackItem(0, e);
+  if (item === undefined) {
+    throw errors.ERR_BAD_VALUE;
+  }
+
+  if (!isMapType(item)) {
+    throw errors.ERR_BAD_VALUE;
+  }
+}
+
+export function validatorValues(e: ExecutionEngine) {
+  const item = peekNStackItem(0, e);
+  if (item === undefined) {
+    throw errors.ERR_BAD_VALUE;
+  }
+
+  if (!isMapType(item) && !isArrayType(item) && !isStructType(item)) {
     throw errors.ERR_BAD_VALUE;
   }
 }

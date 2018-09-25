@@ -177,3 +177,37 @@ export function opHasKey(e: ExecutionEngine) {
     throw errors.ERR_BAD_TYPE;
   }
 }
+
+export function opKeys(e: ExecutionEngine) {
+  const item = popStackItem(e);
+
+  if (isMapType(item)) {
+    const keys = Array.from(item.getMap().keys());
+    pushData(e, new ArrayType(keys));
+  } else {
+    throw errors.ERR_BAD_TYPE;
+  }
+}
+
+export function opValues(e: ExecutionEngine) {
+  const item = popStackItem(e);
+
+  if (isMapType(item)) {
+    const values = Array.from(item.getMap().values());
+    pushData(e, new ArrayType(values));
+  } else if (isArrayType(item)) {
+    const array = item.getArray();
+
+    const cloned = array.map((it) => {
+      if (isStructType(it)) {
+        return it.clone();
+      } else {
+        return it;
+      }
+    });
+
+    pushData(e, new ArrayType(cloned));
+  } else {
+    throw errors.ERR_BAD_TYPE;
+  }
+}

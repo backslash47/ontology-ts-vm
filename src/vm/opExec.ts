@@ -153,6 +153,8 @@ export const OpExecList: Map<O.OpCode, OpExec> = new Map([
   [O.REVERSE, { opCode: O.REVERSE, name: 'REVERSE', exec: A.opReverse, validator: V.validatorReverse }],
   [O.REMOVE, { opCode: O.REMOVE, name: 'REMOVE', exec: A.opRemove, validator: V.validatorRemove }],
   [O.HASKEY, { opCode: O.HASKEY, name: 'HASKEY', exec: A.opHasKey, validator: V.validatorHasKey }],
+  [O.KEYS, { opCode: O.KEYS, name: 'KEYS', exec: A.opKeys, validator: V.validatorKeys }],
+  [O.VALUES, { opCode: O.VALUES, name: 'VALUES', exec: A.opValues, validator: V.validatorValues }],
 
   // Exceptions
   [O.THROW, { opCode: O.THROW, name: 'THROW', exec: opThrow }],
