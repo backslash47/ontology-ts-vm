@@ -1,7 +1,6 @@
 import * as Long from 'long';
 import { Address } from '../../common/address';
 import { PublicKey } from '../../crypto/publicKey';
-import { EVENT_LOG, pushSmartCodeEvent } from '../../event/logEvents';
 import { MAX_BYTEARRAY_SIZE } from '../../vm/consts';
 import { popByteArray, popStackItem, pushData } from '../../vm/func/common';
 import { ExecutionEngine } from '../../vm/interfaces/engine';
@@ -86,13 +85,8 @@ export function runtimeLog(service: VmService, engine: ExecutionEngine) {
     throw new Error('[RuntimeNotify] No context present');
   }
 
-  const txHash = service.getTx().getHash();
-
-  pushSmartCodeEvent(txHash, Long.ZERO, EVENT_LOG, {
-    txHash,
-    contractAddress: context.contractAddress,
-    message: item.toString()
-  });
+  // tslint:disable-next-line:no-console
+  console.log(`Log: ${item.toString()}`);
 }
 
 export function runtimeGetTrigger(service: VmService, engine: ExecutionEngine) {
