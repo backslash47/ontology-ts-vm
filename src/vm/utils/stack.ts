@@ -73,17 +73,18 @@ export class Stack<T> {
   }
 
   swap(i: number, j: number) {
-    if (i >= this.store.length) {
+    const length = this.store.length;
+    if (i >= length) {
       return;
     }
 
-    if (j >= this.store.length) {
+    if (j >= length) {
       return;
     }
 
-    const temp = this.store[i];
-    this.store[i] = this.store[j];
-    this.store[j] = temp;
+    const temp = this.store[length - i - 1];
+    this.store[length - i - 1] = this.store[length - j - 1];
+    this.store[length - j - 1] = temp;
   }
 
   copyTo(stack: Stack<T>) {
