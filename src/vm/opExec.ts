@@ -96,7 +96,7 @@ export const OpExecList: Map<O.OpCode, OpExec> = new Map([
   [O.RIGHT, { opCode: O.RIGHT, name: 'RIGHT', exec: opRight, validator: V.validateRight }],
   [O.SIZE, { opCode: O.SIZE, name: 'SIZE', exec: opSize, validator: V.validateCount1 }],
 
-  // Bitwiase logic
+  // Bitwise logic
   [O.INVERT, { opCode: O.INVERT, name: 'INVERT', exec: opInvert, validator: V.validateCount1 }],
   [O.AND, { opCode: O.AND, name: 'AND', exec: AR.opBigIntZip, validator: V.validateCount2 }],
   [O.OR, { opCode: O.OR, name: 'OR', exec: AR.opBigIntZip, validator: V.validateCount2 }],
