@@ -287,18 +287,30 @@ export function count(e: ExecutionEngine): number {
 
 export function hash(b: Buffer, op: O.OpCode): Buffer {
   let sh: Hash;
+  let rp: Hash;
 
   switch (op) {
     case O.SHA1:
       sh = createHash('sha1');
-      break;
+      sh.update(b);
+      return sh.digest();
     case O.SHA256:
       sh = createHash('sha256');
-      break;
+      sh.update(b);
+      return sh.digest();
+    case O.HASH160:
+      sh = createHash('sha256');
+      rp = createHash('ripemd160');
+      sh.update(b);
+      rp.update(sh.digest());
+      return rp.digest();
+    case O.HASH256:
+      sh = createHash('sha256');
+      rp = createHash('sha256');
+      sh.update(b);
+      rp.update(sh.digest());
+      return rp.digest();
     default:
       throw errors.ERR_NOT_SUPPORT_OPCODE;
   }
-
-  sh.update(b);
-  return sh.digest();
 }
