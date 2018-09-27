@@ -103,8 +103,8 @@ export class PublicKey extends Key {
    * @param signature Hex encoded signature
    */
   verifyEcDSASignature(hash: Buffer, signature: Buffer): boolean {
-    const r = signature.slice(0, 64);
-    const s = signature.slice(64, 64);
+    const r = signature.slice(0, 32);
+    const s = signature.slice(32, 64);
 
     const ec = new elliptic.ec(this.parameters.curve.preset);
     return ec.verify(hash, { r, s }, this.key, 'hex');

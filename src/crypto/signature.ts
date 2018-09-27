@@ -33,12 +33,16 @@ export class Signature {
       throw new Error('Invalid params.');
     }
 
-    const r = new Reader(data);
-    const scheme = r.readByte();
-    const sigScheme = SignatureScheme.fromHex(scheme);
-    const value = r.readBytes(r.length() - r.position());
-    const sig = new Signature(sigScheme, value);
-    return sig;
+    if (data.length === 64) {
+      const sigScheme = SignatureScheme.ECDSAwithSHA256;
+      return new Signature(sigScheme, data);
+    } else {
+      const r = new Reader(data);
+      const scheme = r.readByte();
+      const sigScheme = SignatureScheme.fromHex(scheme);
+      const value = r.readBytes(r.length() - r.position());
+      return new Signature(sigScheme, value);
+    }
   }
 
   algorithm: SignatureScheme;
