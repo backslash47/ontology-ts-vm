@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import * as bigInt from 'big-integer';
 import { bigIntToBytes } from '../../../src/common/utils';
 import { ArrayType } from '../../../src/vm/types/array';
 import { BooleanType } from '../../../src/vm/types/boolean';
@@ -31,9 +31,9 @@ describe('StackItem test', () => {
     expect(a.equals(b)).toBeFalsy();
     expect(a.equals(a)).toBeTruthy();
 
-    const i = new IntegerType(Long.ZERO);
-    const j = new IntegerType(Long.ZERO);
-    const k = new IntegerType(Long.ONE);
+    const i = new IntegerType(bigInt.zero);
+    const j = new IntegerType(bigInt.zero);
+    const k = new IntegerType(bigInt.one);
 
     const m1 = new ArrayType([i, j, k]);
     const m2 = new ArrayType([i, j, k]);
@@ -43,11 +43,11 @@ describe('StackItem test', () => {
   });
 
   test('Test integer equals', async () => {
-    const i = new IntegerType(Long.ZERO);
-    const j = new IntegerType(Long.ZERO);
+    const i = new IntegerType(bigInt.zero);
+    const j = new IntegerType(bigInt.zero);
 
     expect(i.equals(j)).toBeTruthy();
-    const k = new IntegerType(Long.fromInt(100000));
+    const k = new IntegerType(bigInt(100000));
     expect(i.equals(k)).toBeFalsy();
   });
 
@@ -68,9 +68,9 @@ describe('StackItem test', () => {
     expect(a.equals(b)).toBeTruthy();
     expect(b.equals(a)).toBeTruthy();
 
-    const i = new IntegerType(Long.ZERO);
-    const j = new IntegerType(Long.ZERO);
-    const k = new IntegerType(Long.ONE);
+    const i = new IntegerType(bigInt.zero);
+    const j = new IntegerType(bigInt.zero);
+    const k = new IntegerType(bigInt.one);
 
     const m1 = new StructType([i, j, k]);
     const m2 = new StructType([i, j, k]);
@@ -86,8 +86,8 @@ describe('StackItem test', () => {
     expect(a.equals(b)).toBeFalsy();
     expect(a.equals(a)).toBeTruthy();
 
-    const k1 = new IntegerType(Long.ZERO);
-    const k2 = new IntegerType(Long.ZERO);
+    const k1 = new IntegerType(bigInt.zero);
+    const k2 = new IntegerType(bigInt.zero);
 
     const v1 = new ByteArrayType(new Buffer('abcde'));
     const v2 = new ByteArrayType(new Buffer(['a', 'b', 'c', 'd', 'e'].join('')));
@@ -108,9 +108,9 @@ describe('StackItem test', () => {
 
   test('Test cmp', async () => {
     const a = new BooleanType(false);
-    const b = new IntegerType(Long.ZERO);
+    const b = new IntegerType(bigInt.zero);
     const c = new BooleanType(true);
-    const d = new BooleanType(Long.ONE);
+    const d = new IntegerType(bigInt.one);
 
     expect(a.equals(b)).toBeFalsy();
     expect(c.equals(d)).toBeTruthy();
@@ -118,11 +118,11 @@ describe('StackItem test', () => {
     const arr = new ArrayType();
     const stt = new StructType();
     expect(arr.equals(stt)).toBeFalsy();
-    arr.add(new IntegerType(Long.ZERO));
-    stt.add(new IntegerType(Long.ZERO));
+    arr.add(new IntegerType(bigInt.zero));
+    stt.add(new IntegerType(bigInt.zero));
     expect(arr.equals(stt)).toBeFalsy();
 
-    const ba = new ByteArrayType(bigIntToBytes(Long.ZERO));
+    const ba = new ByteArrayType(bigIntToBytes(bigInt.zero));
     expect(ba.equals(b)).toBeTruthy();
 
     const k = new ByteArrayType();

@@ -1,39 +1,95 @@
-import * as Long from 'long';
+import * as bigInt from 'big-integer';
 
 // tslint:disable:no-bitwise
 
-export function bigIntFromBytes(bytes: Buffer): Long {
-  let data = Array.from(bytes.subarray(0));
-  const b = data[data.length - 1];
+export function bigIntToBytes(data: bigInt.BigInteger) {
+  let bs = data.toArray(256).value;
 
-  if (b >> 7 === 1) {
-    data = data.concat(Array(8 - data.length).fill(255));
+  if (data.isZero()) {
+    return new Buffer('');
   }
-  return Long.fromBytesLE(data);
-}
 
-export function bigIntToBytes(value: Long) {
-  let data = value.toBytesLE();
-  const negData = value.neg().toBytesLE();
-  let stop;
-  if (value.isNegative()) {
-    stop = 255;
+  const b = bs[0];
+
+  if (data.isNegative()) {
+    for (let i = 0; i < bs.length; i++) {
+      bs[i] = 255 ^ bs[i];
+    }
+
+    const temp = bigInt.fromArray(bs, 256);
+    const temp2 = temp.add(bigInt.one);
+    bs = temp2.toArray(256).value;
+
+    bs = bs.reverse();
+
+    if (b >> 7 === 1) {
+      bs = bs.concat(255);
+    }
   } else {
-    stop = 0;
-  }
-  let b = stop;
-  let pos = 0;
-  for (let i = data.length - 1; i >= 0; i--) {
-    if (data[i] !== stop) {
-      b = value.isNegative() ? negData[i] : data[i];
-      pos = i + 1;
-      break;
+    bs = bs.reverse();
+    if (b >> 7 === 1) {
+      bs = bs.concat(0);
     }
   }
-  data = data.slice(0, pos);
 
-  if (b >> 7 === 1) {
-    data.push(value.isNegative() ? 255 : 0);
-  }
-  return new Buffer(data);
+  return new Buffer(bs);
 }
+
+export function bigIntFromBytes(ba: Buffer): bigInt.BigInteger {
+  const l = ba.length;
+  if (l === 0) {
+    return bigInt.zero;
+  }
+
+  let bytes = Array.from(ba.subarray(0));
+  bytes = bytes.reverse();
+
+  if (bytes[0] >> 7 === 1) {
+    for (let i = 0; i < bytes.length; i++) {
+      bytes[i] = 255 ^ bytes[i];
+    }
+
+    const temp = bigInt.fromArray(bytes, 256);
+    const temp2 = temp.add(bigInt(1));
+    bytes = temp2.toArray(256).value;
+    return bigInt.fromArray(bytes, 256).negate();
+  }
+
+  return bigInt.fromArray(bytes, 256);
+}
+
+// export function bigIntFromBytes(bytes: Buffer): bigInt.BigInteger {
+//   let data = Array.from(bytes.subarray(0));
+//   const b = data[data.length - 1];
+
+//   if (b >> 7 === 1) {
+//     data = data.concat(Array(8 - data.length).fill(255));
+//   }
+//   return bigInt.fromArray(data);
+// }
+
+// export function bigIntToBytes(value: bigInt.BigInteger) {
+//   let data = value.toBytesLE();
+//   const negData = value.negate().toBytesLE();
+//   let stop;
+//   if (value.isNegative()) {
+//     stop = 255;
+//   } else {
+//     stop = 0;
+//   }
+//   let b = stop;
+//   let pos = 0;
+//   for (let i = data.length - 1; i >= 0; i--) {
+//     if (data[i] !== stop) {
+//       b = value.isNegative() ? negData[i] : data[i];
+//       pos = i + 1;
+//       break;
+//     }
+//   }
+//   data = data.slice(0, pos);
+
+//   if (b >> 7 === 1) {
+//     data.push(value.isNegative() ? 255 : 0);
+//   }
+//   return new Buffer(data);
+// }

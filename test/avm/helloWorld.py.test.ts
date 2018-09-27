@@ -15,7 +15,7 @@ describe('Hello world Python test', () => {
     const { result, notifications } = await env.execute(call, { inspect: opLogger });
 
     expect(isIntegerType(result)).toBeTruthy();
-    expect(result.getBigInteger().toNumber()).toBe(33);
+    expect(result.getBigInteger().toJSNumber()).toBe(33);
     expect(notifications).toHaveLength(1);
     expect(notifications[0].states).toBe(strToHex('World'));
   });

@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import * as bigInt from 'big-integer';
 import { Address } from '../../common/address';
 import { PublicKey } from '../../crypto/publicKey';
 import { MAX_BYTEARRAY_SIZE } from '../../vm/consts';
@@ -143,7 +143,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
       w.writeUint8(ArrayType.id);
 
       const a = item.getArray();
-      w.writeVarUint(Long.fromNumber(a.length));
+      w.writeVarUint(a.length);
 
       for (const v of a) {
         serializeStackItemInternal(v, w);
@@ -156,7 +156,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
       w.writeUint8(StructType.id);
 
       const a = item.getStruct();
-      w.writeVarUint(Long.fromNumber(a.length));
+      w.writeVarUint(a.length);
 
       for (const v of a) {
         serializeStackItemInternal(v, w);
@@ -172,7 +172,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
 
     try {
       w.writeUint8(MapType.id);
-      w.writeVarUint(Long.fromNumber(mp.size));
+      w.writeVarUint(mp.size);
 
       for (const [k] of mp.entries()) {
         if (isByteArrayType(k) || isIntegerType(k)) {
@@ -225,7 +225,7 @@ function deserializeStackItemInternal(r: Reader): StackItem {
     } else if (t === IntegerType.id) {
       try {
         const b = r.readInt64();
-        return new IntegerType(b);
+        return new IntegerType(bigInt(b.toString()));
       } catch (e) {
         throw new Error(`Deserialize stackItems Integer error: ${e}`);
       }

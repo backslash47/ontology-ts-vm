@@ -8,7 +8,7 @@ describe('Method test', () => {
 
     const response = await deployAndInvoke(contract, 1, 2);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(7);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(7);
   });
 
   test('test method 2', async () => {
@@ -16,7 +16,7 @@ describe('Method test', () => {
 
     const response = await deployAndInvoke(contract);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(26);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(26);
   });
 
   test('test method 3', async () => {
@@ -24,7 +24,7 @@ describe('Method test', () => {
 
     const response = await deployAndInvoke(contract);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(13);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(13);
   });
 
   test('test method 4', async () => {
@@ -32,7 +32,7 @@ describe('Method test', () => {
 
     const response = await deployAndInvoke(contract);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(63);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(63);
   });
 
   test('test method 5', async () => {
@@ -40,7 +40,7 @@ describe('Method test', () => {
 
     const response = await deployAndInvoke(contract);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(15);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(15);
   });
 
   test('test method 6', async () => {
@@ -48,22 +48,22 @@ describe('Method test', () => {
 
     let response = await deployAndInvoke(contract, 4);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(3);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(3);
 
     response = await deployAndInvoke(contract, 5);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(5);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(5);
 
     response = await deployAndInvoke(contract, 6);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(8);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(8);
 
     response = await deployAndInvoke(contract, 7);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(13);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(13);
 
     response = await deployAndInvoke(contract, 11);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(89);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(89);
   });
 });

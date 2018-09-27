@@ -1,4 +1,3 @@
-import * as Long from 'long';
 import * as errors from '../errors';
 import { ExecutionEngine } from '../interfaces/engine';
 import { ArrayType, isArrayType } from '../types/array';
@@ -7,7 +6,7 @@ import { isIntegerType } from '../types/integer';
 import { isMapType, MapType } from '../types/map';
 import { StackItem } from '../types/stackItem';
 import { isStructType, StructType } from '../types/struct';
-import { popArray, popBigInt, popInt, popStackItem, push, pushData } from './common';
+import { popArray, popInt, popStackItem, push, pushData } from './common';
 
 export function opArraySize(e: ExecutionEngine) {
   const item = popStackItem(e);
@@ -47,7 +46,7 @@ export function opPickItem(e: ExecutionEngine) {
 
   if (isArrayType(items)) {
     const bi = index.getBigInteger();
-    const i = bi.toNumber();
+    const i = bi.toJSNumber();
     const a = items.getArray();
     if (i < 0 || i >= a.length) {
       throw errors.ERR_OVER_MAX_ARRAY_SIZE;
@@ -55,7 +54,7 @@ export function opPickItem(e: ExecutionEngine) {
     pushData(e, a[i]);
   } else if (isStructType(items)) {
     const bi = index.getBigInteger();
-    const i = bi.toNumber();
+    const i = bi.toJSNumber();
     const s = items.getStruct();
     if (i < 0 || i >= s.length) {
       throw errors.ERR_OVER_MAX_ARRAY_SIZE;
@@ -83,7 +82,7 @@ export function opSetItem(e: ExecutionEngine) {
   } else if (isArrayType(item)) {
     const items = item.getArray();
     const bi = index.getBigInteger();
-    const i = bi.toNumber();
+    const i = bi.toJSNumber();
     if (i < 0 || i >= items.length) {
       throw errors.ERR_OVER_MAX_ARRAY_SIZE;
     }
@@ -91,7 +90,7 @@ export function opSetItem(e: ExecutionEngine) {
   } else if (isStructType(item)) {
     const items = item.getStruct();
     const bi = index.getBigInteger();
-    const i = bi.toNumber();
+    const i = bi.toJSNumber();
     if (i < 0 || i >= items.length) {
       throw errors.ERR_OVER_MAX_ARRAY_SIZE;
     }
@@ -112,9 +111,9 @@ export function opNewArray(e: ExecutionEngine) {
 }
 
 export function opNewStruct(e: ExecutionEngine) {
-  const count = popBigInt(e);
+  const count = popInt(e);
   const items: StackItem[] = [];
-  for (let i = 0; count.comp(Long.fromNumber(i)) > 0; i++) {
+  for (let i = 0; i < count; i++) {
     items.push(new BooleanType(false));
   }
   pushData(e, new StructType(items));
@@ -156,7 +155,7 @@ export function opRemove(e: ExecutionEngine) {
       throw errors.ERR_BAD_TYPE;
     }
 
-    item.removeAt(index.getBigInteger().toNumber());
+    item.removeAt(index.getBigInteger().toJSNumber());
   } else {
     throw errors.ERR_BAD_TYPE;
   }
@@ -170,7 +169,7 @@ export function opHasKey(e: ExecutionEngine) {
     pushData(e, item.tryGetValue(index) !== undefined);
   } else if (isArrayType(item) || isStructType(item)) {
     // todo: this implements HASKEY the same way as NEOVM in C# and Go, but it is against the logic
-    pushData(e, index.getBigInteger().toNumber() < item.count());
+    pushData(e, index.getBigInteger().toJSNumber() < item.count());
     // correct implementation
     // pushData(e, item.contains(index));
   } else {

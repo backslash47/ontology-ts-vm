@@ -1,3 +1,4 @@
+import * as bigInt from 'big-integer';
 import * as Long from 'long';
 import { PublicKey } from '../crypto/publicKey';
 import * as O from '../vm/opCode';
@@ -60,7 +61,7 @@ export class ProgramBuilder {
     } else if (num > 0 && num < 16) {
       this.writeOpCode(num - 1 + O.PUSH1);
     } else {
-      this.pushBytes(bigIntToBytes(Long.fromNumber(num)));
+      this.pushBytes(bigIntToBytes(bigInt(num)));
     }
   }
 

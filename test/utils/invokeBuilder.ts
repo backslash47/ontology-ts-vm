@@ -1,10 +1,5 @@
-import * as Long from 'long';
 import { ProgramBuilder } from '../../src/common/program';
 import { APPCALL, PACK } from '../../src/vm/opCode';
-import { ByteArrayType } from '../../src/vm/types/byteArray';
-import { IntegerType } from '../../src/vm/types/integer';
-import { MapType } from '../../src/vm/types/map';
-import { Writer } from '../../src/vm/utils/writer';
 
 export function invokeContract(contractHash: Buffer, ...parameters: any[]) {
   const builder: ProgramBuilder = new ProgramBuilder();
@@ -27,8 +22,8 @@ function pushParam(parameter: any, builder: ProgramBuilder) {
   } else if (parameter instanceof Buffer) {
     builder.pushBytes(parameter);
   } else if (parameter instanceof Map) {
-    const mapBytes = getMapBytes(parameter);
-    builder.pushBytes(mapBytes);
+    // const mapBytes = getMapBytes(parameter);
+    // builder.pushBytes(mapBytes);
   } else if (Array.isArray(parameter)) {
     pushStruct(parameter, builder);
   } else {
@@ -43,32 +38,32 @@ function pushStruct(parameters: any[], builder: ProgramBuilder) {
   builder.writeOpCode(PACK);
 }
 
-function getMapBytes(val: Map<string, any>) {
-  const writer = new Writer();
+// function getMapBytes(val: Map<string, any>) {
+//   const writer = new Writer();
 
-  writer.writeUint8(MapType.id);
-  writer.writeUint8(val.size);
+//   writer.writeUint8(MapType.id);
+//   writer.writeUint8(val.size);
 
-  for (const k of val.keys()) {
-    writer.writeUint8(ByteArrayType.id);
-    writer.writeString(k);
+//   for (const k of val.keys()) {
+//     writer.writeUint8(ByteArrayType.id);
+//     writer.writeString(k);
 
-    const p = val.get(k);
-    if (p && p.type === 'ByteArray') {
-      writer.writeUint8(ByteArrayType.id);
-      writer.writeBytes(p.value);
-    } else if (p && p.type === 'String') {
-      writer.writeUint8(ByteArrayType.id);
-      writer.writeString(p.value);
-    } else if (p && p.type === 'Integer') {
-      writer.writeUint8(IntegerType.id);
-      writer.writeVarUint(Long.fromNumber(p.value));
-    } else if (p && p.type === 'Long') {
-      writer.writeUint8(IntegerType.id);
-      writer.writeVarUint(p.value);
-    } else {
-      throw new Error('Invalid params');
-    }
-  }
-  return writer.getBytes();
-}
+//     const p = val.get(k);
+//     if (p && p.type === 'ByteArray') {
+//       writer.writeUint8(ByteArrayType.id);
+//       writer.writeBytes(p.value);
+//     } else if (p && p.type === 'String') {
+//       writer.writeUint8(ByteArrayType.id);
+//       writer.writeString(p.value);
+//     } else if (p && p.type === 'Integer') {
+//       writer.writeUint8(IntegerType.id);
+//       writer.writeVarUint(Long.fromNumber(p.value));
+//     } else if (p && p.type === 'Long') {
+//       writer.writeUint8(IntegerType.id);
+//       writer.writeVarUint(p.value);
+//     } else {
+//       throw new Error('Invalid params');
+//     }
+//   }
+//   return writer.getBytes();
+// }

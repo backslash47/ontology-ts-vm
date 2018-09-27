@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import * as bigInt from 'big-integer';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
@@ -16,7 +16,7 @@ export class MapType implements StackItem {
     return this === other;
   }
 
-  getBigInteger(): Long {
+  getBigInteger(): bigInt.BigInteger {
     throw new Error('Not support map to integer');
   }
 

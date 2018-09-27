@@ -38,7 +38,7 @@ export function validatorBlockTransaction(engine: ExecutionEngine) {
 
     const item = peekNBigInt(1, engine);
 
-    const index = item.toNumber();
+    const index = item.toJSNumber();
     if (index < 0) {
       throw new Error('[validatorBlockTransaction] Pop index invalid!');
     }

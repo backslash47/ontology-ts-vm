@@ -1,5 +1,5 @@
+import * as bigInt from 'big-integer';
 import { createHash, Hash } from 'crypto';
-import * as Long from 'long';
 import * as errors from '../errors';
 import { ExecutionEngine } from '../interfaces/engine';
 import { Interop, isInterop } from '../interfaces/interop';
@@ -17,14 +17,14 @@ export function pushData(e: ExecutionEngine, data: any) {
   e.getEvaluationStack().push(newStackItem(data));
 }
 
-export function popBigInt(e: ExecutionEngine): Long {
+export function popBigInt(e: ExecutionEngine): bigInt.BigInteger {
   const x = popStackItem(e);
   return x.getBigInteger();
 }
 
 export function popInt(e: ExecutionEngine): number {
   const x = popBigInt(e);
-  return x.toNumber();
+  return x.toJSNumber();
 }
 
 export function popBoolean(e: ExecutionEngine): boolean {
@@ -69,10 +69,10 @@ export function peekInteropInterface(e: ExecutionEngine): Interop {
 
 export function peekInt(e: ExecutionEngine): number {
   const x = peekBigInteger(e);
-  return x.toNumber();
+  return x.toJSNumber();
 }
 
-export function peekBigInteger(e: ExecutionEngine): Long {
+export function peekBigInteger(e: ExecutionEngine): bigInt.BigInteger {
   const x = peekStackItem(e);
   return x.getBigInteger();
 }
@@ -87,7 +87,7 @@ export function peekStackItem(e: ExecutionEngine): StackItem {
   return item;
 }
 
-export function peekNBigInt(i: number, e: ExecutionEngine): Long {
+export function peekNBigInt(i: number, e: ExecutionEngine): bigInt.BigInteger {
   const x = peekNStackItem(i, e);
   return x.getBigInteger();
 }
@@ -107,21 +107,21 @@ export function peekNStackItem(i: number, e: ExecutionEngine): StackItem {
   return item;
 }
 
-export function bigIntOp(bi: Long, op: O.OpCode): Long {
-  let nb: Long;
+export function bigIntOp(bi: bigInt.BigInteger, op: O.OpCode): bigInt.BigInteger {
+  let nb: bigInt.BigInteger;
 
   switch (op) {
     case O.INC:
-      nb = bi.add(Long.ONE);
+      nb = bi.add(bigInt.one);
       break;
     case O.DEC:
-      nb = bi.sub(Long.ONE);
+      nb = bi.subtract(bigInt.one);
       break;
     case O.NEGATE:
-      nb = bi.neg();
+      nb = bi.negate();
       break;
     case O.ABS:
-      nb = bi.isPositive() ? bi : bi.neg();
+      nb = bi.abs();
       break;
     default:
       nb = bi;
@@ -129,8 +129,8 @@ export function bigIntOp(bi: Long, op: O.OpCode): Long {
   return nb;
 }
 
-export function bigIntZip(ints1: Long, ints2: Long, op: O.OpCode): Long {
-  let nb: Long;
+export function bigIntZip(ints1: bigInt.BigInteger, ints2: bigInt.BigInteger, op: O.OpCode): bigInt.BigInteger {
+  let nb: bigInt.BigInteger;
 
   switch (op) {
     case O.AND:
@@ -146,36 +146,28 @@ export function bigIntZip(ints1: Long, ints2: Long, op: O.OpCode): Long {
       nb = ints1.add(ints2);
       break;
     case O.SUB:
-      nb = ints1.sub(ints2);
+      nb = ints1.subtract(ints2);
       break;
     case O.MUL:
-      nb = ints1.mul(ints2);
+      nb = ints1.multiply(ints2);
       break;
     case O.DIV:
-      nb = ints1.div(ints2);
+      nb = ints1.divide(ints2);
       break;
     case O.MOD:
       nb = ints1.mod(ints2);
       break;
     case O.SHL:
-      nb = ints1.shl(ints2);
+      nb = ints1.shiftLeft(ints2.toJSNumber());
       break;
     case O.SHR:
-      nb = ints1.shr(ints2);
+      nb = ints1.shiftRight(ints2.toJSNumber());
       break;
     case O.MIN:
-      if (ints1.comp(ints2) <= 0) {
-        nb = ints1;
-      } else {
-        nb = ints2;
-      }
+      nb = bigInt.min(ints1, ints2);
       break;
     case O.MAX:
-      if (ints1.comp(ints2) <= 0) {
-        nb = ints2;
-      } else {
-        nb = ints1;
-      }
+      nb = bigInt.max(ints1, ints2);
       break;
     default:
       throw errors.ERR_NOT_SUPPORT_OPCODE;
@@ -183,12 +175,12 @@ export function bigIntZip(ints1: Long, ints2: Long, op: O.OpCode): Long {
   return nb;
 }
 
-export function bigIntComp(bigint: Long, op: O.OpCode): boolean {
+export function bigIntComp(bigint: bigInt.BigInteger, op: O.OpCode): boolean {
   let nb: boolean;
 
   switch (op) {
     case O.NZ:
-      nb = bigint.comp(Long.ZERO) !== 0;
+      nb = !bigint.isZero();
       break;
     default:
       throw errors.ERR_NOT_SUPPORT_OPCODE;
@@ -196,27 +188,27 @@ export function bigIntComp(bigint: Long, op: O.OpCode): boolean {
   return nb;
 }
 
-export function bigIntMultiComp(ints1: Long, ints2: Long, op: O.OpCode): boolean {
+export function bigIntMultiComp(ints1: bigInt.BigInteger, ints2: bigInt.BigInteger, op: O.OpCode): boolean {
   let nb: boolean;
 
   switch (op) {
     case O.NUMEQUAL:
-      nb = ints1.comp(ints2) === 0;
+      nb = ints1.equals(ints2);
       break;
     case O.NUMNOTEQUAL:
-      nb = ints1.comp(ints2) !== 0;
+      nb = ints1.notEquals(ints2);
       break;
     case O.LT:
-      nb = ints1.comp(ints2) < 0;
+      nb = ints1.lesser(ints2);
       break;
     case O.GT:
-      nb = ints1.comp(ints2) > 0;
+      nb = ints1.greater(ints2);
       break;
     case O.LTE:
-      nb = ints1.comp(ints2) <= 0;
+      nb = ints1.lesserOrEquals(ints2);
       break;
     case O.GTE:
-      nb = ints1.comp(ints2) >= 0;
+      nb = ints1.greaterOrEquals(ints2);
       break;
     default:
       throw errors.ERR_NOT_SUPPORT_OPCODE;
@@ -239,7 +231,7 @@ export function boolZip(bi1: boolean, bi2: boolean, op: O.OpCode): boolean {
   return nb;
 }
 
-export function withInOp(int1: Long, int2: Long, int3: Long): boolean {
+export function withInOp(int1: bigInt.BigInteger, int2: bigInt.BigInteger, int3: bigInt.BigInteger): boolean {
   const b1 = bigIntMultiComp(int1, int2, O.GTE);
   const b2 = bigIntMultiComp(int1, int3, O.LT);
   return boolZip(b1, b2, O.BOOLAND);
@@ -249,8 +241,8 @@ export function newStackItem(data: any): StackItem {
   let stackItem: StackItem;
 
   if (typeof data === 'number') {
-    stackItem = new IntegerType(Long.fromNumber(data));
-  } else if (data instanceof Long) {
+    stackItem = new IntegerType(bigInt(data));
+  } else if (bigInt.isInstance(data)) {
     stackItem = new IntegerType(data);
   } else if (typeof data === 'boolean') {
     stackItem = new BooleanType(data);

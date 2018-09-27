@@ -1,10 +1,10 @@
-import * as Long from 'long';
+import { BigInteger } from 'big-integer';
 import { Interop } from '../interfaces/interop';
 
 export interface StackItem {
   type: string;
   equals(other: StackItem | undefined): boolean;
-  getBigInteger(): Long;
+  getBigInteger(): BigInteger;
   getBoolean(): boolean;
   getByteArray(): Buffer;
   getInterface(): Interop;

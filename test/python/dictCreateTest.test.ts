@@ -10,7 +10,7 @@ describe('Dict Create test', () => {
     const response = await deployAndInvoke(contract, 1);
     expect(isIntegerType(response.result)).toBeTruthy();
 
-    expect(response.result.getBigInteger().toNumber()).toBe(10);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(10);
   });
 
   test('test Dict Keys', async () => {
@@ -28,7 +28,7 @@ describe('Dict Create test', () => {
     const response = await deployAndInvoke(contract, 1);
     expect(isIntegerType(response.result)).toBeTruthy();
 
-    expect(response.result.getBigInteger().toNumber()).toBe(55);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(55);
   });
 
   test('test Dict HasKey', async () => {
@@ -37,6 +37,6 @@ describe('Dict Create test', () => {
     const response = await deployAndInvoke(contract, 1);
     expect(isIntegerType(response.result)).toBeTruthy();
 
-    expect(response.result.getBigInteger().toNumber()).toBe(22);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(22);
   });
 });

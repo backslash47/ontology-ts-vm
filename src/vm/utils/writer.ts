@@ -16,7 +16,11 @@ export class Writer {
     return buffer;
   }
 
-  writeVarUint(value: Long) {
+  writeVarUint(value: Long | number) {
+    if (typeof value === 'number') {
+      value = Long.fromNumber(value);
+    }
+
     if (value.lt(0xfd)) {
       this.writer.writeUint8(value.toNumber());
     } else if (value.lte(0xffff)) {
@@ -31,7 +35,7 @@ export class Writer {
     }
   }
   writeVarBytes(value: Buffer) {
-    this.writeVarUint(Long.fromNumber(value.length));
+    this.writeVarUint(value.length);
     this.writeBytes(value);
   }
   writeString(value: string) {

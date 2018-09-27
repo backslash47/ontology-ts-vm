@@ -1,3 +1,4 @@
+import * as bigInt from 'big-integer';
 import * as Long from 'long';
 import { Address } from '../common/address';
 import { Uint256 } from '../common/uint256';
@@ -13,7 +14,7 @@ export class Header implements Interop {
   private blockRoot: Uint256;
   private timestamp: number;
   private height: number;
-  private consensusData: Long;
+  private consensusData: bigInt.BigInteger;
   private consensusPayload: Buffer;
   private nextBookkeeper: Address;
 
@@ -63,7 +64,7 @@ export class Header implements Interop {
     this.serializeUnsigned(w);
 
     try {
-      w.writeVarUint(Long.fromNumber(this.bookkeepers.length));
+      w.writeVarUint(this.bookkeepers.length);
     } catch (e) {
       throw new Error('serialize sig pubkey length failed');
     }
@@ -73,7 +74,7 @@ export class Header implements Interop {
     }
 
     try {
-      w.writeVarUint(Long.fromNumber(this.sigData.length));
+      w.writeVarUint(this.sigData.length);
     } catch (e) {
       throw new Error('serialize sig pubkey length failed');
     }
@@ -99,7 +100,7 @@ export class Header implements Interop {
     w.writeBytes(this.blockRoot.toArray());
     w.writeUint32(this.timestamp);
     w.writeUint32(this.height);
-    w.writeUint64(this.consensusData);
+    w.writeUint64(Long.fromString(this.consensusData.toString()));
     w.writeVarBytes(this.consensusPayload);
     w.writeBytes(this.nextBookkeeper.toArray());
   }

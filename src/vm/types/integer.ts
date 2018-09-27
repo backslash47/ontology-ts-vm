@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import * as bigInt from 'big-integer';
 import { bigIntToBytes } from '../../common/utils';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
@@ -6,9 +6,9 @@ import { StackItem } from './stackItem';
 export class IntegerType implements StackItem {
   static id = 0x02;
   type: string;
-  value: Long;
+  value: bigInt.BigInteger;
 
-  constructor(value: Long) {
+  constructor(value: bigInt.BigInteger) {
     this.value = value;
     this.type = 'IntegerType';
   }
@@ -36,7 +36,7 @@ export class IntegerType implements StackItem {
   }
 
   getBoolean() {
-    return this.value.neq(Long.ZERO);
+    return this.value.neq(bigInt.zero);
   }
 
   getByteArray(): Buffer {

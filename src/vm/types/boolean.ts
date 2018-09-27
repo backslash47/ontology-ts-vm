@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import * as bigInt from 'big-integer';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
@@ -28,7 +28,7 @@ export class BooleanType implements StackItem {
   }
 
   getBigInteger() {
-    return this.value ? Long.ONE : Long.ZERO;
+    return this.value ? bigInt.one : bigInt.zero;
   }
 
   getBoolean() {

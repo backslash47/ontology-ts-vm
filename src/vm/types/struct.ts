@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import * as bigInt from 'big-integer';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
@@ -37,7 +37,7 @@ export class StructType implements StackItem {
     return true;
   }
 
-  getBigInteger(): Long {
+  getBigInteger(): bigInt.BigInteger {
     throw new Error('Not support struct to integer');
   }
 

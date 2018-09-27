@@ -15,7 +15,7 @@ describe('Arith test', () => {
     const { result, notifications } = await env.execute(call, { inspect: opLogger });
 
     expect(isIntegerType(result)).toBeTruthy();
-    expect(result.getBigInteger().toNumber()).toBe(7);
+    expect(result.getBigInteger().toJSNumber()).toBe(7);
     expect(notifications).toHaveLength(1);
     expect(notifications[0].states).toHaveLength(1);
     expect(notifications[0].states[0]).toBe('07');

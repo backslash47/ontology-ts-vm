@@ -24,7 +24,7 @@ export function blockChainGetHeader(service: VmService, engine: ExecutionEngine)
   const l = data.length;
   if (l <= 5) {
     const b = bigIntFromBytes(data);
-    const height = b.toNumber();
+    const height = b.toJSNumber();
     const hash = service.getStore().getBlockHash(height);
 
     try {
@@ -61,7 +61,7 @@ export function blockChainGetBlock(service: VmService, engine: ExecutionEngine) 
   const l = data.length;
   if (l <= 5) {
     const b = bigIntFromBytes(data);
-    const height = b.toNumber();
+    const height = b.toJSNumber();
 
     try {
       block = service.getStore().getBlockByHeight(height);

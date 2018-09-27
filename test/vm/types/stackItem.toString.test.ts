@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import * as bigInt from 'big-integer';
 import { ArrayType } from '../../../src/vm/types/array';
 import { BooleanType } from '../../../src/vm/types/boolean';
 import { ByteArrayType } from '../../../src/vm/types/byteArray';
@@ -20,9 +20,9 @@ describe('StackItem toString test', () => {
   });
 
   test('Integer', async () => {
-    const a = new IntegerType(Long.ONE);
-    const b = new IntegerType(Long.ZERO);
-    const c = new IntegerType(Long.fromString('9175052165852779861'));
+    const a = new IntegerType(bigInt.one);
+    const b = new IntegerType(bigInt.zero);
+    const c = new IntegerType(bigInt('9175052165852779861'));
 
     expect(a.toString()).toBe('Integer(1)');
     expect(b.toString()).toBe('Integer(0)');
@@ -41,10 +41,10 @@ describe('StackItem toString test', () => {
 
   test('Struct', async () => {
     const first = new BooleanType(true);
-    const second = new IntegerType(Long.fromString('9175052165852779861'));
+    const second = new IntegerType(bigInt('9175052165852779861'));
     const third = new ByteArrayType(new Buffer('01020304', 'hex'));
     const fourth = new StructType([]);
-    const fifth = new IntegerType(Long.fromString('10'));
+    const fifth = new IntegerType(bigInt('10'));
     const sixth = new StructType([fifth]);
 
     const a = new StructType([first, second, third, fourth, sixth]);
@@ -56,10 +56,10 @@ describe('StackItem toString test', () => {
 
   test('Array', async () => {
     const first = new BooleanType(true);
-    const second = new IntegerType(Long.fromString('9175052165852779861'));
+    const second = new IntegerType(bigInt('9175052165852779861'));
     const third = new ByteArrayType(new Buffer('01020304', 'hex'));
     const fourth = new ArrayType([]);
-    const fifth = new IntegerType(Long.fromString('10'));
+    const fifth = new IntegerType(bigInt('10'));
     const sixth = new ArrayType([fifth]);
 
     const a = new ArrayType([first, second, third, fourth, sixth]);
@@ -71,12 +71,12 @@ describe('StackItem toString test', () => {
 
   test('Map', async () => {
     const first = new BooleanType(true);
-    const second = new IntegerType(Long.fromString('9175052165852779861'));
+    const second = new IntegerType(bigInt('9175052165852779861'));
     const third = new ByteArrayType(new Buffer('01020304', 'hex'));
     const fourth = new ArrayType([]);
-    const fifth = new IntegerType(Long.fromString('10'));
+    const fifth = new IntegerType(bigInt('10'));
     const sixth = new ArrayType([fifth]);
-    const seventh = new IntegerType(Long.ONE);
+    const seventh = new IntegerType(bigInt.one);
 
     const map: Map<StackItem, StackItem> = new Map();
     map.set(first, second);

@@ -11,23 +11,23 @@ describe('ArrayTest test', () => {
 
     let response = await deployAndInvoke(contract, 0);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(1);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(1);
 
     response = await deployAndInvoke(contract, 1);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(6);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(6);
 
     response = await deployAndInvoke(contract, 2);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(3);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(3);
 
     response = await deployAndInvoke(contract, 4);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(8);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(8);
 
     response = await deployAndInvoke(contract, 8);
     expect(isIntegerType(response.result)).toBeTruthy();
-    expect(response.result.getBigInteger().toNumber()).toBe(9);
+    expect(response.result.getBigInteger().toJSNumber()).toBe(9);
   });
 
   test('testList1', async () => {
@@ -53,7 +53,7 @@ describe('ArrayTest test', () => {
     expect(isArrayType(response.result)).toBeTruthy();
     const res = response.result.getArray();
     expect(res).toHaveLength(3);
-    expect(res[0].getBigInteger().toNumber()).toBe(1);
+    expect(res[0].getBigInteger().toJSNumber()).toBe(1);
   });
 
   test('testList4', async () => {
@@ -63,7 +63,7 @@ describe('ArrayTest test', () => {
     expect(isArrayType(response.result)).toBeTruthy();
     const res = response.result.getArray();
     expect(res).toHaveLength(2);
-    expect(res[0].getBigInteger().toNumber()).toBe(6);
+    expect(res[0].getBigInteger().toJSNumber()).toBe(6);
   });
 
   test('testList5', async () => {
@@ -73,8 +73,8 @@ describe('ArrayTest test', () => {
     expect(isArrayType(response.result)).toBeTruthy();
     const res = response.result.getArray();
     expect(res).toHaveLength(3);
-    expect(res[0].getBigInteger().toNumber()).toBe(16);
-    expect(res[1].getBigInteger().toNumber()).toBe(3);
+    expect(res[0].getBigInteger().toJSNumber()).toBe(16);
+    expect(res[1].getBigInteger().toJSNumber()).toBe(3);
   });
 
   test('testList6', async () => {
@@ -92,6 +92,6 @@ describe('ArrayTest test', () => {
     expect(isArrayType(response.result)).toBeTruthy();
     const res = response.result.getArray();
     expect(res).toHaveLength(3);
-    expect(res[0].getBigInteger().toNumber()).toBe(3);
+    expect(res[0].getBigInteger().toJSNumber()).toBe(3);
   });
 });
