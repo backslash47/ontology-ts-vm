@@ -83,3 +83,13 @@ export function programFromPubKey(key: PublicKey): Buffer {
   b.writeOpCode(O.CHECKSIG);
   return b.getProgram();
 }
+
+export function programFromParams(sigs: Buffer[]) {
+  const b = new ProgramBuilder();
+
+  for (const s of sigs) {
+    b.pushBytes(s);
+  }
+
+  return b.getProgram();
+}

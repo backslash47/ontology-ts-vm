@@ -29,7 +29,7 @@ describe('Python domain auction test', () => {
       new Buffer('02ece713405b19bb1ffb9123bd0309b28c7fc2f1e499934b5957e68e46638da8db', 'hex')
     );
     const verify = programFromPubKey(publicKey);
-    tx.setSigs([new RawSig(new Buffer(''), verify)]);
+    tx.addSig(new RawSig(new Buffer(''), verify));
 
     const { result, notifications } = await env.execute(call, { inspect: opLogger, tx });
 

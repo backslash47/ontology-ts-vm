@@ -85,8 +85,7 @@ export function runtimeLog(service: VmService, engine: ExecutionEngine) {
     throw new Error('[RuntimeNotify] No context present');
   }
 
-  // tslint:disable-next-line:no-console
-  console.log(`Log: ${item.toString()}`);
+  service.addLog({ contractAddress: context.contractAddress, message: item.toString(), tx: service.getTx().getHash() });
 }
 
 export function runtimeGetTrigger(service: VmService, engine: ExecutionEngine) {

@@ -7,7 +7,7 @@ describe('Module Vars test', () => {
   test('test 1', async () => {
     const contract = loadContract('./test/python/compiled/moduleVariableTest1.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(8);
   });
@@ -15,7 +15,7 @@ describe('Module Vars test', () => {
   test('test 2', async () => {
     const contract = loadContract('./test/python/compiled/moduleVariableTest.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(1260);
   });
@@ -23,7 +23,7 @@ describe('Module Vars test', () => {
   test('test 3', async () => {
     const contract = loadContract('./test/python/compiled/moduleMethodTest1.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isBooleanType(response.result)).toBeTruthy();
     expect(response.result.getBoolean()).toBeTruthy();
   });
@@ -31,7 +31,7 @@ describe('Module Vars test', () => {
   test('test 4', async () => {
     const contract = loadContract('./test/python/compiled/moduleMethodTest2.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(3003);
   });

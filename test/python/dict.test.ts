@@ -9,7 +9,7 @@ describe('Dict test', () => {
   test('test Dict 1', async () => {
     const contract = loadContract('./test/python/compiled/dictTest1.avm');
 
-    const response = await deployAndInvoke(contract, 1);
+    const response = await deployAndInvoke({ contract }, 1);
     expect(isMapType(response.result)).toBeTruthy();
 
     if (isMapType(response.result)) {
@@ -32,7 +32,7 @@ describe('Dict test', () => {
   test('test Dict 2', async () => {
     const contract = loadContract('./test/python/compiled/dictTest2.avm');
 
-    const response = await deployAndInvoke(contract, 1);
+    const response = await deployAndInvoke({ contract }, 1);
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(7);
   });
@@ -40,7 +40,7 @@ describe('Dict test', () => {
   test('test Dict 3', async () => {
     const contract = loadContract('./test/python/compiled/dictTest3.avm');
 
-    const response = await deployAndInvoke(contract, 1);
+    const response = await deployAndInvoke({ contract }, 1);
     expect(isMapType(response.result)).toBeTruthy();
   });
 });

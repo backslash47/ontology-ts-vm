@@ -2,7 +2,7 @@ import { Address } from '../common/address';
 import { LedgerStore } from '../core/ledgerStore';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
-import { NotifyEventInfo } from '../event/notifyEvents';
+import { LogEventInfo, NotifyEventInfo } from '../event/notifyEvents';
 import { VMEngine } from '../vm/vmEngine';
 import { MAX_EXECUTE_ENGINE, VM_STEP_LIMIT } from './consts';
 import { Context, ContextRef, VmService } from './context';
@@ -26,12 +26,14 @@ export class SmartContract implements ContextRef {
   // height: number; // current block height - unused
   private tx: Transaction; // current transaction
   private notifications: NotifyEventInfo[]; // all execute smart contract event notify info
+  private logs: LogEventInfo[];
   private gas: Long;
   private execStep: number;
 
   constructor(config: SmartContractConfig) {
     this.contexts = [];
     this.notifications = [];
+    this.logs = [];
     this.execStep = 0;
 
     this.time = config.time;
@@ -44,6 +46,10 @@ export class SmartContract implements ContextRef {
 
   getNotifications() {
     return this.notifications;
+  }
+
+  getLogs() {
+    return this.logs;
   }
 
   // PushContext push current context to smart contract
@@ -89,6 +95,10 @@ export class SmartContract implements ContextRef {
   // PushNotifications push smart contract event info
   pushNotifications(notifications: NotifyEventInfo[]) {
     this.notifications.push(...notifications);
+  }
+
+  pushLogs(logs: LogEventInfo[]) {
+    this.logs.push(...logs);
   }
 
   checkExecStep(): boolean {

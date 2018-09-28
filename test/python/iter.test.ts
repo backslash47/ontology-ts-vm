@@ -8,7 +8,7 @@ describe('Iter test', () => {
   test('test while 1', async () => {
     const contract = loadContract('./test/python/compiled/whileTest1.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(6);
   });
@@ -16,7 +16,7 @@ describe('Iter test', () => {
   test('test while 2', async () => {
     const contract = loadContract('./test/python/compiled/whileTest2.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(6);
   });
@@ -24,7 +24,7 @@ describe('Iter test', () => {
   test('test while 3', async () => {
     const contract = loadContract('./test/python/compiled/whileTest.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(24);
   });
@@ -32,7 +32,7 @@ describe('Iter test', () => {
   test('test iter 1', async () => {
     const contract = loadContract('./test/python/compiled/iterTest.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(18);
   });
@@ -40,7 +40,7 @@ describe('Iter test', () => {
   test('test iter 2', async () => {
     const contract = loadContract('./test/python/compiled/iterTest2.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(8);
   });
@@ -48,7 +48,7 @@ describe('Iter test', () => {
   test('test iter 3', async () => {
     const contract = loadContract('./test/python/compiled/iterTest3.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(7);
   });
@@ -56,7 +56,7 @@ describe('Iter test', () => {
   test('test iter 4', async () => {
     const contract = loadContract('./test/python/compiled/iterTest4.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isByteArrayType(response.result)).toBeTruthy();
     expect(response.result.getByteArray().toString('binary')).toBe('abcdabcdabcd\x0c');
   });
@@ -64,7 +64,7 @@ describe('Iter test', () => {
   test('test iter 5', async () => {
     const contract = loadContract('./test/python/compiled/iterTest5.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(51);
   });
@@ -72,7 +72,7 @@ describe('Iter test', () => {
   test('test range 1', async () => {
     const contract = loadContract('./test/python/compiled/rangeTest.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isArrayType(response.result)).toBeTruthy();
     expect(response.result.getArray().length).toBe(20);
   });
@@ -80,7 +80,7 @@ describe('Iter test', () => {
   test('test range 2', async () => {
     const contract = loadContract('./test/python/compiled/iterTest6.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(10);
   });
@@ -88,7 +88,7 @@ describe('Iter test', () => {
   test('test range 3', async () => {
     const contract = loadContract('./test/python/compiled/iterTest7.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(12);
   });
@@ -96,7 +96,7 @@ describe('Iter test', () => {
   test('test range 4', async () => {
     const contract = loadContract('./test/python/compiled/iterTest8.avm');
 
-    const response = await deployAndInvoke(contract);
+    const response = await deployAndInvoke({ contract });
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBigInteger().toJSNumber()).toBe(6);
   });

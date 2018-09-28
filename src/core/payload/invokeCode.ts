@@ -5,6 +5,10 @@ import { StateValue } from '../state/stateStore';
 export class InvokeCode implements StateValue {
   private code: Buffer;
 
+  constructor(code: Buffer = new Buffer('')) {
+    this.code = code;
+  }
+
   serialize(w: Writer) {
     try {
       w.writeVarBytes(this.code);

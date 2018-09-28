@@ -53,7 +53,11 @@ export class Key {
    * @param algorithm Key type
    * @param parameters Parameters of the key type
    */
-  constructor(key: Buffer, algorithm?: KeyType, parameters?: KeyParameters) {
+  constructor(key: Buffer | string, algorithm?: KeyType, parameters?: KeyParameters) {
+    if (typeof key === 'string') {
+      key = new Buffer(key, 'hex');
+    }
+
     this.key = key;
 
     if (algorithm === undefined) {

@@ -7,15 +7,15 @@ describe('Verify Signature test', () => {
   test('test', async () => {
     const contract = loadContract('./test/python/compiled/verifySignatureTest.avm');
 
-    let response = await deployAndInvoke(contract, 1);
+    let response = await deployAndInvoke({ contract }, 1);
     expect(isBooleanType(response.result)).toBeTruthy();
     expect(response.result.getBoolean()).toBeTruthy();
 
-    response = await deployAndInvoke(contract, 2);
+    response = await deployAndInvoke({ contract }, 2);
     expect(isBooleanType(response.result)).toBeTruthy();
     expect(response.result.getBoolean()).toBeFalsy();
 
-    response = await deployAndInvoke(contract, 3);
+    response = await deployAndInvoke({ contract }, 3);
     expect(isIntegerType(response.result)).toBeTruthy();
     expect(response.result.getBoolean()).toBeFalsy();
   });

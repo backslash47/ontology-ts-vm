@@ -35,6 +35,14 @@ export class Address {
 
   private value: Buffer;
 
+  constructor(value: Buffer | string = '0000000000000000000000000000000000000000') {
+    if (typeof value === 'string') {
+      this.value = new Buffer(value, 'hex');
+    } else {
+      this.value = value;
+    }
+  }
+
   equals(other: Address): boolean {
     return this.value.equals(other.value);
   }

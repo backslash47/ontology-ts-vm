@@ -6,7 +6,7 @@ import { StateItem, StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
 import { PublicKey } from '../crypto/publicKey';
 import { Signature } from '../crypto/signature';
-import { NotifyEventInfo } from '../event/notifyEvents';
+import { LogEventInfo, NotifyEventInfo } from '../event/notifyEvents';
 import { MAX_BYTEARRAY_SIZE } from '../vm/consts';
 import { ExecutionContext } from '../vm/executionContext';
 import { evaluationStackCount, peekStackItem, popByteArray, pushData } from '../vm/func/common';
@@ -40,6 +40,7 @@ export class NeoVmService implements VmService {
   private contextRef: ContextRef;
 
   private notifications: NotifyEventInfo[];
+  private logs: LogEventInfo[];
   private code: Buffer;
   private tx: Transaction;
   private time: number;
@@ -56,6 +57,7 @@ export class NeoVmService implements VmService {
     // this.height = options.height;
     this.engine = options.engine;
     this.notifications = [];
+    this.logs = [];
   }
 
   getTx() {
@@ -84,6 +86,10 @@ export class NeoVmService implements VmService {
 
   getNotifications() {
     return this.notifications;
+  }
+
+  getLogs() {
+    return this.logs;
   }
 
   // Invoke a smart contract
@@ -215,6 +221,7 @@ export class NeoVmService implements VmService {
     }
     this.contextRef.popContext();
     this.contextRef.pushNotifications(this.notifications);
+    this.contextRef.pushLogs(this.logs);
     if (this.engine.getEvaluationStack().count() !== 0) {
       return this.engine.getEvaluationStack().peek(0);
     }
@@ -313,5 +320,9 @@ export class NeoVmService implements VmService {
 
   addNotification(event: NotifyEventInfo) {
     this.notifications.push(event);
+  }
+
+  addLog(event: LogEventInfo) {
+    this.logs.push(event);
   }
 }

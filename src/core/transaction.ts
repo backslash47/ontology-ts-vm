@@ -54,25 +54,33 @@ export class RawSig {
 }
 
 export class Transaction implements Interop {
-  private version: number;
-  private txType: TransactionType;
-  private nonce: number;
-  private gasPrice: Long;
-  private gasLimit: Long;
+  private version: number = 0;
+  private txType: TransactionType = Invoke;
+  private nonce: number = 0;
+  private gasPrice: Long = Long.fromNumber(500);
+  private gasLimit: Long = Long.fromNumber(30000);
   private payer: Address;
   private payload: Payload;
 
-  // private Attributes []*TxAttribute
-  // tslint:disable-next-line:max-line-length
-  private attributes: number; // this must be 0 now, Attribute Array length use VarUint encoding, so byte is enough for extension
-  private sigs: RawSig[];
+  private sigs: RawSig[] = [];
 
-  private raw: Buffer; // raw transaction data
+  private raw: Buffer | undefined; // raw transaction data
 
   private hash: Uint256;
-  // private signedAddr: Address[]; - unused, computed on the fly
 
-  private nonDirectConstracted: boolean; // used to check literal construction like `tx := &Transaction{...}`
+  constructor() {
+    this.version = 0;
+    this.txType = Invoke;
+    this.nonce = 0;
+    this.gasPrice = Long.fromNumber(500);
+    this.gasLimit = Long.fromNumber(30000);
+    this.payer = new Address('0000000000000000000000000000000000000000');
+    this.payload = new InvokeCode();
+
+    const sh = createHash('sha256');
+    sh.update(this.serializeUnsigned());
+    this.hash = Uint256.parseFromBytes(sh.digest());
+  }
 
   getVersion() {
     return this.version;
@@ -105,12 +113,8 @@ export class Transaction implements Interop {
     return this.payload;
   }
 
-  getAttributes() {
-    return this.attributes;
-  }
-
-  setSigs(sigs: RawSig[]) {
-    this.sigs = sigs;
+  addSig(sig: RawSig) {
+    this.sigs.push(sig);
   }
 
   getSignatureAddresses(): Address[] {
@@ -124,11 +128,16 @@ export class Transaction implements Interop {
   }
 
   serialize(w: Writer) {
-    if (this.nonDirectConstracted === false || this.raw.length === 0) {
-      throw new Error('wrong constructed transaction');
-    }
+    if (this.raw !== undefined) {
+      if (this.raw.length === 0) {
+        throw new Error('wrong constructed transaction');
+      }
 
-    w.writeBytes(this.raw);
+      w.writeBytes(this.raw);
+    } else {
+      const bytes = this.serializeUnsigned();
+      w.writeBytes(bytes);
+    }
   }
 
   deserialize(r: Reader) {
@@ -159,8 +168,6 @@ export class Transaction implements Interop {
     const lenAll = pend - pstart;
     r.seek(-lenAll, 'relative');
     this.raw = r.readBytes(lenAll);
-
-    this.nonDirectConstracted = true;
   }
 
   toArray(): Buffer {
@@ -196,7 +203,23 @@ export class Transaction implements Interop {
     if (!length.isZero()) {
       throw new Error('transaction attribute must be 0, got %d');
     }
-    this.attributes = 0;
+  }
+
+  /**
+   * Serialize transaction data exclueds signatures
+   */
+  private serializeUnsigned() {
+    const w = new Writer();
+    w.writeUint8(this.version);
+    w.writeUint8(this.txType);
+    w.writeUint32(this.nonce);
+    w.writeUint64(this.gasPrice);
+    w.writeUint64(this.gasLimit);
+    this.payer.serialize(w);
+    this.payload.serialize(w);
+    w.writeVarUint(0);
+
+    return w.getBytes();
   }
 }
 

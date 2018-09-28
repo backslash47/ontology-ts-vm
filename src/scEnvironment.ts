@@ -9,6 +9,7 @@ import { Inspect } from './smartcontract/context';
 import { RuntimeLedgerStore } from './smartcontract/runtime/runtimeLedgerStore';
 import { RuntimeStateStore } from './smartcontract/runtime/runtimeStateStore';
 import { SmartContract } from './smartcontract/smartContract';
+import { Wallet } from './wallet';
 
 export interface EnvironmentOptions {
   ledgerStore?: LedgerStore;
@@ -20,6 +21,7 @@ export interface ExecuteOptions {
   tx?: Transaction;
   gas?: Long;
   inspect?: Inspect;
+  wallet?: Wallet;
 }
 
 export class ScEnvironment {
@@ -42,8 +44,12 @@ export class ScEnvironment {
 
   async execute(
     code: Buffer,
-    { time = 10, tx = new Transaction(), gas = Long.fromNumber(100000), inspect }: ExecuteOptions = {}
+    { time = 10, tx = new Transaction(), gas = Long.fromNumber(100000), inspect, wallet }: ExecuteOptions = {}
   ) {
+    if (wallet !== undefined) {
+      wallet.signTransaction(tx);
+    }
+
     const sc = new SmartContract({
       time,
       tx,
@@ -55,7 +61,8 @@ export class ScEnvironment {
 
     const result = await vmService.invoke({ inspect });
     const notifications = sc.getNotifications();
+    const logs = sc.getLogs();
 
-    return { result, notifications };
+    return { result, notifications, logs };
   }
 }

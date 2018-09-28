@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { ScEnvironment } from '../../src/scEnvironment';
+import { ExecuteOptions, ScEnvironment } from '../../src/scEnvironment';
 import { InspectData } from '../../src/smartcontract/context';
 import { invokeContract } from './invokeBuilder';
 
@@ -23,10 +23,16 @@ export function hexToStr(value: string) {
   return new Buffer(value, 'hex').toString();
 }
 
-export async function deployAndInvoke(contract: Buffer, ...params: any[]) {
+export interface DeployAndInvokeOptions extends ExecuteOptions {
+  contract: Buffer;
+}
+
+export async function deployAndInvoke(options: DeployAndInvokeOptions, ...params: any[]) {
+  const { contract, ...rest } = options;
+
   const env = new ScEnvironment();
   const address = env.deployContract(contract);
 
   const call = invokeContract(address, ...params);
-  return await env.execute(call, { inspect: opLogger });
+  return await env.execute(call, { ...rest, inspect: opLogger });
 }

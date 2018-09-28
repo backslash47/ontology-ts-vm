@@ -2,7 +2,7 @@ import { Address } from '../common/address';
 import { LedgerStore } from '../core/ledgerStore';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
-import { NotifyEventInfo } from '../event/notifyEvents';
+import { LogEventInfo, NotifyEventInfo } from '../event/notifyEvents';
 import { ExecutionContext } from '../vm/executionContext';
 import { ExecutionEngine, RandomAccessStack } from '../vm/interfaces/engine';
 import { OpCode } from '../vm/opCode';
@@ -16,6 +16,7 @@ export interface ContextRef {
   popContext(): void;
   checkWitness(address: Address): boolean;
   pushNotifications(notifications: NotifyEventInfo[]): void;
+  pushLogs(logs: LogEventInfo[]): void;
   newExecuteEngine(code: Buffer): VmService;
   checkUseGas(gas: Long): boolean;
   checkExecStep(): boolean;
@@ -50,7 +51,9 @@ export interface VmService {
   getTime(): number;
 
   addNotification(event: NotifyEventInfo): void;
+  addLog(event: LogEventInfo): void;
   getNotifications(): NotifyEventInfo[];
+  getLogs(): LogEventInfo[];
 }
 
 export interface Context {
