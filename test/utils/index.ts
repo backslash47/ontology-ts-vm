@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs';
-import { ExecuteOptions, ScEnvironment, EnvironmentOptions } from '../../src/scEnvironment';
+import { EnvironmentOptions, ExecuteOptions, ScEnvironment } from '../../src/scEnvironment';
 import { InspectData } from '../../src/smartcontract/context';
 import { invokeContract } from './invokeBuilder';
 
