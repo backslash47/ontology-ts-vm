@@ -53,7 +53,7 @@ export function storageDelete(service: VmService, engine: ExecutionEngine) {
   try {
     const context = getContext(engine);
 
-    if (context.isReadOnly) {
+    if (context.isReadOnly()) {
       throw new Error('[StorageDelete] storage read only!');
     }
     try {
