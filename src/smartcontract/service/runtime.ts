@@ -1,5 +1,5 @@
-import * as bigInt from 'big-integer';
 import { Address } from '../../common/address';
+import { bigIntFromBytes } from '../../common/utils';
 import { PublicKey } from '../../crypto/publicKey';
 import { MAX_BYTEARRAY_SIZE } from '../../vm/consts';
 import { popByteArray, popStackItem, pushData } from '../../vm/func/common';
@@ -103,7 +103,7 @@ export function serializeStackItem(item: StackItem): Buffer {
   return writer.getBytes();
 }
 
-function deserializeStackItem(data: Buffer): StackItem {
+export function deserializeStackItem(data: Buffer): StackItem {
   const r = new Reader(data);
 
   return deserializeStackItemInternal(r);
@@ -223,8 +223,8 @@ function deserializeStackItemInternal(r: Reader): StackItem {
       }
     } else if (t === IntegerType.id) {
       try {
-        const b = r.readInt64();
-        return new IntegerType(bigInt(b.toString()));
+        const b = r.readVarBytes();
+        return new IntegerType(bigIntFromBytes(b));
       } catch (e) {
         throw new Error(`Deserialize stackItems Integer error: ${e}`);
       }
