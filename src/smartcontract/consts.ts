@@ -54,11 +54,11 @@ export const TRANSACTION_GETHASH_NAME = 'System.Transaction.GetHash';
 export const TRANSACTION_GETTYPE_NAME = 'Ontology.Transaction.GetType';
 export const TRANSACTION_GETATTRIBUTES_NAME = 'Ontology.Transaction.GetAttributes';
 
-export const CONTRACT_CREATE_NAME = 'Ontology.Contract.Create';
-export const CONTRACT_MIGRATE_NAME = 'Ontology.Contract.Migrate';
+export const CONTRACT_CREATE_NAME = 'System.Contract.Create';
+export const CONTRACT_MIGRATE_NAME = 'System.Contract.Migrate';
 export const CONTRACT_GETSTORAGECONTEXT_NAME = 'System.Contract.GetStorageContext';
 export const CONTRACT_DESTROY_NAME = 'System.Contract.Destroy';
-export const CONTRACT_GETSCRIPT_NAME = 'Ontology.Contract.GetScript';
+export const CONTRACT_GETSCRIPT_NAME = 'System.Contract.GetScript';
 
 export const STORAGE_GET_NAME = 'System.Storage.Get';
 export const STORAGE_PUT_NAME = 'System.Storage.Put';

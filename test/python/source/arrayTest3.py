@@ -12,8 +12,8 @@ def Main():
     sub = m[3]
 
     sublen = len(sub)
-    # FIXME: commented until compiler start outputting correct Interop Names print(sublen)
+    print(sublen)
     subitem = sub[0]
-    # FIXME: commented until compiler start outputting correct Interop Names print(subitem)
+    print(subitem)
 
     return answer

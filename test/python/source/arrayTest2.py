@@ -23,6 +23,6 @@ def Main():
 
     j = h[1]
 
-    # FIXME: commented until compiler start outputting correct Interop Names print(j)  # prints 'wat'
+    print("wat")
 
     return q3

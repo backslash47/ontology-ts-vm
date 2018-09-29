@@ -4,9 +4,6 @@ import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
 import { DataEntryPrefix, ST_STORAGE } from './dataEntryPrefix';
 
-/**
- * FIXME: implement
- */
 export interface StateStore {
   add(prefix: DataEntryPrefix, key: Buffer, value: StateValue): void;
   /**

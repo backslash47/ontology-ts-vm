@@ -39,6 +39,8 @@ export class ScEnvironment {
     const deployCode = new DeployCode({ code: contract });
     this.store.add(ST_CONTRACT, address.toArray(), deployCode);
 
+    this.ledgerStore.deployContract(address, deployCode);
+
     return address.toArray();
   }
 
@@ -54,7 +56,8 @@ export class ScEnvironment {
       time,
       tx,
       gas,
-      stateStore: this.store
+      stateStore: this.store,
+      store: this.ledgerStore
     });
 
     const vmService = sc.newExecuteEngine(code);
