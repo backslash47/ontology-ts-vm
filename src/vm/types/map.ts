@@ -92,6 +92,18 @@ export class MapType implements StackItem {
 
     return `Map({${childrenString}})`;
   }
+
+  getEncodedValue(): string {
+    throw new Error('Unsupported');
+  }
+
+  setEncodedValue(value: string) {
+    throw new Error('Unsupported');
+  }
+
+  getType() {
+    return this.type;
+  }
 }
 
 export function isMapType(item: StackItem): item is MapType {

@@ -13,6 +13,9 @@ export interface StackItem {
   getMap(): Map<StackItem, StackItem>;
   isMapKey(): boolean;
   toString(): string;
+  getEncodedValue(): string;
+  setEncodedValue(value: string): void;
+  getType(): string;
 }
 
 export function isStackItemType(item: any): item is StackItem {

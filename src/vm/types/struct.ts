@@ -120,6 +120,18 @@ export class StructType implements StackItem {
 
     return `Struct([${childrenString}])`;
   }
+
+  getEncodedValue(): string {
+    throw new Error('Unsupported');
+  }
+
+  setEncodedValue(value: string) {
+    throw new Error('Unsupported');
+  }
+
+  getType() {
+    return this.type;
+  }
 }
 
 export function isStructType(item: StackItem): item is StructType {

@@ -63,6 +63,18 @@ export class ByteArrayType implements StackItem {
   toString() {
     return `ByteArray(0x${this.value.toString('hex')})`;
   }
+
+  getEncodedValue() {
+    return this.value.toString('hex');
+  }
+
+  setEncodedValue(value: string) {
+    this.value = new Buffer(value, 'hex');
+  }
+
+  getType() {
+    return this.type;
+  }
 }
 
 export function isByteArrayType(item: StackItem): item is ByteArrayType {

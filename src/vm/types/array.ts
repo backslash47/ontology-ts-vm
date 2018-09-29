@@ -76,6 +76,18 @@ export class ArrayType implements StackItem {
 
     return `Array([${childrenString}])`;
   }
+
+  getEncodedValue(): string {
+    throw new Error('Unsupported');
+  }
+
+  setEncodedValue(value: string) {
+    throw new Error('Unsupported');
+  }
+
+  getType() {
+    return this.type;
+  }
 }
 
 export function isArrayType(item: StackItem): item is ArrayType {

@@ -71,6 +71,18 @@ export class InteropType implements StackItem {
   toString() {
     return `Interop(${this.value.toArray().toString('hex')})`;
   }
+
+  getEncodedValue(): string {
+    throw new Error('Unsupported');
+  }
+
+  setEncodedValue(value: string) {
+    throw new Error('Unsupported');
+  }
+
+  getType() {
+    return this.type;
+  }
 }
 
 export function isInteropType(item: StackItem): item is InteropType {

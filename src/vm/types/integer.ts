@@ -66,6 +66,18 @@ export class IntegerType implements StackItem {
   toString(): string {
     return `Integer(${this.value.toString()})`;
   }
+
+  getEncodedValue(): string {
+    return this.value.toString();
+  }
+
+  setEncodedValue(value: string) {
+    this.value = bigInt(value);
+  }
+
+  getType() {
+    return this.type;
+  }
 }
 
 export function isIntegerType(item: StackItem): item is IntegerType {

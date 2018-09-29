@@ -64,6 +64,18 @@ export class BooleanType implements StackItem {
   toString(): string {
     return `Boolean(${String(this.value)})`;
   }
+
+  getEncodedValue(): string {
+    return String(this.value);
+  }
+
+  setEncodedValue(value: string) {
+    this.value = Boolean(value);
+  }
+
+  getType() {
+    return this.type;
+  }
 }
 
 export function isBooleanType(item: StackItem): item is BooleanType {
