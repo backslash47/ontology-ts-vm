@@ -1,4 +1,5 @@
 import * as bigInt from 'big-integer';
+import { createHash } from 'crypto';
 import * as Long from 'long';
 import { Address } from '../common/address';
 import { Uint256 } from '../common/uint256';
@@ -6,6 +7,20 @@ import { PublicKey } from '../crypto/publicKey';
 import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
+
+export interface HeaderOptions {
+  version?: number;
+  prevBlockHash?: Uint256;
+  transactionsRoot?: Uint256;
+  blockRoot?: Uint256;
+  timestamp?: number;
+  height?: number;
+  consensusData?: bigInt.BigInteger;
+  consensusPayload?: Buffer;
+  nextBookkeeper?: Address;
+  bookkeepers?: PublicKey[];
+  sigData?: Buffer[];
+}
 
 export class Header implements Interop {
   private version: number;
@@ -17,12 +32,34 @@ export class Header implements Interop {
   private consensusData: bigInt.BigInteger;
   private consensusPayload: Buffer;
   private nextBookkeeper: Address;
-
-  /**
-   * Program *program.Program
-   */
   private bookkeepers: PublicKey[];
   private sigData: Buffer[];
+
+  constructor({
+    version = 0,
+    prevBlockHash = new Uint256(),
+    transactionsRoot = new Uint256(),
+    blockRoot = new Uint256(),
+    timestamp = 0,
+    height = 0,
+    consensusData = bigInt(0),
+    consensusPayload = new Buffer(''),
+    nextBookkeeper = new Address(),
+    bookkeepers = [],
+    sigData = []
+  }: HeaderOptions = {}) {
+    this.version = version;
+    this.prevBlockHash = prevBlockHash;
+    this.transactionsRoot = transactionsRoot;
+    this.blockRoot = blockRoot;
+    this.timestamp = timestamp;
+    this.height = height;
+    this.consensusData = consensusData;
+    this.consensusPayload = consensusPayload;
+    this.nextBookkeeper = nextBookkeeper;
+    this.bookkeepers = bookkeepers;
+    this.sigData = sigData;
+  }
 
   getVersion() {
     return this.version;
@@ -57,7 +94,15 @@ export class Header implements Interop {
   }
 
   getHash(): Uint256 {
-    throw new Error('Unsupported');
+    const w = new Writer();
+    this.serializeUnsigned(w);
+
+    const sh = createHash('sha256');
+    const sh2 = createHash('sha256');
+
+    sh.update(w.getBytes());
+    sh2.update(sh.digest());
+    return Uint256.parseFromBytes(sh2.digest());
   }
 
   serialize(w: Writer) {

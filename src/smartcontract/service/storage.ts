@@ -1,9 +1,9 @@
-import * as ByteBuffer from 'bytebuffer';
 import { Address } from '../../common/address';
 import { ST_CONTRACT, ST_STORAGE } from '../../core/state/dataEntryPrefix';
 import { isStorageItem, StorageItem } from '../../core/state/storageItem';
 import { evaluationStackCount, popByteArray, popInteropInterface, pushData } from '../../vm/func/common';
 import { ExecutionEngine } from '../../vm/interfaces/engine';
+import { Writer } from '../../vm/utils/writer';
 import { VmService } from '../context';
 import { isStorageContext, StorageContext } from '../storageContext';
 
@@ -141,9 +141,8 @@ export function getContext(engine: ExecutionEngine): StorageContext {
 }
 
 export function getStorageKey(address: Address, key: Buffer): Buffer {
-  const buf = new ByteBuffer();
-  buf.append(address.toArray());
-  buf.append(key);
-  buf.flip();
-  return new Buffer(buf.toBuffer());
+  const w = new Writer();
+  w.writeBytes(address.toArray());
+  w.writeBytes(key);
+  return w.getBytes();
 }

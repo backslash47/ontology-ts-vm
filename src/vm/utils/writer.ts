@@ -5,7 +5,7 @@ export class Writer {
   private writer: ByteBuffer;
 
   constructor() {
-    this.writer = new ByteBuffer(undefined, true);
+    this.writer = new ByteBuffer(undefined, true, true);
   }
 
   getBytes() {

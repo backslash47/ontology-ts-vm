@@ -6,12 +6,26 @@ import { Writer } from '../vm/utils/writer';
 import { Header } from './header';
 import { Transaction } from './transaction';
 
+export interface BlockOptions {
+  header?: Header;
+  transactions?: Transaction[];
+}
+
 export class Block implements Interop {
   private header: Header;
   private transactions: Transaction[];
 
+  constructor({ header = new Header(), transactions = [] }: BlockOptions) {
+    this.header = header;
+    this.transactions = transactions;
+  }
+
   getHeader() {
     return this.header;
+  }
+
+  getHash() {
+    return this.header.getHash();
   }
   getTransactions() {
     return this.transactions;

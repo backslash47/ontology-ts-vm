@@ -13,6 +13,10 @@ export class Uint256 {
   }
   private value: Buffer;
 
+  constructor(value: Buffer = new Buffer('')) {
+    this.value = value;
+  }
+
   toArray(): Buffer {
     const bf = new Writer();
     this.serialize(bf);

@@ -1,4 +1,3 @@
-import * as ByteBuffer from 'bytebuffer';
 import { Address } from '../../common/address';
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
@@ -45,10 +44,9 @@ export interface StateItem {
  * TODO: should be in storage
  */
 export function getStorageKey(address: Address, key: Buffer): Buffer {
-  const buf = new ByteBuffer();
-  buf.writeByte(ST_STORAGE);
-  buf.append(address.toArray());
-  buf.append(key);
-  buf.flip();
-  return new Buffer(buf.toBuffer());
+  const w = new Writer();
+  w.writeUint8(ST_STORAGE);
+  w.writeBytes(address.toArray());
+  w.writeBytes(key);
+  return w.getBytes();
 }

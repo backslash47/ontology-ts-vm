@@ -9,7 +9,7 @@ import { Transaction } from '../../core/transaction';
 export class RuntimeLedgerStore implements LedgerStore {
   private currBlockHeight: number;
   private headerIndex: Map<number, Uint256>;
-  private blocks: Map<string, Block>;
+  private blocks: Map<string, Block>; // key is Uint256, but for searching it is serialized to string
   private contracts: Map<string, DeployCode>;
 
   constructor() {
@@ -78,5 +78,13 @@ export class RuntimeLedgerStore implements LedgerStore {
 
   deployContract(contractHash: Address, contract: DeployCode) {
     this.contracts.set(contractHash.toArray().toString('hex'), contract);
+  }
+
+  addBlock(block: Block) {
+    const index = block.getHeader().getHeight();
+    const hash = block.getHash();
+
+    this.headerIndex.set(index, hash);
+    this.blocks.set(hash.toArray().toString('hex'), block);
   }
 }
