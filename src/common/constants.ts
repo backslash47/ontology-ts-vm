@@ -3,8 +3,12 @@ import * as Long from 'long';
 export const ONT_NAME = 'ONT Token';
 export const ONT_SYMBOL = 'ONT';
 export const ONT_DECIMALS = 1;
-
 export const ONT_TOTAL_SUPPLY = Long.fromString('1000000000');
+
+export const ONG_NAME = 'ONG Token';
+export const ONG_SYMBOL = 'ONG';
+export const ONG_DECIMALS = 9;
+export const ONG_TOTAL_SUPPLY = Long.fromString('1000000000000000000');
 
 export const GENESIS_BLOCK_TIMESTAMP = new Date(2018, 6, 30, 0, 0, 0, 0).getTime();
 

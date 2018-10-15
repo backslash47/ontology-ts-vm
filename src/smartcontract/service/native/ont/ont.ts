@@ -22,8 +22,8 @@ import {
 } from './states';
 import * as U from './utils';
 
-const TRANSFER_FLAG = 1;
-const APPROVE_FLAG = 2;
+export const TRANSFER_FLAG = 1;
+export const APPROVE_FLAG = 2;
 
 export function initOnt() {
   contracts.set(OntContractAddress.toHexString(), registerOntContract);
@@ -189,7 +189,7 @@ export function ontAllowance(native: NativeVmService): Buffer {
   return getBalanceValue(native, APPROVE_FLAG);
 }
 
-function getBalanceValue(native: NativeVmService, flag: number): Buffer {
+export function getBalanceValue(native: NativeVmService, flag: number): Buffer {
   const source = new Reader(native.input);
   const from = decodeAddress(source);
 
