@@ -1,8 +1,8 @@
 import * as bigInt from 'big-integer';
-import { createHash } from 'crypto';
 import * as Long from 'long';
 import { Address } from '../common/address';
 import { Uint256 } from '../common/uint256';
+import { sha256 } from '../common/utils';
 import { PublicKey } from '../crypto/publicKey';
 import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
@@ -97,12 +97,7 @@ export class Header implements Interop {
     const w = new Writer();
     this.serializeUnsigned(w);
 
-    const sh = createHash('sha256');
-    const sh2 = createHash('sha256');
-
-    sh.update(w.getBytes());
-    sh2.update(sh.digest());
-    return Uint256.parseFromBytes(sh2.digest());
+    return Uint256.parseFromBytes(sha256(sha256(w.getBytes())));
   }
 
   serialize(w: Writer) {

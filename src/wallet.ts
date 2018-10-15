@@ -1,6 +1,6 @@
-import { createHash } from 'crypto';
 import { Address } from './common/address';
 import { programFromParams, programFromPubKey } from './common/program';
+import { sha256 } from './common/utils';
 import { RawSig, Transaction } from './core/transaction';
 import { PrivateKey } from './crypto/privateKey';
 import { PublicKey } from './crypto/publicKey';
@@ -25,14 +25,8 @@ export class Wallet {
   signTransaction(tx: Transaction) {
     const w = new Writer();
     tx.serialize(w);
-    const bytes = w.getBytes();
 
-    const sh1 = createHash('sha256');
-    const sh2 = createHash('sha256');
-
-    sh1.update(bytes);
-    sh2.update(sh1.digest());
-    const hash = sh2.digest();
+    const hash = sha256(sha256(w.getBytes()));
 
     const signature = this.privateKey.sign(hash);
 

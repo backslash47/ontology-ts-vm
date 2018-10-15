@@ -1,7 +1,7 @@
-import { createHash } from 'crypto';
 import * as Long from 'long';
 import { Address } from '../common/address';
 import { Uint256 } from '../common/uint256';
+import { sha256 } from '../common/utils';
 import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
@@ -77,9 +77,7 @@ export class Transaction implements Interop {
     this.payer = new Address('0000000000000000000000000000000000000000');
     this.payload = new InvokeCode();
 
-    const sh = createHash('sha256');
-    sh.update(this.serializeUnsigned());
-    this.hash = Uint256.parseFromBytes(sh.digest());
+    this.hash = Uint256.parseFromBytes(sha256(this.serializeUnsigned()));
   }
 
   getVersion() {
@@ -148,9 +146,7 @@ export class Transaction implements Interop {
     r.seek(-lenUnsigned, 'relative');
     const rawUnsigned = r.readBytes(lenUnsigned);
 
-    const sh = createHash('sha256');
-    sh.update(rawUnsigned);
-    this.hash = Uint256.parseFromBytes(sh.digest());
+    this.hash = Uint256.parseFromBytes(sha256(rawUnsigned));
 
     // tx sigs
     const length = r.readVarUInt().toNumber();

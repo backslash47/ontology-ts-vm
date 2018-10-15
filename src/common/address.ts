@@ -1,8 +1,9 @@
-import { createHash } from 'crypto';
+import * as base58 from 'bs58';
 import { PublicKey } from '../crypto/publicKey';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
 import { programFromPubKey } from './program';
+import { md160, reverseBuffer, sha256 } from './utils';
 
 const ADDR_LEN = 20;
 
@@ -16,15 +17,7 @@ export class Address {
   }
 
   static parseFromVmCode(code: Buffer): Address {
-    const addr: Address = new Address();
-
-    const sha256 = createHash('sha256');
-    const md = createHash('ripemd160');
-
-    const temp = sha256.update(code).digest();
-    addr.value = md.update(temp).digest();
-
-    return addr;
+    return new Address(md160(sha256(code)));
   }
 
   static fromPubKey(key: PublicKey): Address {
@@ -63,5 +56,20 @@ export class Address {
     const buffer = new Buffer(this.value.length);
     this.value.copy(buffer);
     return buffer;
+  }
+
+  toHexString() {
+    return reverseBuffer(this.toArray()).toString('hex');
+  }
+
+  toBase58(): string {
+    const data = Buffer.concat([new Buffer('17', 'hex'), this.value]);
+    const hash = sha256(data);
+    const hash2 = sha256(hash);
+    const checksum = hash2.slice(0, 4);
+
+    const datas = Buffer.concat([data, checksum]);
+
+    return base58.encode(datas);
   }
 }

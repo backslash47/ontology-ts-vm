@@ -56,6 +56,9 @@ export class Writer {
   writeUint64(val: Long) {
     this.writer.writeUint64(val);
   }
+  writeBool(val: boolean) {
+    this.writeUint8(val ? 1 : 0);
+  }
 }
 
 /**

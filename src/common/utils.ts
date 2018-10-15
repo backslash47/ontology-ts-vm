@@ -1,4 +1,5 @@
 import * as bigInt from 'big-integer';
+import { createHash } from 'crypto';
 
 // tslint:disable:no-bitwise
 
@@ -58,38 +59,25 @@ export function bigIntFromBytes(ba: Buffer): bigInt.BigInteger {
   return bigInt.fromArray(bytes, 256);
 }
 
-// export function bigIntFromBytes(bytes: Buffer): bigInt.BigInteger {
-//   let data = Array.from(bytes.subarray(0));
-//   const b = data[data.length - 1];
+export function reverseBuffer(src: Buffer) {
+  const buffer = Buffer.allocUnsafe(src.length);
 
-//   if (b >> 7 === 1) {
-//     data = data.concat(Array(8 - data.length).fill(255));
-//   }
-//   return bigInt.fromArray(data);
-// }
+  for (let i = 0, j = src.length - 1; i <= j; ++i, --j) {
+    buffer[i] = src[j];
+    buffer[j] = src[i];
+  }
 
-// export function bigIntToBytes(value: bigInt.BigInteger) {
-//   let data = value.toBytesLE();
-//   const negData = value.negate().toBytesLE();
-//   let stop;
-//   if (value.isNegative()) {
-//     stop = 255;
-//   } else {
-//     stop = 0;
-//   }
-//   let b = stop;
-//   let pos = 0;
-//   for (let i = data.length - 1; i >= 0; i--) {
-//     if (data[i] !== stop) {
-//       b = value.isNegative() ? negData[i] : data[i];
-//       pos = i + 1;
-//       break;
-//     }
-//   }
-//   data = data.slice(0, pos);
+  return buffer;
+}
 
-//   if (b >> 7 === 1) {
-//     data.push(value.isNegative() ? 255 : 0);
-//   }
-//   return new Buffer(data);
-// }
+export function sha256(data: Buffer) {
+  const sh = createHash('sha256');
+  sh.update(data);
+  return sh.digest();
+}
+
+export function md160(data: Buffer) {
+  const sh = createHash('ripemd160');
+  sh.update(data);
+  return sh.digest();
+}

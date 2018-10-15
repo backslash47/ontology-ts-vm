@@ -67,7 +67,7 @@ export class RuntimeLedgerStore implements LedgerStore {
     throw new Error('Method not implemented.');
   }
   getContractState(contractHash: Address): DeployCode {
-    const contract = this.contracts.get(contractHash.toArray().toString('hex'));
+    const contract = this.contracts.get(contractHash.toHexString());
 
     if (contract === undefined) {
       throw new Error('Contract not found');
@@ -77,7 +77,7 @@ export class RuntimeLedgerStore implements LedgerStore {
   }
 
   deployContract(contractHash: Address, contract: DeployCode) {
-    this.contracts.set(contractHash.toArray().toString('hex'), contract);
+    this.contracts.set(contractHash.toHexString(), contract);
   }
 
   addBlock(block: Block) {
