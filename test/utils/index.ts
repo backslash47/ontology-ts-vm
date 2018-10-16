@@ -31,7 +31,7 @@ export function loadContract(path: string) {
 
 export function opLogger(data: InspectData) {
   // tslint:disable-next-line:no-console
-  // console.log('' + data.contexts.length + ' ' + data.contractAddress.toArray().toString('hex') + ': ' + data.opName);
+  console.log('' + data.contexts.length + ' ' + data.contractAddress.toArray().toString('hex') + ': ' + data.opName);
   return Promise.resolve(true);
 }
 
