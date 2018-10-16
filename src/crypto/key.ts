@@ -18,6 +18,7 @@
 
 import { createHash } from 'crypto';
 import { sha3_224, sha3_256, sha3_384, sha3_512 } from 'js-sha3';
+import { TracedError } from '../common/error';
 import { DEFAULT_ALGORITHM } from './consts';
 import { CurveLabel } from './curveLabel';
 import { KeyType } from './keyType';
@@ -108,7 +109,7 @@ export class Key {
     } else if (scheme === SignatureScheme.ECDSAwithSHA3_512) {
       return new Buffer(sha3_512.arrayBuffer(msg));
     } else {
-      throw new Error('Unsupported hash algorithm.');
+      throw new TracedError('Unsupported hash algorithm.');
     }
   }
 
@@ -132,7 +133,7 @@ export class Key {
       case SignatureScheme.EDDSAwithSHA512:
         return this.algorithm === KeyType.EDDSA;
       default:
-        throw new Error('Unsupported signature schema.');
+        throw new TracedError('Unsupported signature schema.');
     }
   }
 }

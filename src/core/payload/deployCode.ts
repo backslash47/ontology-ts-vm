@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../../common/error';
 import { Interop } from '../../vm/interfaces/interop';
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
@@ -49,11 +50,11 @@ export class DeployCode implements StateValue, Interop {
   }
 
   serialize(w: Writer) {
-    throw new Error('Unsuported');
+    throw new TracedError('Unsuported');
   }
 
   deserialize(r: Reader) {
-    throw new Error('Unsuported');
+    throw new TracedError('Unsuported');
   }
 
   toArray(): Buffer {

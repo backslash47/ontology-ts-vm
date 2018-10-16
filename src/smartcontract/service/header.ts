@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../../common/error';
 import { isBlock } from '../../core/block';
 import { Header, isHeader } from '../../core/header';
 import { popInteropInterface, pushData } from '../../vm/func/common';
@@ -33,7 +34,7 @@ export function headerGetHash(service: VmService, engine: ExecutionEngine) {
   } else if (isHeader(d)) {
     data = d;
   } else {
-    throw new Error('[HeaderGetHash] Wrong type!');
+    throw new TracedError('[HeaderGetHash] Wrong type!');
   }
 
   pushData(engine, data.getHash().toArray());
@@ -50,7 +51,7 @@ export function headerGetVersion(service: VmService, engine: ExecutionEngine) {
   } else if (isHeader(d)) {
     data = d;
   } else {
-    throw new Error('[headerGetVersion] Wrong type!');
+    throw new TracedError('[headerGetVersion] Wrong type!');
   }
 
   pushData(engine, data.getVersion());
@@ -68,7 +69,7 @@ export function headerGetPrevHash(service: VmService, engine: ExecutionEngine) {
   } else if (isHeader(d)) {
     data = d;
   } else {
-    throw new Error('[headerGetVersion] Wrong type!');
+    throw new TracedError('[headerGetVersion] Wrong type!');
   }
 
   pushData(engine, data.getPrevBlockHash().toArray());
@@ -86,7 +87,7 @@ export function headerGetMerkleRoot(service: VmService, engine: ExecutionEngine)
   } else if (isHeader(d)) {
     data = d;
   } else {
-    throw new Error('[headerGetVersion] Wrong type!');
+    throw new TracedError('[headerGetVersion] Wrong type!');
   }
 
   pushData(engine, data.getTransactionsRoot().toArray());
@@ -104,7 +105,7 @@ export function headerGetIndex(service: VmService, engine: ExecutionEngine) {
   } else if (isHeader(d)) {
     data = d;
   } else {
-    throw new Error('[headerGetVersion] Wrong type!');
+    throw new TracedError('[headerGetVersion] Wrong type!');
   }
 
   pushData(engine, data.getHeight());
@@ -122,7 +123,7 @@ export function headerGetTimestamp(service: VmService, engine: ExecutionEngine) 
   } else if (isHeader(d)) {
     data = d;
   } else {
-    throw new Error('[headerGetVersion] Wrong type!');
+    throw new TracedError('[headerGetVersion] Wrong type!');
   }
 
   pushData(engine, data.getTimestamp());
@@ -140,7 +141,7 @@ export function headerGetConsensusData(service: VmService, engine: ExecutionEngi
   } else if (isHeader(d)) {
     data = d;
   } else {
-    throw new Error('[headerGetVersion] Wrong type!');
+    throw new TracedError('[headerGetVersion] Wrong type!');
   }
 
   pushData(engine, data.getConsensusData());
@@ -158,7 +159,7 @@ export function headerGetNextConsensus(service: VmService, engine: ExecutionEngi
   } else if (isHeader(d)) {
     data = d;
   } else {
-    throw new Error('[headerGetVersion] Wrong type!');
+    throw new TracedError('[headerGetVersion] Wrong type!');
   }
 
   pushData(engine, data.getNextBookkeeper().toArray());

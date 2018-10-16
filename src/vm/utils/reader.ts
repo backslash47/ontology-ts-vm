@@ -17,6 +17,7 @@
  */
 import * as ByteBuffer from 'bytebuffer';
 import * as Long from 'long';
+import { TracedError } from '../../common/error';
 
 export type Whence = 'start' | 'relative';
 
@@ -77,7 +78,7 @@ export class Reader {
       this.reader.offset = oldOffset + offset;
       return oldOffset;
     } else {
-      throw new Error('Unsupported Whence');
+      throw new TracedError('Unsupported Whence');
     }
   }
 

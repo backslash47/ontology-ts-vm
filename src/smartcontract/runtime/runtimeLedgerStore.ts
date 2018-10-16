@@ -17,6 +17,7 @@
  */
 
 import { Address } from '../../common/address';
+import { TracedError } from '../../common/error';
 import { Uint256 } from '../../common/uint256';
 import { Block } from '../../core/block';
 import { Header } from '../../core/header';
@@ -51,7 +52,7 @@ export class RuntimeLedgerStore implements LedgerStore {
   getHeaderIndex(height: number): Uint256 {
     const blockHash = this.headerIndex.get(height);
     if (blockHash === undefined) {
-      throw new Error(`[getHeaderIndex] Invalid block height: ${height}`);
+      throw new TracedError(`[getHeaderIndex] Invalid block height: ${height}`);
     }
     return blockHash;
   }
@@ -63,7 +64,7 @@ export class RuntimeLedgerStore implements LedgerStore {
     const blockHash = this.getBlockHash(height);
 
     if (blockHash === undefined) {
-      throw new Error(`[getBlockByHeight] Invalid block height: ${height}`);
+      throw new TracedError(`[getBlockByHeight] Invalid block height: ${height}`);
     }
     return this.getBlockByHash(blockHash);
   }
@@ -76,19 +77,19 @@ export class RuntimeLedgerStore implements LedgerStore {
     const block = this.blocks.get(hash);
 
     if (block === undefined) {
-      throw new Error(`[RuntimeLedgerStore] Block ${hash} not found.`);
+      throw new TracedError(`[RuntimeLedgerStore] Block ${hash} not found.`);
     }
 
     return block;
   }
   getTransaction(txHash: Uint256): [Transaction, number] {
-    throw new Error('Method not implemented.');
+    throw new TracedError('Method not implemented.');
   }
   getContractState(contractHash: Address): DeployCode {
     const contract = this.contracts.get(contractHash.toHexString());
 
     if (contract === undefined) {
-      throw new Error('Contract not found');
+      throw new TracedError('Contract not found');
     }
 
     return contract;

@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Address } from '../../common/address';
+import { TracedError } from '../../common/error';
 import { bigIntFromBytes } from '../../common/utils';
 import { PublicKey } from '../../crypto/publicKey';
 import { MAX_BYTEARRAY_SIZE } from '../../vm/consts';
@@ -57,7 +58,7 @@ export function runtimeCheckWitness(service: VmService, engine: ExecutionEngine)
       const pk = PublicKey.deserialize(data);
       result = service.getContextRef().checkWitness(Address.fromPubKey(pk));
     } catch (e) {
-      throw new Error(`[RuntimeCheckWitness] data invalid: ${e}`);
+      throw new TracedError(`[RuntimeCheckWitness] data invalid: ${e}`);
     }
   }
 
@@ -87,7 +88,7 @@ export function runtimeNotify(service: VmService, engine: ExecutionEngine) {
   const context = service.getContextRef().currentContext();
 
   if (context === undefined) {
-    throw new Error('[RuntimeNotify] No context present');
+    throw new TracedError('[RuntimeNotify] No context present');
   }
 
   service.addNotification({ contractAddress: context.contractAddress, states: convertNeoVmTypeHexString(item) });
@@ -99,7 +100,7 @@ export function runtimeLog(service: VmService, engine: ExecutionEngine) {
 
   const context = service.getContextRef().currentContext();
   if (context === undefined) {
-    throw new Error('[RuntimeNotify] No context present');
+    throw new TracedError('[RuntimeNotify] No context present');
   }
 
   service.addLog({ contractAddress: context.contractAddress, message: item.toString(), tx: service.getTx().getHash() });
@@ -111,7 +112,7 @@ export function runtimeGetTrigger(service: VmService, engine: ExecutionEngine) {
 
 export function serializeStackItem(item: StackItem): Buffer {
   if (circularRefAndDepthDetection(item)) {
-    throw new Error('runtime serialize: can not serialize circular reference data');
+    throw new TracedError('runtime serialize: can not serialize circular reference data');
   }
 
   const writer = new LimitedWriter(MAX_BYTEARRAY_SIZE);
@@ -134,7 +135,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
       const ba = item.getByteArray();
       w.writeVarBytes(ba);
     } catch (e) {
-      throw new Error(`Serialize ByteArray stackItems error: ${e}`);
+      throw new TracedError(`Serialize ByteArray stackItems error.`, e);
     }
   } else if (isBooleanType(item)) {
     try {
@@ -143,7 +144,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
       const b = item.getBoolean();
       w.writeUint8(b ? 1 : 0);
     } catch (e) {
-      throw new Error(`Serialize Boolean stackItems error: ${e}`);
+      throw new TracedError(`Serialize Boolean stackItems error:`, e);
     }
   } else if (isIntegerType(item)) {
     try {
@@ -152,7 +153,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
       const i = item.getByteArray();
       w.writeVarBytes(i);
     } catch (e) {
-      throw new Error(`Serialize Integer stackItems error: ${e}`);
+      throw new TracedError(`Serialize Integer stackItems error.`, e);
     }
   } else if (isArrayType(item)) {
     try {
@@ -165,7 +166,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
         serializeStackItemInternal(v, w);
       }
     } catch (e) {
-      throw new Error(`Serialize Array stackItems error: ${e}`);
+      throw new TracedError(`Serialize Array stackItems error.`, e);
     }
   } else if (isStructType(item)) {
     try {
@@ -178,7 +179,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
         serializeStackItemInternal(v, w);
       }
     } catch (e) {
-      throw new Error(`Serialize Struct stackItems error: ${e}`);
+      throw new TracedError(`Serialize Struct stackItems error.`, e);
     }
   } else if (isMapType(item)) {
     const unsortKey: string[] = [];
@@ -195,16 +196,16 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
           const ba = k.getByteArray();
           const key = ba.toString();
           if (key === '') {
-            throw new Error('Serialize Map error: invalid key type');
+            throw new TracedError('Serialize Map error: invalid key type');
           }
           unsortKey.push(key);
           keyMap.set(key, k);
         } else {
-          throw new Error('Unsupport map key type.');
+          throw new TracedError('Unsupport map key type.');
         }
       }
     } catch (e) {
-      throw new Error(`Serialize Struct stackItems error: ${e}`);
+      throw new TracedError(`Serialize Struct stackItems error.`, e);
     }
 
     unsortKey.sort();
@@ -216,7 +217,7 @@ function serializeStackItemInternal(item: StackItem, w: Writer) {
       serializeStackItemInternal(mp.get(key)!, w);
     }
   } else {
-    throw new Error('unknown type');
+    throw new TracedError('unknown type');
   }
 }
 
@@ -229,21 +230,21 @@ function deserializeStackItemInternal(r: Reader): StackItem {
         const b = r.readVarBytes();
         return new ByteArrayType(b);
       } catch (e) {
-        throw new Error(`Deserialize stackItems ByteArray error: ${e}`);
+        throw new TracedError(`Deserialize stackItems ByteArray error.`, e);
       }
     } else if (t === BooleanType.id) {
       try {
         const b = r.readByte() > 0;
         return new BooleanType(b);
       } catch (e) {
-        throw new Error(`Deserialize stackItems Boolean error: ${e}`);
+        throw new TracedError(`Deserialize stackItems Boolean error.`, e);
       }
     } else if (t === IntegerType.id) {
       try {
         const b = r.readVarBytes();
         return new IntegerType(bigIntFromBytes(b));
       } catch (e) {
-        throw new Error(`Deserialize stackItems Integer error: ${e}`);
+        throw new TracedError(`Deserialize stackItems Integer error.`, e);
       }
     } else if (t === ArrayType.id || t === StructType.id) {
       try {
@@ -262,7 +263,7 @@ function deserializeStackItemInternal(r: Reader): StackItem {
           return new ArrayType(arr);
         }
       } catch (e) {
-        throw new Error(`Deserialize stackItems error: ${e}`);
+        throw new TracedError(`Deserialize stackItems error.`, e);
       }
     } else if (t === MapType.id) {
       try {
@@ -279,13 +280,13 @@ function deserializeStackItemInternal(r: Reader): StackItem {
         }
         return mp;
       } catch (e) {
-        throw new Error(`Deserialize stackItems map error: ${e}`);
+        throw new TracedError(`Deserialize stackItems map error.`, e);
       }
     } else {
-      throw new Error('unknown type');
+      throw new TracedError('unknown type');
     }
   } catch (e) {
-    throw new Error(`Deserialize error: ${e}`);
+    throw new TracedError(`Deserialize error.`, e);
   }
 }
 

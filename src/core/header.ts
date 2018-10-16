@@ -18,6 +18,7 @@
 import * as bigInt from 'big-integer';
 import * as Long from 'long';
 import { Address } from '../common/address';
+import { TracedError } from '../common/error';
 import { Uint256 } from '../common/uint256';
 import { sha256 } from '../common/utils';
 import { PublicKey } from '../crypto/publicKey';
@@ -123,7 +124,7 @@ export class Header implements Interop {
     try {
       w.writeVarUint(this.bookkeepers.length);
     } catch (e) {
-      throw new Error('serialize sig pubkey length failed');
+      throw new TracedError('serialize sig pubkey length failed', e);
     }
 
     for (const pubKey of this.bookkeepers) {
@@ -133,7 +134,7 @@ export class Header implements Interop {
     try {
       w.writeVarUint(this.sigData.length);
     } catch (e) {
-      throw new Error('serialize sig pubkey length failed');
+      throw new TracedError('serialize sig pubkey length failed', e);
     }
 
     for (const sig of this.sigData) {
@@ -142,7 +143,7 @@ export class Header implements Interop {
   }
 
   deserialize(w: Reader) {
-    throw new Error('Unsupported');
+    throw new TracedError('Unsupported');
   }
   toArray(): Buffer {
     const bf = new Writer();

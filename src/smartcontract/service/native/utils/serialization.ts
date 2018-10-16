@@ -18,6 +18,7 @@
 import * as bigInt from 'big-integer';
 import * as Long from 'long';
 import { Address } from '../../../../common/address';
+import { TracedError } from '../../../../common/error';
 import { bigIntFromBytes, bigIntToBytes } from '../../../../common/utils';
 import { Reader } from '../../../../vm/utils/reader';
 import { Writer } from '../../../../vm/utils/writer';
@@ -43,7 +44,7 @@ export function decodeVarUint(r: Reader): Long {
   const v = Long.fromString(bigIntFromBytes(value).toString());
 
   if (v.lessThan(0)) {
-    throw new Error('value should not be a negative number.');
+    throw new TracedError('value should not be a negative number.');
   }
   return v;
 }

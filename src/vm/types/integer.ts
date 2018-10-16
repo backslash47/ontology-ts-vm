@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as bigInt from 'big-integer';
+import { TracedError } from '../../common/error';
 import { bigIntToBytes } from '../../common/utils';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
@@ -61,19 +62,19 @@ export class IntegerType implements StackItem {
   }
 
   getInterface(): Interop {
-    throw new Error('Not support integer to interface');
+    throw new TracedError('Not support integer to interface');
   }
 
   getArray(): StackItem[] {
-    throw new Error('Not support integer to array');
+    throw new TracedError('Not support integer to array');
   }
 
   getStruct(): StackItem[] {
-    throw new Error('Not support integer to struct');
+    throw new TracedError('Not support integer to struct');
   }
 
   getMap(): Map<StackItem, StackItem> {
-    throw new Error('Not support integer to map');
+    throw new TracedError('Not support integer to map');
   }
 
   isMapKey(): boolean {

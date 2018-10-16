@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as bigInt from 'big-integer';
+import { TracedError } from '../../common/error';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
@@ -55,7 +56,7 @@ export class StructType implements StackItem {
   }
 
   getBigInteger(): bigInt.BigInteger {
-    throw new Error('Not support struct to integer');
+    throw new TracedError('Not support struct to integer');
   }
 
   getBoolean(): boolean {
@@ -63,11 +64,11 @@ export class StructType implements StackItem {
   }
 
   getByteArray(): Buffer {
-    throw new Error('Not support struct to byte array');
+    throw new TracedError('Not support struct to byte array');
   }
 
   getInterface(): Interop {
-    throw new Error('Not support struct to interface');
+    throw new TracedError('Not support struct to interface');
   }
 
   getArray(): StackItem[] {
@@ -79,7 +80,7 @@ export class StructType implements StackItem {
   }
 
   getMap(): Map<StackItem, StackItem> {
-    throw new Error('Not support struct to map');
+    throw new TracedError('Not support struct to map');
   }
 
   isMapKey(): boolean {
@@ -113,7 +114,7 @@ export class StructType implements StackItem {
   }
   cloneInternal(length: number): StackItem {
     if (length > MAX_CLONE_LENGTH) {
-      throw new Error('over max struct clone length');
+      throw new TracedError('over max struct clone length');
     }
 
     const arr: StackItem[] = [];
@@ -139,11 +140,11 @@ export class StructType implements StackItem {
   }
 
   getEncodedValue(): string {
-    throw new Error('Unsupported');
+    throw new TracedError('Unsupported');
   }
 
   setEncodedValue(value: string) {
-    throw new Error('Unsupported');
+    throw new TracedError('Unsupported');
   }
 
   getType() {

@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Address } from '../common/address';
+import { TracedError } from '../common/error';
 import { LedgerStore } from '../core/ledgerStore';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
@@ -79,7 +80,7 @@ export class SmartContract implements ContextRef {
    */
   currentContext() {
     if (this.contexts.length < 1) {
-      throw new Error();
+      throw new TracedError();
     }
     return this.contexts[this.contexts.length - 1];
   }
@@ -148,7 +149,7 @@ export class SmartContract implements ContextRef {
    */
   newExecuteEngine(code: Buffer): VmService {
     if (!this.checkContexts()) {
-      throw new Error('engine over max limit!');
+      throw new TracedError('engine over max limit!');
     }
     const service = new NeoVmService({
       store: this.store,

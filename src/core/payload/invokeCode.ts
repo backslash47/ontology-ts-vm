@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../../common/error';
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
 import { StateValue } from '../state/stateStore';
@@ -30,7 +31,7 @@ export class InvokeCode implements StateValue {
     try {
       w.writeVarBytes(this.code);
     } catch (e) {
-      throw new Error(`InvokeCode Code Serialize failed: ${e}`);
+      throw new TracedError('InvokeCode Code Serialize failed.', e);
     }
   }
 
@@ -40,7 +41,7 @@ export class InvokeCode implements StateValue {
 
       this.code = code;
     } catch (e) {
-      throw new Error(`InvokeCode Code Deserialize failed: ${e}`);
+      throw new TracedError('InvokeCode Code Deserialize failed.', e);
     }
   }
 }

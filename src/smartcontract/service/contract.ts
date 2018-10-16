@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Address } from '../../common/address';
+import { TracedError } from '../../common/error';
 import { DeployCode, isDeployCode } from '../../core/payload/deployCode';
 import { ST_CONTRACT, ST_STORAGE } from '../../core/state/dataEntryPrefix';
 import { getStorageKey, StateItem } from '../../core/state/stateStore';
@@ -36,10 +37,10 @@ export function contractCreate(service: VmService, engine: ExecutionEngine) {
       const state = service.getStateStore().getOrAdd(ST_CONTRACT, contractAddress.toArray(), contract);
       pushData(engine, state);
     } catch (e) {
-      throw new Error(`[ContractCreate] GetOrAdd error: ${e}`);
+      throw new TracedError(`[ContractCreate] GetOrAdd error.`, e);
     }
   } catch (e) {
-    throw new Error(`[ContractCreate] contract parameters invalid: ${e}`);
+    throw new TracedError(`[ContractCreate] contract parameters invalid.`, e);
   }
 }
 
@@ -57,7 +58,7 @@ export function contractMigrate(service: VmService, engine: ExecutionEngine) {
 
       const context = service.getContextRef().currentContext();
       if (context === undefined) {
-        throw new Error('[ContractMigrate] current contract context invalid!');
+        throw new TracedError('[ContractMigrate] current contract context invalid!');
       }
 
       service.getStateStore().add(ST_CONTRACT, contractAddress.toArray(), contract);
@@ -73,13 +74,13 @@ export function contractMigrate(service: VmService, engine: ExecutionEngine) {
 
         pushData(engine, contract);
       } catch (e) {
-        throw new Error(`[ContractMigrate] contract store migration error: ${e}`);
+        throw new TracedError(`[ContractMigrate] contract store migration error.`, e);
       }
     } catch (e) {
-      throw new Error(`[ContractMigrate] contract invalid: ${e}`);
+      throw new TracedError(`[ContractMigrate] contract invalid.`, e);
     }
   } catch (e) {
-    throw new Error(`[ContractMigrate] contract parameters invalid: ${e}`);
+    throw new TracedError(`[ContractMigrate] contract parameters invalid.`, e);
   }
 }
 
@@ -89,14 +90,14 @@ export function contractMigrate(service: VmService, engine: ExecutionEngine) {
 export function contractDestroy(service: VmService, engine: ExecutionEngine) {
   const context = service.getContextRef().currentContext();
   if (context === undefined) {
-    throw new Error('[ContractDestory] current contract context invalid!');
+    throw new TracedError('[ContractDestory] current contract context invalid!');
   }
 
   try {
     const item = service.getStateStore().get(ST_CONTRACT, context.contractAddress.toArray());
 
     if (item === undefined) {
-      throw new Error('[ContractDestroy] get current contract null!');
+      throw new TracedError('[ContractDestroy] get current contract null!');
     }
 
     service.getStateStore().delete(ST_CONTRACT, context.contractAddress.toArray());
@@ -108,10 +109,10 @@ export function contractDestroy(service: VmService, engine: ExecutionEngine) {
         service.getStateStore().delete(ST_STORAGE, v.key);
       }
     } catch (e) {
-      throw new Error(`[ContractDestory] find error: ${e}`);
+      throw new TracedError(`[ContractDestory] find error.`, e);
     }
   } catch (e) {
-    throw new Error('[ContractDestroy] get current contract fail!');
+    throw new TracedError('[ContractDestroy] get current contract fail!');
   }
 }
 
@@ -120,7 +121,7 @@ export function contractDestroy(service: VmService, engine: ExecutionEngine) {
  */
 export function contractGetStorageContext(service: VmService, engine: ExecutionEngine) {
   if (evaluationStackCount(engine) < 1) {
-    throw new Error('[GetStorageContext] Too few input parameter!');
+    throw new TracedError('[GetStorageContext] Too few input parameter!');
   }
   const opInterface = popInteropInterface(engine);
 
@@ -131,18 +132,18 @@ export function contractGetStorageContext(service: VmService, engine: ExecutionE
       const item = service.getStateStore().get(ST_CONTRACT, address.toArray());
 
       if (item === undefined) {
-        throw new Error('[GetStorageContext] Get StorageContext null');
+        throw new TracedError('[GetStorageContext] Get StorageContext null');
       }
 
       if (!address.equals(service.getContextRef().currentContext()!.contractAddress)) {
-        throw new Error('[GetStorageContext] CodeHash not equal!');
+        throw new TracedError('[GetStorageContext] CodeHash not equal!');
       }
       pushData(engine, new StorageContext(address));
     } catch (e) {
-      throw new Error(`[GetStorageContext] Get StorageContext error: ${e}`);
+      throw new TracedError(`[GetStorageContext] Get StorageContext error.`, e);
     }
   } else {
-    throw new Error('[GetStorageContext] Pop data not contract!');
+    throw new TracedError('[GetStorageContext] Pop data not contract!');
   }
 }
 
@@ -159,39 +160,39 @@ export function contractGetCode(service: VmService, engine: ExecutionEngine) {
 
 function isContractParamValid(engine: ExecutionEngine): DeployCode {
   if (evaluationStackCount(engine) < 7) {
-    throw new Error('[Contract] Too few input parameters');
+    throw new TracedError('[Contract] Too few input parameters');
   }
   const code = popByteArray(engine);
 
   if (code.length > 1024 * 1024) {
-    throw new Error('[Contract] Code too long!');
+    throw new TracedError('[Contract] Code too long!');
   }
   const needStorage = popBoolean(engine);
 
   const name = popByteArray(engine);
 
   if (name.length > 252) {
-    throw new Error('[Contract] Name too long!');
+    throw new TracedError('[Contract] Name too long!');
   }
   const version = popByteArray(engine);
 
   if (version.length > 252) {
-    throw new Error('[Contract] Version too long!');
+    throw new TracedError('[Contract] Version too long!');
   }
   const author = popByteArray(engine);
 
   if (author.length > 252) {
-    throw new Error('[Contract] Author too long!');
+    throw new TracedError('[Contract] Author too long!');
   }
   const email = popByteArray(engine);
 
   if (email.length > 252) {
-    throw new Error('[Contract] Email too long!');
+    throw new TracedError('[Contract] Email too long!');
   }
   const desc = popByteArray(engine);
 
   if (desc.length > 65536) {
-    throw new Error('[Contract] Desc too long!');
+    throw new TracedError('[Contract] Desc too long!');
   }
   const contract = new DeployCode({
     code,
@@ -210,10 +211,10 @@ function isContractExist(service: VmService, contractAddress: Address) {
     const item = service.getStateStore().get(ST_CONTRACT, contractAddress.toArray());
 
     if (item !== undefined) {
-      throw new Error(`[Contract] Get ${contractAddress} contract exist!`);
+      throw new TracedError(`[Contract] Get ${contractAddress} contract exist!`);
     }
   } catch (e) {
-    throw new Error(`[Contract] Get contract ${contractAddress} error!`);
+    throw new TracedError(`[Contract] Get contract ${contractAddress} error!`, e);
   }
 }
 
@@ -228,6 +229,6 @@ function storeMigration(service: VmService, oldAddr: Address, newAddr: Address):
 
     return stateValues;
   } catch (e) {
-    throw new Error(`[Contract] Find error: ${e}`);
+    throw new TracedError(`[Contract] Find error.`, e);
   }
 }

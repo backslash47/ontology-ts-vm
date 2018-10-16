@@ -17,6 +17,7 @@
  */
 import * as Long from 'long';
 import { Address } from '../../../../common/address';
+import { TracedError } from '../../../../common/error';
 import { ST_STORAGE } from '../../../../core/state/dataEntryPrefix';
 import { StorageItem } from '../../../../core/state/storageItem';
 import { Writer } from '../../../../vm/utils/writer';
@@ -46,7 +47,7 @@ export function addNotifications(native: NativeVmService, contract: Address, sta
 
 export function transfer(native: NativeVmService, contract: Address, state: State) {
   if (!native.contextRef.checkWitness(state.from)) {
-    throw new Error('authentication failed!');
+    throw new TracedError('authentication failed!');
   }
 
   const fromBalance = fromTransfer(native, genBalanceKey(contract, state.from), state.value);
@@ -56,7 +57,7 @@ export function transfer(native: NativeVmService, contract: Address, state: Stat
 
 export function transferedFrom(native: NativeVmService, currentContract: Address, state: TransferFrom) {
   if (native.contextRef.checkWitness(state.sender) === false) {
-    throw new Error('authentication failed!');
+    throw new TracedError('authentication failed!');
   }
 
   fromApprove(native, genTransferFromKey(currentContract, state), state.value);
@@ -86,7 +87,7 @@ export function fromTransfer(native: NativeVmService, fromKey: Buffer, value: Lo
 
   if (fromBalance.lt(value)) {
     const addr = Address.parseFromBytes(fromKey.slice(20));
-    throw new Error(
+    throw new TracedError(
       `[Transfer] balance insufficient. contract:${native.contextRef
         .currentContext()!
         // tslint:disable-next-line:max-line-length
@@ -119,7 +120,7 @@ export function fromApprove(native: NativeVmService, fromApproveKey: Buffer, val
   const approveValue = getStorageUInt64(native, fromApproveKey);
 
   if (approveValue.lessThan(value)) {
-    throw new Error(`[TransferFrom] approve balance insufficient! have ${approveValue}, got ${value}`);
+    throw new TracedError(`[TransferFrom] approve balance insufficient! have ${approveValue}, got ${value}`);
   } else if (approveValue === value) {
     native.stateStore.delete(ST_STORAGE, fromApproveKey);
   } else {

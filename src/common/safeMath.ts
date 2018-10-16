@@ -16,10 +16,11 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as Long from 'long';
+import { TracedError } from './error';
 
 export function safeAdd(x: Long, y: Long) {
   if (y.gt(Long.MAX_UNSIGNED_VALUE.subtract(x))) {
-    throw new Error('overflow detected');
+    throw new TracedError('overflow detected');
   }
   return x.add(y);
 }

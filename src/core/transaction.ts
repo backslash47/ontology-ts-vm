@@ -17,6 +17,7 @@
  */
 import * as Long from 'long';
 import { Address } from '../common/address';
+import { TracedError } from '../common/error';
 import { Uint256 } from '../common/uint256';
 import { sha256 } from '../common/utils';
 import { Interop } from '../vm/interfaces/interop';
@@ -145,7 +146,7 @@ export class Transaction implements Interop {
   serialize(w: Writer) {
     if (this.raw !== undefined) {
       if (this.raw.length === 0) {
-        throw new Error('wrong constructed transaction');
+        throw new TracedError('wrong constructed transaction');
       }
 
       w.writeBytes(this.raw);
@@ -169,7 +170,7 @@ export class Transaction implements Interop {
     const length = r.readVarUInt().toNumber();
 
     if (length > TX_MAX_SIG_SIZE) {
-      throw new Error(`transaction signature number ${length} execced ${TX_MAX_SIG_SIZE}`);
+      throw new TracedError(`transaction signature number ${length} execced ${TX_MAX_SIG_SIZE}`);
     }
 
     for (let i = 0; i < length; i++) {
@@ -208,13 +209,13 @@ export class Transaction implements Interop {
       pl.deserialize(r);
       this.payload = pl;
     } else {
-      throw new Error(`unsupported tx type ${this.getTxType()}`);
+      throw new TracedError(`unsupported tx type ${this.getTxType()}`);
     }
 
     const length = r.readVarUInt();
 
     if (!length.isZero()) {
-      throw new Error('transaction attribute must be 0, got %d');
+      throw new TracedError(`transaction attribute must be 0, got ${length.toString()}`);
     }
   }
 

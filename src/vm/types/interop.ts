@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as bigInt from 'big-integer';
+import { TracedError } from '../../common/error';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
@@ -54,7 +55,7 @@ export class InteropType implements StackItem {
   }
 
   getBigInteger(): bigInt.BigInteger {
-    throw new Error('Not support interface to integer');
+    throw new TracedError('Not support interface to integer');
   }
 
   getBoolean(): boolean {
@@ -62,7 +63,7 @@ export class InteropType implements StackItem {
   }
 
   getByteArray(): Buffer {
-    throw new Error('Not support interface to byte array');
+    throw new TracedError('Not support interface to byte array');
   }
 
   getInterface() {
@@ -70,15 +71,15 @@ export class InteropType implements StackItem {
   }
 
   getArray(): StackItem[] {
-    throw new Error('Not support interface to array');
+    throw new TracedError('Not support interface to array');
   }
 
   getStruct(): StackItem[] {
-    throw new Error('Not support interface to struct');
+    throw new TracedError('Not support interface to struct');
   }
 
   getMap(): Map<StackItem, StackItem> {
-    throw new Error('Not support interface to map');
+    throw new TracedError('Not support interface to map');
   }
 
   isMapKey(): boolean {
@@ -90,11 +91,11 @@ export class InteropType implements StackItem {
   }
 
   getEncodedValue(): string {
-    throw new Error('Unsupported');
+    throw new TracedError('Unsupported');
   }
 
   setEncodedValue(value: string) {
-    throw new Error('Unsupported');
+    throw new TracedError('Unsupported');
   }
 
   getType() {

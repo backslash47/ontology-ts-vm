@@ -17,6 +17,7 @@
  */
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
+import { TracedError } from './error';
 
 const UINT256_SIZE = 32;
 
@@ -48,7 +49,7 @@ export class Uint256 {
     try {
       this.value = r.readBytes(UINT256_SIZE);
     } catch (e) {
-      throw new Error('deserialize Uint256 error');
+      throw new TracedError('deserialize Uint256 error', e);
     }
   }
 }

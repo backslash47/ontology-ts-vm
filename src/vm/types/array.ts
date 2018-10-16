@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as bigInt from 'big-integer';
+import { TracedError } from '../../common/error';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
@@ -34,19 +35,19 @@ export class ArrayType implements StackItem {
   }
 
   getBigInteger(): bigInt.BigInteger {
-    throw new Error('Not support array to integer');
+    throw new TracedError('Not support array to integer');
   }
 
   getBoolean(): boolean {
-    throw new Error('Not support array to boolean');
+    throw new TracedError('Not support array to boolean');
   }
 
   getByteArray(): Buffer {
-    throw new Error('Not support array to byte array');
+    throw new TracedError('Not support array to byte array');
   }
 
   getInterface(): Interop {
-    throw new Error('Not support array to interface');
+    throw new TracedError('Not support array to interface');
   }
 
   getArray(): StackItem[] {
@@ -58,7 +59,7 @@ export class ArrayType implements StackItem {
   }
 
   getMap(): Map<StackItem, StackItem> {
-    throw new Error('Not support array to map');
+    throw new TracedError('Not support array to map');
   }
 
   isMapKey(): boolean {
@@ -95,11 +96,11 @@ export class ArrayType implements StackItem {
   }
 
   getEncodedValue(): string {
-    throw new Error('Unsupported');
+    throw new TracedError('Unsupported');
   }
 
   setEncodedValue(value: string) {
-    throw new Error('Unsupported');
+    throw new TracedError('Unsupported');
   }
 
   getType() {

@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as Long from 'long';
+import { TracedError } from '../common/error';
 import { peekNByteArray } from '../vm/func/common';
 import { ExecutionEngine } from '../vm/interfaces/engine';
 import { GasTable, OPCODE_GAS, STORAGE_PUT_NAME } from './consts';
@@ -29,7 +30,7 @@ export function storeGasCost(engine: ExecutionEngine): Long {
   if (putCost !== undefined) {
     return Long.fromNumber((key.length + value.length - 1) / 1024 + 1).mul(putCost);
   } else {
-    throw new Error('[StoreGasCost] get STORAGE_PUT_NAME gas failed');
+    throw new TracedError('[StoreGasCost] get STORAGE_PUT_NAME gas failed');
   }
 }
 

@@ -1,3 +1,5 @@
+import { TracedError } from '../common/error';
+
 /*
  * Copyright (C) 2018 Matus Zamborsky & The ontology Authors
  * This file is part of The ontology library.
@@ -43,7 +45,7 @@ export class SignatureScheme {
   static fromHex(hex: number): SignatureScheme {
     const item = SignatureScheme.values.find((v) => v.hex === hex);
     if (item === undefined) {
-      throw new Error('Enum value not found');
+      throw new TracedError('Enum value not found');
     }
 
     return item;
@@ -57,7 +59,7 @@ export class SignatureScheme {
   static fromLabel(label: string): SignatureScheme {
     const item = SignatureScheme.values.find((v) => v.label === label);
     if (item === undefined) {
-      throw new Error('Enum value not found');
+      throw new TracedError('Enum value not found');
     }
 
     return item;
@@ -71,7 +73,7 @@ export class SignatureScheme {
   static fromLabelJWS(label: string): SignatureScheme {
     const item = SignatureScheme.values.find((v) => v.labelJWS === label);
     if (item === undefined) {
-      throw new Error('Enum value not found');
+      throw new TracedError('Enum value not found');
     }
 
     return item;

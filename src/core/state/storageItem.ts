@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../../common/error';
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
 import { StateBase } from './stateBase';
@@ -41,13 +42,13 @@ export class StorageItem extends StateBase {
     try {
       super.deserialize(r);
     } catch (e) {
-      throw new Error(`[StorageItem], StateBase Deserialize failed: ${e}`);
+      throw new TracedError('[StorageItem], StateBase Deserialize failed.', e);
     }
 
     try {
       this.value = r.readVarBytes();
     } catch (e) {
-      throw new Error(`[StorageItem], Value Deserialize failed: ${e}`);
+      throw new TracedError('[StorageItem], Value Deserialize failed.', e);
     }
   }
 

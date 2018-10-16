@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../../common/error';
 import { Reader } from '../../vm/utils/reader';
 import { Writer } from '../../vm/utils/writer';
 import { StateValue } from './stateStore';
@@ -30,7 +31,7 @@ export class StateBase implements StateValue {
     try {
       this.stateVersion = r.readByte();
     } catch (e) {
-      throw new Error(`[StateBase], StateBase Deserialize failed: ${e}`);
+      throw new TracedError('[StateBase], StateBase Deserialize failed.', e);
     }
   }
 }

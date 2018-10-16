@@ -19,6 +19,7 @@ import * as base58 from 'bs58';
 import { PublicKey } from '../crypto/publicKey';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
+import { TracedError } from './error';
 import { programFromPubKey } from './program';
 import { md160, reverseBuffer, sha256 } from './utils';
 
@@ -65,7 +66,7 @@ export class Address {
     try {
       this.value = r.readBytes(ADDR_LEN);
     } catch (e) {
-      throw new Error('deserialize Uint256 error');
+      throw new TracedError('deserialize Uint256 error', e);
     }
   }
 

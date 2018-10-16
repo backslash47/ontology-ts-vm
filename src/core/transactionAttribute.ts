@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../common/error';
 import { Interop } from '../vm/interfaces/interop';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
@@ -54,17 +55,17 @@ export class TransactionAttribute implements Interop {
     try {
       w.writeUint8(this.usage);
     } catch (e) {
-      throw new Error(`Transaction attribute Usage serialization error: ${e}`);
+      throw new TracedError(`Transaction attribute Usage serialization error.`, e);
     }
 
     if (!isTransactionAttributeUsage(this.usage)) {
-      throw new Error(`Unsupported attribute Description.`);
+      throw new TracedError(`Unsupported attribute Description.`);
     }
 
     try {
       w.writeVarBytes(this.data);
     } catch (e) {
-      throw new Error(`Transaction attribute Data serialization error: ${e}`);
+      throw new TracedError(`Transaction attribute Data serialization error.`, e);
     }
   }
 
@@ -73,18 +74,18 @@ export class TransactionAttribute implements Interop {
       const val = r.readByte();
 
       if (!isTransactionAttributeUsage(this.usage)) {
-        throw new Error('[TxAttribute] Unsupported attribute Description.');
+        throw new TracedError('[TxAttribute] Unsupported attribute Description.');
       }
 
       this.usage = val;
     } catch (e) {
-      throw new Error(`Transaction attribute Usage deserialization error: ${e}`);
+      throw new TracedError(`Transaction attribute Usage deserialization error`, e);
     }
 
     try {
       this.data = r.readVarBytes();
     } catch (e) {
-      throw new Error(`Transaction attribute Data deserialization error: ${e}`);
+      throw new TracedError(`Transaction attribute Data deserialization error.`, e);
     }
   }
   toArray(): Buffer {

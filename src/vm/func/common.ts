@@ -17,6 +17,7 @@
  */
 import * as bigInt from 'big-integer';
 import { createHash, Hash } from 'crypto';
+import { TracedError } from '../../common/error';
 import * as errors from '../errors';
 import { ExecutionEngine } from '../interfaces/engine';
 import { Interop, isInterop } from '../interfaces/interop';
@@ -284,7 +285,7 @@ export function newStackItem(data: any): StackItem {
   } else if (isInterop(data)) {
     stackItem = new InteropType(data);
   } else {
-    throw new Error('Invalid data type!');
+    throw new TracedError('Invalid data type!');
   }
 
   return stackItem;

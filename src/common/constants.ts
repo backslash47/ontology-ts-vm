@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as Long from 'long';
+import { TracedError } from './error';
 
 export const ONT_NAME = 'ONT Token';
 export const ONT_SYMBOL = 'ONT';
@@ -50,7 +51,7 @@ export const UNBOUND_DEADLINE = (() => {
       ONT_TOTAL_SUPPLY.lessThanOrEqual(count)
     )
   ) {
-    throw new Error('incompatible constants setting');
+    throw new TracedError('incompatible constants setting');
   }
 
   return UNBOUND_TIME_INTERVAL * numInterval - count.subtract(ONT_TOTAL_SUPPLY).toNumber();

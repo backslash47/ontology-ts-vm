@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../common/error';
 import { computeMerkleRoot } from '../common/merkleTree';
 import { Uint256 } from '../common/uint256';
 import { Interop } from '../vm/interfaces/interop';
@@ -54,7 +55,7 @@ export class Block implements Interop {
     try {
       w.writeUint32(this.transactions.length);
     } catch (e) {
-      throw new Error(`Block item Transactions length serialization failed: ${e}`);
+      throw new TracedError('Block item Transactions length serialization failed.', e);
     }
 
     for (const transaction of this.transactions) {

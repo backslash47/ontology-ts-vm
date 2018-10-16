@@ -17,6 +17,7 @@
  */
 import * as bigInt from 'big-integer';
 import { Address } from '../../common/address';
+import { TracedError } from '../../common/error';
 import { bigIntToBytes } from '../../common/utils';
 import { evaluationStackCount, popByteArray, popInt, popStackItem, pushData } from '../../vm/func/common';
 import { ExecutionEngine } from '../../vm/interfaces/engine';
@@ -35,7 +36,7 @@ import { Contract } from '../states/contract';
 export function nativeInvoke(service: VmService, engine: ExecutionEngine) {
   const count = evaluationStackCount(engine);
   if (count < 4) {
-    throw new Error(`invoke native contract invalid parameters ${count} < 4`);
+    throw new TracedError(`invoke native contract invalid parameters ${count} < 4`);
   }
   const version = popInt(engine);
   const address = popByteArray(engine);
@@ -43,13 +44,13 @@ export function nativeInvoke(service: VmService, engine: ExecutionEngine) {
   try {
     addr = Address.parseFromBytes(address);
   } catch (e) {
-    throw new Error(`invoke native contract:${address}, address invalid`);
+    throw new TracedError(`invoke native contract:${address}, address invalid`, e);
   }
 
   const method = popByteArray(engine);
 
   if (method.length > METHOD_LENGTH_LIMIT) {
-    throw new Error(`invoke native contract:${address} method:${method} too long, over max length 1024 limit`);
+    throw new TracedError(`invoke native contract:${address} method:${method} too long, over max length 1024 limit`);
   }
   const args = popStackItem(engine);
 
@@ -109,6 +110,6 @@ function buildParamToNativeInternal(w: Writer, item: StackItem) {
       buildParamToNativeInternal(w, v);
     }
   } else {
-    throw new Error(`convert neovm params to native invalid type support: ${item.getType()}`);
+    throw new TracedError(`convert neovm params to native invalid type support: ${item.getType()}`);
   }
 }

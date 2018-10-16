@@ -17,6 +17,7 @@
  */
 
 import * as elliptic from 'elliptic';
+import { TracedError } from '../common/error';
 import { Key } from './key';
 import { KeyType } from './keyType';
 import { PublicKey } from './publicKey';
@@ -35,7 +36,7 @@ export class PrivateKey extends Key {
       case KeyType.EDDSA:
         return this.getEdDSAPublicKey();
       default:
-        throw new Error('Unsupported signature schema.');
+        throw new TracedError('Unsupported signature schema.');
     }
   }
 
@@ -56,7 +57,7 @@ export class PrivateKey extends Key {
     }
 
     if (!this.isSchemaSupported(schema)) {
-      throw new Error('Signature schema does not match key type.');
+      throw new TracedError('Signature schema does not match key type.');
     }
 
     // retrieves content to sign if not provided directly
@@ -91,7 +92,7 @@ export class PrivateKey extends Key {
       case SignatureScheme.EDDSAwithSHA512:
         return this.computeEdDSASignature(hash);
       default:
-        throw new Error('Unsupported signature schema.');
+        throw new TracedError('Unsupported signature schema.');
     }
   }
 

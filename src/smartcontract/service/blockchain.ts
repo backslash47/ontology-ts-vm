@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Address } from '../../common/address';
+import { TracedError } from '../../common/error';
 import { Uint256 } from '../../common/uint256';
 import { bigIntFromBytes } from '../../common/utils';
 import { Block } from '../../core/block';
@@ -47,7 +48,7 @@ export function blockChainGetHeader(service: VmService, engine: ExecutionEngine)
     try {
       header = service.getStore().getHeaderByHash(hash);
     } catch (e) {
-      throw new Error(`[BlockChainGetHeader] GetHeader error: ${e}`);
+      throw new TracedError(`[BlockChainGetHeader] GetHeader error.`, e);
     }
   } else if (l === 32) {
     const hash = Uint256.parseFromBytes(data);
@@ -56,10 +57,10 @@ export function blockChainGetHeader(service: VmService, engine: ExecutionEngine)
     try {
       header = service.getStore().getHeaderByHash(hash);
     } catch (e) {
-      throw new Error(`[BlockChainGetHeader] GetHeader error: ${e}`);
+      throw new TracedError(`[BlockChainGetHeader] GetHeader error.`, e);
     }
   } else {
-    throw new Error('[BlockChainGetHeader] data invalid.');
+    throw new TracedError('[BlockChainGetHeader] data invalid.');
   }
   pushData(engine, header);
 }
@@ -69,7 +70,7 @@ export function blockChainGetHeader(service: VmService, engine: ExecutionEngine)
  */
 export function blockChainGetBlock(service: VmService, engine: ExecutionEngine) {
   if (evaluationStackCount(engine) < 1) {
-    throw new Error('[BlockChainGetBlock] Too few input parameters ');
+    throw new TracedError('[BlockChainGetBlock] Too few input parameters ');
   }
   const data = popByteArray(engine);
 
@@ -83,7 +84,7 @@ export function blockChainGetBlock(service: VmService, engine: ExecutionEngine) 
     try {
       block = service.getStore().getBlockByHeight(height);
     } catch (e) {
-      throw new Error(`[BlockChainGetBlock] GetBlock error: ${e}`);
+      throw new TracedError(`[BlockChainGetBlock] GetBlock error.`, e);
     }
   } else if (l === 32) {
     const hash = Uint256.parseFromBytes(data);
@@ -91,10 +92,10 @@ export function blockChainGetBlock(service: VmService, engine: ExecutionEngine) 
     try {
       block = service.getStore().getBlockByHash(hash);
     } catch (e) {
-      throw new Error(`[BlockChainGetBlock] GetBlock error: ${e}`);
+      throw new TracedError(`[BlockChainGetBlock] GetBlock error.`, e);
     }
   } else {
-    throw new Error('[BlockChainGetBlock] data invalid.');
+    throw new TracedError('[BlockChainGetBlock] data invalid.');
   }
   pushData(engine, block);
 }
@@ -110,7 +111,7 @@ export function blockChainGetTransaction(service: VmService, engine: ExecutionEn
     const [t] = service.getStore().getTransaction(hash);
     pushData(engine, t);
   } catch (e) {
-    throw new Error(`[BlockChainGetTransaction] GetTransaction error: ${e}`);
+    throw new TracedError(`[BlockChainGetTransaction] GetTransaction error.`, e);
   }
 }
 
@@ -119,7 +120,7 @@ export function blockChainGetTransaction(service: VmService, engine: ExecutionEn
  */
 export function blockChainGetContract(service: VmService, engine: ExecutionEngine) {
   if (evaluationStackCount(engine) < 1) {
-    throw new Error('[GetContract] Too few input parameters ');
+    throw new TracedError('[GetContract] Too few input parameters ');
   }
   const b = popByteArray(engine);
   const address = Address.parseFromBytes(b);
@@ -128,7 +129,7 @@ export function blockChainGetContract(service: VmService, engine: ExecutionEngin
     const item = service.getStore().getContractState(address);
     pushData(engine, item);
   } catch (e) {
-    throw new Error(`[GetContract] GetAsset error: ${e}`);
+    throw new TracedError(`[GetContract] GetAsset error.`, e);
   }
 }
 
@@ -137,7 +138,7 @@ export function blockChainGetContract(service: VmService, engine: ExecutionEngin
  */
 export function blockChainGetTransactionHeight(service: VmService, engine: ExecutionEngine) {
   if (evaluationStackCount(engine) < 1) {
-    throw new Error('[BlockChainGetTransactionHeight] Too few input parameters ');
+    throw new TracedError('[BlockChainGetTransactionHeight] Too few input parameters ');
   }
   const d = popByteArray(engine);
 
@@ -147,6 +148,6 @@ export function blockChainGetTransactionHeight(service: VmService, engine: Execu
     const [, h] = service.getStore().getTransaction(hash);
     pushData(engine, h);
   } catch (e) {
-    throw new Error(`[BlockChainGetTransaction] GetTransaction error: ${e}`);
+    throw new TracedError(`[BlockChainGetTransaction] GetTransaction error.`, e);
   }
 }

@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { TracedError } from '../common/error';
 import { SignatureScheme } from './signatureScheme';
 
 /**
@@ -35,7 +36,7 @@ export class KeyType {
   static fromHex(hex: number): KeyType {
     const item = KeyType.values.find((v) => v.hex === hex);
     if (item === undefined) {
-      throw new Error('Enum value not found');
+      throw new TracedError('Enum value not found');
     }
 
     return item;
@@ -49,7 +50,7 @@ export class KeyType {
   static fromLabel(label: string): KeyType {
     const item = KeyType.values.find((v) => v.label === label);
     if (item === undefined) {
-      throw new Error('Enum value not found');
+      throw new TracedError('Enum value not found');
     }
 
     return item;

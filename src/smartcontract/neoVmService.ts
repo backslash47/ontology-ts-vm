@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Address } from '../common/address';
+import { TracedError } from '../common/error';
 import { LedgerStore } from '../core/ledgerStore';
 import { isDeployCode } from '../core/payload/deployCode';
 import { ST_CONTRACT } from '../core/state/dataEntryPrefix';
@@ -178,7 +179,7 @@ export class NeoVmService implements VmService {
       switch (this.engine.getOpCode()) {
         case O.VERIFY:
           if (evaluationStackCount(this.engine) < 3) {
-            throw new Error('[VERIFY] Too few input parameters ');
+            throw new TracedError('[VERIFY] Too few input parameters ');
           }
           const pubKey = popByteArray(this.engine);
           const key = PublicKey.deserialize(pubKey);
@@ -203,17 +204,17 @@ export class NeoVmService implements VmService {
             .readBytes(20);
           if (address.compare(BYTE_ZERO_20) === 0) {
             if (evaluationStackCount(this.engine) < 1) {
-              throw new Error(`[Appcall] Too few input parameters:${evaluationStackCount(this.engine)}`);
+              throw new TracedError(`[Appcall] Too few input parameters:${evaluationStackCount(this.engine)}`);
             }
 
             try {
               address = popByteArray(this.engine);
             } catch (e) {
-              throw new Error(`[Appcall] pop contract address error:${e}`);
+              throw new TracedError(`[Appcall] pop contract address error.`, e);
             }
 
             if (address.length !== 20) {
-              throw new Error(`[Appcall] pop contract address len != 20:${address}`);
+              throw new TracedError(`[Appcall] pop contract address len != 20:${address}`);
             }
           }
 
@@ -229,7 +230,7 @@ export class NeoVmService implements VmService {
         default:
           const err = this.engine.stepInto();
           if (err !== undefined) {
-            throw new Error(`[NeoVmService] vm execute error! ${err}`);
+            throw new TracedError(`[NeoVmService] vm execute error!`, err);
           }
           if (this.engine.getState() === FAULT) {
             throw errors.VM_EXEC_FAULT;
@@ -254,7 +255,7 @@ export class NeoVmService implements VmService {
       .readVarString(MAX_BYTEARRAY_SIZE);
     const service = ServiceMap.get(serviceName);
     if (service === undefined) {
-      throw new Error(`[SystemCall] service not support: ${serviceName}`);
+      throw new TracedError(`[SystemCall] service not support: ${serviceName}`);
     }
     const price = gasPrice(this.engine, serviceName);
 
@@ -265,14 +266,14 @@ export class NeoVmService implements VmService {
       try {
         service.validator(this.engine);
       } catch (e) {
-        throw new Error(`[SystemCall] service validator error: ${e}`);
+        throw new TracedError(`[SystemCall] service validator error.`, e);
       }
     }
 
     try {
       service.execute(this, this.engine);
     } catch (e) {
-      throw new Error(`[SystemCall] service execute error: ${e}`);
+      throw new TracedError(`[SystemCall] service execute error.`, e);
     }
   }
 
@@ -286,7 +287,7 @@ export class NeoVmService implements VmService {
     try {
       item = this.stateStore.get(ST_CONTRACT, address);
     } catch (e) {
-      throw new Error('[getContract] Get contract context error!');
+      throw new TracedError('[getContract] Get contract context error!', e);
     }
 
     // log.Debugf("invoke contract address:%x", scommon.ToArrayReverse(address))

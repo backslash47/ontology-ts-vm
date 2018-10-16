@@ -19,6 +19,7 @@
 import * as bigInt from 'big-integer';
 import { Address } from '../../../../common/address';
 import * as C from '../../../../common/constants';
+import { TracedError } from '../../../../common/error';
 import { bigIntToBytes } from '../../../../common/utils';
 import { ST_STORAGE } from '../../../../core/state/dataEntryPrefix';
 import { Reader } from '../../../../vm/utils/reader';
@@ -51,7 +52,7 @@ export function ongInit(native: NativeVmService): Buffer {
   const amount = getStorageUInt64(native, U.genTotalSupplyKey(contract));
 
   if (amount.gt(0)) {
-    throw new Error('Init ong has been completed!');
+    throw new TracedError('Init ong has been completed!');
   }
 
   const item = genUInt64StorageItem(C.ONG_TOTAL_SUPPLY);
@@ -70,7 +71,7 @@ export function ongTransfer(native: NativeVmService): Buffer {
       continue;
     }
     if (v.value.gt(C.ONG_TOTAL_SUPPLY)) {
-      throw new Error(`transfer ong amount:${v.value} over totalSupply:${C.ONG_TOTAL_SUPPLY}`);
+      throw new TracedError(`transfer ong amount:${v.value} over totalSupply:${C.ONG_TOTAL_SUPPLY}`);
     }
     U.transfer(native, contract, v);
     U.addNotifications(native, contract, v);
@@ -85,10 +86,10 @@ export function ongApprove(native: NativeVmService): Buffer {
     return BYTE_FALSE;
   }
   if (state.value.gt(C.ONG_TOTAL_SUPPLY)) {
-    throw new Error(`approve ong amount:${state.value} over totalSupply:${C.ONG_TOTAL_SUPPLY}`);
+    throw new TracedError(`approve ong amount:${state.value} over totalSupply:${C.ONG_TOTAL_SUPPLY}`);
   }
   if (native.contextRef.checkWitness(state.from) === false) {
-    throw new Error('authentication failed!');
+    throw new TracedError('authentication failed!');
   }
   const contract = native.contextRef.currentContext()!.contractAddress;
   native.stateStore.add(ST_STORAGE, U.genApproveKey(contract, state.from, state.to), genUInt64StorageItem(state.value));
@@ -103,7 +104,7 @@ export function ongTransferFrom(native: NativeVmService): Buffer {
     return BYTE_FALSE;
   }
   if (state.value.gt(C.ONG_TOTAL_SUPPLY)) {
-    throw new Error(`approve ong amount:${state.value} over totalSupply:${C.ONG_TOTAL_SUPPLY}`);
+    throw new TracedError(`approve ong amount:${state.value} over totalSupply:${C.ONG_TOTAL_SUPPLY}`);
   }
   const contract = native.contextRef.currentContext()!.contractAddress;
   U.transferedFrom(native, contract, state);

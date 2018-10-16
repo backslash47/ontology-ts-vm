@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as bigInt from 'big-integer';
+import { TracedError } from '../../common/error';
 import { bigIntFromBytes } from '../../common/utils';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
@@ -58,19 +59,19 @@ export class ByteArrayType implements StackItem {
   }
 
   getInterface(): Interop {
-    throw new Error('Not support byte array to interface');
+    throw new TracedError('Not support byte array to interface');
   }
 
   getArray(): StackItem[] {
-    throw new Error('Not support byte array to array');
+    throw new TracedError('Not support byte array to array');
   }
 
   getStruct(): StackItem[] {
-    throw new Error('Not support byte array to struct');
+    throw new TracedError('Not support byte array to struct');
   }
 
   getMap(): Map<StackItem, StackItem> {
-    throw new Error('Not support byte array to map');
+    throw new TracedError('Not support byte array to map');
   }
 
   isMapKey(): boolean {

@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import { TracedError } from '../common/error';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
 import { SignatureScheme } from './signatureScheme';
@@ -30,7 +31,7 @@ export class Signature {
    */
   static deserialize(data: Buffer): Signature {
     if (data.length < 2) {
-      throw new Error('Invalid params.');
+      throw new TracedError('Invalid params.');
     }
 
     if (data.length === 64) {

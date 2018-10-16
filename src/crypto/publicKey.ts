@@ -17,6 +17,7 @@
  */
 
 import * as elliptic from 'elliptic';
+import { TracedError } from '../common/error';
 import { Reader } from '../vm/utils/reader';
 import { Writer } from '../vm/utils/writer';
 import { CurveLabel } from './curveLabel';
@@ -76,7 +77,7 @@ export class PublicKey extends Key {
    */
   verify(msg: Buffer | Signable, signature: Signature): boolean {
     if (!this.isSchemaSupported(signature.algorithm)) {
-      throw new Error('Signature schema does not match key type.');
+      throw new TracedError('Signature schema does not match key type.');
     }
 
     // retrieves content to sign if not provided directly
@@ -110,7 +111,7 @@ export class PublicKey extends Key {
       case SignatureScheme.EDDSAwithSHA512:
         return this.verifyEdDSASignature(hash, signature);
       default:
-        throw new Error('Unsupported signature schema.');
+        throw new TracedError('Unsupported signature schema.');
     }
   }
 

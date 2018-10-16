@@ -20,6 +20,7 @@ import * as bigInt from 'big-integer';
 import * as Long from 'long';
 import { Address } from '../../../../common/address';
 import * as C from '../../../../common/constants';
+import { TracedError } from '../../../../common/error';
 import { safeAdd } from '../../../../common/safeMath';
 import { bigIntToBytes } from '../../../../common/utils';
 import { ST_STORAGE } from '../../../../core/state/dataEntryPrefix';
@@ -67,7 +68,7 @@ function ontInit(native: NativeVmService): Buffer {
   const amount = getStorageUInt64(native, U.genTotalSupplyKey(contract));
 
   if (amount.gt(0)) {
-    throw new Error('Init ont has been completed!');
+    throw new TracedError('Init ont has been completed!');
   }
 
   const distribute = new Map<string, Long>();
@@ -78,7 +79,7 @@ function ontInit(native: NativeVmService): Buffer {
   try {
     buf = new Reader(source).readVarBytes();
   } catch (e) {
-    throw new Error('serialization.ReadVarBytes, contract params deserialize error!');
+    throw new TracedError('serialization.ReadVarBytes, contract params deserialize error!', e);
   }
 
   const input = new Reader(buf);
@@ -96,7 +97,7 @@ function ontInit(native: NativeVmService): Buffer {
     distribute.set(addrStr, prev.add(value));
   }
   if (sum.neq(C.ONT_TOTAL_SUPPLY)) {
-    throw new Error(`wrong config. total supply ${sum.toString()} != ${C.ONT_TOTAL_SUPPLY.toString()}`);
+    throw new TracedError(`wrong config. total supply ${sum.toString()} != ${C.ONT_TOTAL_SUPPLY.toString()}`);
   }
 
   for (const [addrStr, val] of distribute) {
@@ -125,7 +126,7 @@ function ontTransfer(native: NativeVmService): Buffer {
     }
 
     if (v.value.gt(C.ONT_TOTAL_SUPPLY)) {
-      throw new Error(`transfer ont amount:${v.value.toString()} over totalSupply:${C.ONT_TOTAL_SUPPLY}`);
+      throw new TracedError(`transfer ont amount:${v.value.toString()} over totalSupply:${C.ONT_TOTAL_SUPPLY}`);
     }
     const { fromBalance, toBalance } = U.transfer(native, contract, v);
 
@@ -147,7 +148,7 @@ export function ontTransferFrom(native: NativeVmService): Buffer {
   }
 
   if (state.value.gt(C.ONT_TOTAL_SUPPLY)) {
-    throw new Error(`transferFrom ont amount:${state.value} over totalSupply: ${C.ONT_TOTAL_SUPPLY}`);
+    throw new TracedError(`transferFrom ont amount:${state.value} over totalSupply: ${C.ONT_TOTAL_SUPPLY}`);
   }
 
   const contract = native.contextRef.currentContext()!.contractAddress;
@@ -170,10 +171,10 @@ export function ontApprove(native: NativeVmService): Buffer {
     return BYTE_FALSE;
   }
   if (state.value.gt(C.ONT_TOTAL_SUPPLY)) {
-    throw new Error(`approve ont amount:${state.value} over totalSupply:${C.ONT_TOTAL_SUPPLY}`);
+    throw new TracedError(`approve ont amount:${state.value} over totalSupply:${C.ONT_TOTAL_SUPPLY}`);
   }
   if (native.contextRef.checkWitness(state.from) === false) {
-    throw new Error('authentication failed!');
+    throw new TracedError('authentication failed!');
   }
   const contract = native.contextRef.currentContext()!.contractAddress;
   native.stateStore.add(ST_STORAGE, U.genApproveKey(contract, state.from, state.to), genUInt64StorageItem(state.value));
@@ -219,7 +220,7 @@ export function getBalanceValue(native: NativeVmService, flag: number): Buffer {
   } else if (flag === TRANSFER_FLAG) {
     key = U.genBalanceKey(contract, from);
   } else {
-    throw new Error('invalid flag');
+    throw new TracedError('invalid flag');
   }
 
   const amount = getStorageUInt64(native, key);
@@ -235,7 +236,7 @@ export function grantOng(native: NativeVmService, contract: Address, address: Ad
   }
   const endOffset = native.time - C.GENESIS_BLOCK_TIMESTAMP;
   if (endOffset < startOffset) {
-    throw new Error(`grant Ong error: wrong timestamp endOffset: ${endOffset} < startOffset: ${startOffset}`);
+    throw new TracedError(`grant Ong error: wrong timestamp endOffset: ${endOffset} < startOffset: ${startOffset}`);
   } else if (endOffset === startOffset) {
     return;
   }

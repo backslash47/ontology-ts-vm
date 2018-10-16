@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Address } from '../common/address';
+import { TracedError } from '../common/error';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
 import { LogEventInfo, NotifyEventInfo } from '../event/notifyEvents';
@@ -73,14 +74,14 @@ export class NativeVmService {
     const services = contracts.get(addr);
 
     if (services === undefined) {
-      throw new Error(`Native contract address ${addr} haven't been registered.`);
+      throw new TracedError(`Native contract address ${addr} haven't been registered.`);
     }
     services(this);
 
     const service = this.serviceMap.get(contract.method);
 
     if (service === undefined) {
-      throw new Error(`Native contract ${addr} doesn't support this function ${contract.method}.`);
+      throw new TracedError(`Native contract ${addr} doesn't support this function ${contract.method}.`);
     }
 
     const args = this.input;
@@ -101,7 +102,7 @@ export class NativeVmService {
 
       return Promise.resolve(newStackItem(result));
     } catch (e) {
-      throw new Error('[Invoke] Native serivce function execute error!');
+      throw new TracedError('[Invoke] Native serivce function execute error!', e);
     }
   }
 

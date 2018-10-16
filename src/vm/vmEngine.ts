@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../common/error';
 import * as errors from './errors';
 import { ExecutionContext } from './executionContext';
 import { pushData } from './func/common';
@@ -130,7 +131,7 @@ export class VMEngine implements ExecutionEngine {
       if (e instanceof Error) {
         return e;
       } else {
-        return new Error(e);
+        return new TracedError(e);
       }
     }
   }

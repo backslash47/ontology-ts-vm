@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as Long from 'long';
+import { TracedError } from '../../../../common/error';
 import { ST_STORAGE } from '../../../../core/state/dataEntryPrefix';
 import { isStorageItem, StorageItem } from '../../../../core/state/storageItem';
 import { Reader } from '../../../../vm/utils/reader';
@@ -32,7 +33,7 @@ export function getStorageItem(native: NativeVmService, key: Buffer): StorageIte
   if (isStorageItem(store.value)) {
     return store.value;
   } else {
-    throw new Error('[GetStorageItem] instance does not StorageItem!');
+    throw new TracedError('[GetStorageItem] instance does not StorageItem!');
   }
 }
 

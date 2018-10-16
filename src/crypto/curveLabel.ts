@@ -1,3 +1,5 @@
+import { TracedError } from '../common/error';
+
 /*
  * Copyright (C) 2018 Matus Zamborsky & The ontology Authors
  * This file is part of The ontology library.
@@ -36,7 +38,7 @@ export class CurveLabel {
   static fromHex(hex: number): CurveLabel {
     const item = CurveLabel.values.find((v) => v.hex === hex);
     if (item === undefined) {
-      throw new Error('Enum value not found');
+      throw new TracedError('Enum value not found');
     }
 
     return item;
@@ -50,7 +52,7 @@ export class CurveLabel {
   static fromLabel(label: string): CurveLabel {
     const item = CurveLabel.values.find((v) => v.label === label);
     if (item === undefined) {
-      throw new Error('Enum value not found');
+      throw new TracedError('Enum value not found');
     }
 
     return item;

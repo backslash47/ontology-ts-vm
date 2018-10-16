@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../../common/error';
 import { popInteropInterface, pushData } from '../../vm/func/common';
 import { ExecutionEngine } from '../../vm/interfaces/engine';
 import { VmService } from '../context';
@@ -31,6 +32,6 @@ export function storageContextAsReadOnly(service: VmService, engine: ExecutionEn
     }
     pushData(engine, context);
   } else {
-    throw new Error('pop storage context type invalid');
+    throw new TracedError('pop storage context type invalid');
   }
 }

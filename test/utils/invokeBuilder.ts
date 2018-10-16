@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import { TracedError } from '../../src/common/error';
 import { ProgramBuilder } from '../../src/common/program';
 import { APPCALL, PACK } from '../../src/vm/opCode';
 
@@ -44,7 +45,7 @@ function pushParam(parameter: any, builder: ProgramBuilder) {
   } else if (Array.isArray(parameter)) {
     pushStruct(parameter, builder);
   } else {
-    throw new Error('Unsupported param type');
+    throw new TracedError('Unsupported param type');
   }
 }
 
@@ -79,7 +80,7 @@ function pushStruct(parameters: any[], builder: ProgramBuilder) {
 //       writer.writeUint8(IntegerType.id);
 //       writer.writeVarUint(p.value);
 //     } else {
-//       throw new Error('Invalid params');
+//       throw new TracedError('Invalid params');
 //     }
 //   }
 //   return writer.getBytes();

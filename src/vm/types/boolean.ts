@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import * as bigInt from 'big-integer';
+import { TracedError } from '../../common/error';
 import { Interop } from '../interfaces/interop';
 import { StackItem } from './stackItem';
 
@@ -59,19 +60,19 @@ export class BooleanType implements StackItem {
   }
 
   getInterface(): Interop {
-    throw new Error('Not support boolean to interface');
+    throw new TracedError('Not support boolean to interface');
   }
 
   getArray(): StackItem[] {
-    throw new Error('Not support boolean to array');
+    throw new TracedError('Not support boolean to array');
   }
 
   getStruct(): StackItem[] {
-    throw new Error('Not support boolean to struct');
+    throw new TracedError('Not support boolean to struct');
   }
 
   getMap(): Map<StackItem, StackItem> {
-    throw new Error('Not support boolean to map');
+    throw new TracedError('Not support boolean to map');
   }
 
   isMapKey(): boolean {
