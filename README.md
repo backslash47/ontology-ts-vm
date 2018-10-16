@@ -12,10 +12,7 @@ Ontology TS VM is Ontology Smart contract virtual machine written in Typescript.
 * Multiple Smart contract deployment
 * Custom blockchain state spoofing
 * Custom smart contract state spoofing
-
-### What is currently missing
-
-* Native contract call spoofing
+* Native contracts (ONT/ONG)
 
 ## Usage
 
@@ -73,4 +70,4 @@ You will get the packaged code under '/lib'
 
 ## License
 
-This project is licensed under the ISC License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the LGPL License - see the [LICENSE.md](LICENSE.md) file for details.
