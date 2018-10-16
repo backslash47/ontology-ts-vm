@@ -32,13 +32,13 @@ export function opJmp(e: ExecutionEngine) {
   offset = context.getInstructionPointer() + offset - 3;
 
   if (offset < 0 || offset > context.getCodeLength()) {
-    throw errors.ERR_FAULT;
+    throw errors.ERR_FAULT();
   }
   let fValue: boolean = true;
 
   if (opCode > O.JMP) {
     if (evaluationStackCount(e) < 1) {
-      throw errors.ERR_UNDER_STACK_LEN;
+      throw errors.ERR_UNDER_STACK_LEN();
     }
 
     fValue = popBoolean(e);

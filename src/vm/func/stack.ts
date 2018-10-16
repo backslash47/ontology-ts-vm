@@ -23,7 +23,7 @@ export function opToDupFromAltStack(e: ExecutionEngine) {
   const item = e.getAltStack().peek(0);
 
   if (item === undefined) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 
   push(e, item);
@@ -37,7 +37,7 @@ export function opFromAltStack(e: ExecutionEngine) {
   const item = e.getAltStack().pop();
 
   if (item === undefined) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 
   push(e, item);
@@ -96,7 +96,7 @@ export function opPick(e: ExecutionEngine) {
   const item = e.getEvaluationStack().peek(n);
 
   if (item === undefined) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 
   push(e, item);
@@ -112,7 +112,7 @@ export function opRoll(e: ExecutionEngine) {
   const item = e.getEvaluationStack().remove(n);
 
   if (item === undefined) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 
   push(e, item);

@@ -41,7 +41,7 @@ export function validateCount1(e: ExecutionEngine) {
 export function validateAltStackCount1(e: ExecutionEngine) {
   const stackCount = e.getAltStack().count();
   if (stackCount < 1) {
-    throw errors.ERR_UNDER_STACK_LEN;
+    throw errors.ERR_UNDER_STACK_LEN();
   }
 }
 
@@ -61,14 +61,14 @@ export function validateShiftLeft(e: ExecutionEngine) {
   const x1 = peekNBigInt(1, e);
 
   if (x2 < 0) {
-    throw errors.ERR_SHIFT_BY_NEG;
+    throw errors.ERR_SHIFT_BY_NEG();
   }
   if (!x1.isZero() && x2 > MAX_SIZE_FOR_BIGINTEGER * 8) {
-    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE;
+    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE();
   }
 
   if (checkBigInteger(x1.shiftLeft(x2)) === false) {
-    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE;
+    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE();
   }
 }
 
@@ -77,7 +77,7 @@ export function validateShift(e: ExecutionEngine) {
 
   const bi = peekBigInteger(e);
   if (bi.isNegative()) {
-    throw errors.ERR_SHIFT_BY_NEG;
+    throw errors.ERR_SHIFT_BY_NEG();
   }
 }
 
@@ -85,7 +85,7 @@ export function validatorPushData4(e: ExecutionEngine) {
   const index = e.getContext().getInstructionPointer();
 
   if (index + 4 >= e.getContext().getCodeLength()) {
-    throw errors.ERR_OVER_CODE_LEN;
+    throw errors.ERR_OVER_CODE_LEN();
   }
 
   const l = e
@@ -93,7 +93,7 @@ export function validatorPushData4(e: ExecutionEngine) {
     .getCode()
     .readUInt32LE(index);
   if (l > MAX_BYTEARRAY_SIZE) {
-    throw errors.ERR_OVER_MAX_ITEM_SIZE;
+    throw errors.ERR_OVER_MAX_ITEM_SIZE();
   }
 }
 
@@ -103,19 +103,19 @@ export function validateCall(e: ExecutionEngine) {
 
 export function validateInvocationStack(e: ExecutionEngine) {
   if (e.getContexts().length >= MAX_INVOCATION_STACK_SIZE) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 }
 
 export function validateOpStack(e: ExecutionEngine, desc: string) {
   const total = evaluationStackCount(e);
   if (total < 1) {
-    throw errors.ERR_UNDER_STACK_LEN;
+    throw errors.ERR_UNDER_STACK_LEN();
   }
   const index = peekBigInteger(e);
   const count = index.add(bigInt(2));
   if (index.isNegative() || count.compare(bigInt(total)) > 0) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 }
 
@@ -146,7 +146,7 @@ export function validateCat(e: ExecutionEngine) {
   const p1 = peekNByteArray(1, e);
   const l = p0.length + p1.length;
   if (l > MAX_BYTEARRAY_SIZE) {
-    throw errors.ERR_OVER_MAX_ITEM_SIZE;
+    throw errors.ERR_OVER_MAX_ITEM_SIZE();
   }
 }
 
@@ -155,17 +155,17 @@ export function validateSubStr(e: ExecutionEngine) {
   const count = peekNBigInt(0, e);
 
   if (count.isNegative()) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
   const index = peekNBigInt(1, e);
   if (index.isNegative()) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
   const arr = peekNByteArray(2, e);
   const temp = index.add(count);
 
   if (bigInt(arr.length).compare(temp) < 0) {
-    throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+    throw errors.ERR_OVER_MAX_ARRAY_SIZE();
   }
 }
 
@@ -174,12 +174,12 @@ export function validateLeft(e: ExecutionEngine) {
 
   const count = peekNBigInt(0, e);
   if (count.isNegative()) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   const arr = peekNByteArray(1, e);
   if (bigInt(arr.length).compare(count) < 0) {
-    throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+    throw errors.ERR_OVER_MAX_ARRAY_SIZE();
   }
 }
 
@@ -189,12 +189,12 @@ export function validateRight(e: ExecutionEngine) {
   const count = peekNBigInt(0, e);
 
   if (count.isNegative()) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
   const arr = peekNByteArray(1, e);
 
   if (bigInt(arr.length).compare(count) < 0) {
-    throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+    throw errors.ERR_OVER_MAX_ARRAY_SIZE();
   }
 }
 
@@ -203,7 +203,7 @@ export function validateInc(e: ExecutionEngine) {
   const x = peekBigInteger(e);
 
   if (!checkBigInteger(x) || !checkBigInteger(x.add(bigInt.one))) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 }
 
@@ -213,7 +213,7 @@ export function validateDec(e: ExecutionEngine) {
   const x = peekBigInteger(e);
 
   if (!checkBigInteger(x) || ((x.isNegative() || x.isZero()) && !checkBigInteger(x.subtract(bigInt.one)))) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 }
 
@@ -229,7 +229,7 @@ export function validateAdd(e: ExecutionEngine) {
   const x1 = peekNBigInt(1, e);
 
   if (!checkBigInteger(x1) || !checkBigInteger(x2) || !checkBigInteger(x1.add(x2))) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 }
 
@@ -238,7 +238,7 @@ export function validateSub(e: ExecutionEngine) {
   const x2 = peekBigInteger(e);
   const x1 = peekNBigInt(1, e);
   if (!checkBigInteger(x1) || !checkBigInteger(x2) || !checkBigInteger(x1.subtract(x2))) {
-    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE;
+    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE();
   }
 }
 
@@ -250,7 +250,7 @@ export function validateMul(e: ExecutionEngine) {
   const lx2 = bigIntToBytes(x2).length;
   const lx1 = bigIntToBytes(x1).length;
   if (lx2 > MAX_SIZE_FOR_BIGINTEGER || lx1 > MAX_SIZE_FOR_BIGINTEGER || lx1 + lx2 > MAX_SIZE_FOR_BIGINTEGER) {
-    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE;
+    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE();
   }
 }
 
@@ -259,10 +259,10 @@ export function validateDiv(e: ExecutionEngine) {
   const x2 = peekBigInteger(e);
   const x1 = peekNBigInt(1, e);
   if (!checkBigInteger(x2) || !checkBigInteger(x1)) {
-    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE;
+    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE();
   }
   if (x2.isZero()) {
-    throw errors.ERR_DIV_MOD_BY_ZERO;
+    throw errors.ERR_DIV_MOD_BY_ZERO();
   }
 }
 
@@ -272,10 +272,10 @@ export function validateMod(e: ExecutionEngine) {
 
   const x1 = peekNBigInt(1, e);
   if (!checkBigInteger(x2) || !checkBigInteger(x1)) {
-    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE;
+    throw errors.ERR_OVER_MAX_BIGINTEGER_SIZE();
   }
   if (x2.isZero()) {
-    throw errors.ERR_DIV_MOD_BY_ZERO;
+    throw errors.ERR_DIV_MOD_BY_ZERO();
   }
 }
 
@@ -286,15 +286,15 @@ export function validatePack(e: ExecutionEngine) {
   const temp = peekBigInteger(e);
   let count = temp;
   if (count.isNegative()) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   if (count.compare(bigInt(MAX_ARRAY_SIZE)) > 0) {
-    throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+    throw errors.ERR_OVER_MAX_ARRAY_SIZE();
   }
   count = count.add(bigInt.one);
   if (count.compare(bigInt(total)) > 0) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 }
 
@@ -303,7 +303,7 @@ export function validateUnpack(e: ExecutionEngine) {
   const item = peekStackItem(e);
 
   if (!isArrayType(item)) {
-    throw errors.ERR_NOT_ARRAY;
+    throw errors.ERR_NOT_ARRAY();
   }
 }
 
@@ -316,34 +316,34 @@ export function validatePickItem(e: ExecutionEngine) {
 
   const item = peekNStackItem(1, e);
   if (item === null) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   if (isArrayType(item) || isStructType(item)) {
     const index = peekBigInteger(e);
 
     if (index.isNegative()) {
-      throw errors.ERR_BAD_VALUE;
+      throw errors.ERR_BAD_VALUE();
     }
     const arr = item.getArray();
 
     if (index.compare(bigInt(arr.length)) >= 0) {
-      throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+      throw errors.ERR_OVER_MAX_ARRAY_SIZE();
     }
   } else if (isMapType(item)) {
     const key = peekNStackItem(0, e);
     if (key == null) {
-      throw errors.ERR_BAD_VALUE;
+      throw errors.ERR_BAD_VALUE();
     }
     if (!key.isMapKey()) {
-      throw errors.ERR_NOT_MAP_KEY;
+      throw errors.ERR_NOT_MAP_KEY();
     }
 
     if (item.tryGetValue(key) === undefined) {
-      throw errors.ERR_MAP_NOT_EXIST;
+      throw errors.ERR_MAP_NOT_EXIST();
     }
   } else {
-    throw errors.ERR_NOT_SUPPORT_TYPE;
+    throw errors.ERR_NOT_SUPPORT_TYPE();
   }
 }
 
@@ -352,34 +352,34 @@ export function validatorSetItem(e: ExecutionEngine) {
 
   const value = peekNStackItem(0, e);
   if (value === undefined) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   const item = peekNStackItem(2, e);
   if (item === undefined) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   if (isArrayType(item) || isStructType(item)) {
     const index = peekNBigInt(1, e);
     if (index.isNegative()) {
-      throw errors.ERR_BAD_VALUE;
+      throw errors.ERR_BAD_VALUE();
     }
     const arr = item.getArray();
 
     if (index.compare(bigInt(arr.length)) >= 0) {
-      throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+      throw errors.ERR_OVER_MAX_ARRAY_SIZE();
     }
   } else if (isMapType(item)) {
     const key = peekNStackItem(1, e);
     if (key === undefined) {
-      throw errors.ERR_BAD_VALUE;
+      throw errors.ERR_BAD_VALUE();
     }
     if (!key.isMapKey()) {
-      throw errors.ERR_NOT_MAP_KEY;
+      throw errors.ERR_NOT_MAP_KEY();
     }
   } else {
-    throw errors.ERR_NOT_SUPPORT_TYPE;
+    throw errors.ERR_NOT_SUPPORT_TYPE();
   }
 }
 
@@ -389,10 +389,10 @@ export function validateNewArray(e: ExecutionEngine) {
   const count = peekBigInteger(e);
 
   if (count.isNegative()) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
   if (count.compare(bigInt(MAX_ARRAY_SIZE)) > 0) {
-    throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+    throw errors.ERR_OVER_MAX_ARRAY_SIZE();
   }
 }
 
@@ -402,10 +402,10 @@ export function validateNewStruct(e: ExecutionEngine) {
   const count = peekBigInteger(e);
 
   if (count.isNegative()) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
   if (count.compare(bigInt(MAX_ARRAY_SIZE)) > 0) {
-    throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+    throw errors.ERR_OVER_MAX_ARRAY_SIZE();
   }
 }
 
@@ -415,7 +415,7 @@ export function validateAppend(e: ExecutionEngine) {
   const arrItem = peekNStackItem(1, e);
 
   if (!isArrayType(arrItem) && !isStructType(arrItem)) {
-    throw errors.ERR_NOT_SUPPORT_TYPE;
+    throw errors.ERR_NOT_SUPPORT_TYPE();
   }
 }
 
@@ -425,7 +425,7 @@ export function validatorReverse(e: ExecutionEngine) {
   const arrItem = peekStackItem(e);
 
   if (!isArrayType(arrItem) && !isStructType(arrItem)) {
-    throw errors.ERR_NOT_SUPPORT_TYPE;
+    throw errors.ERR_NOT_SUPPORT_TYPE();
   }
 }
 
@@ -434,66 +434,66 @@ export function validatorRemove(e: ExecutionEngine) {
 
   const value = peekNStackItem(0, e);
   if (value === undefined) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   if (!value.isMapKey()) {
-    throw errors.ERR_NOT_MAP_KEY;
+    throw errors.ERR_NOT_MAP_KEY();
   }
 
   const item = peekNStackItem(1, e);
   if (item === undefined) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   if (isArrayType(item) || isStructType(item)) {
     if (!isIntegerType(value)) {
-      throw errors.ERR_BAD_TYPE;
+      throw errors.ERR_BAD_TYPE();
     }
   } else if (!isMapType(item)) {
-    throw errors.ERR_REMOVE_NOT_SUPPORT;
+    throw errors.ERR_REMOVE_NOT_SUPPORT();
   }
 }
 
 export function validatorHasKey(e: ExecutionEngine) {
   const value = peekNStackItem(0, e);
   if (value === undefined) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   const item = peekNStackItem(1, e);
   if (item === undefined) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   if (isMapType(item)) {
     if (!value.isMapKey()) {
-      throw errors.ERR_NOT_MAP_KEY;
+      throw errors.ERR_NOT_MAP_KEY();
     }
   } else if (!isArrayType(item) && !isStructType(item)) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 }
 
 export function validatorKeys(e: ExecutionEngine) {
   const item = peekNStackItem(0, e);
   if (item === undefined) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   if (!isMapType(item)) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 }
 
 export function validatorValues(e: ExecutionEngine) {
   const item = peekNStackItem(0, e);
   if (item === undefined) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 
   if (!isMapType(item) && !isArrayType(item) && !isStructType(item)) {
-    throw errors.ERR_BAD_VALUE;
+    throw errors.ERR_BAD_VALUE();
   }
 }
 
@@ -514,6 +514,6 @@ export function checkBigInteger(value: bigInt.BigInteger | undefined): boolean {
 export function logStackTrace(e: ExecutionEngine, needStackCount: number, desc: string) {
   const stackCount = evaluationStackCount(e);
   if (stackCount < needStackCount) {
-    throw errors.ERR_UNDER_STACK_LEN;
+    throw errors.ERR_UNDER_STACK_LEN();
   }
 }

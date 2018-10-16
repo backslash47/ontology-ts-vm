@@ -68,7 +68,7 @@ export function popStackItem(e: ExecutionEngine): StackItem {
   const item = e.getEvaluationStack().pop();
 
   if (item === undefined) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 
   return item;
@@ -98,7 +98,7 @@ export function peekStackItem(e: ExecutionEngine): StackItem {
   const item = e.getEvaluationStack().peek(0);
 
   if (item === undefined) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 
   return item;
@@ -118,7 +118,7 @@ export function peekNStackItem(i: number, e: ExecutionEngine): StackItem {
   const item = e.getEvaluationStack().peek(i);
 
   if (item === undefined) {
-    throw errors.ERR_OVER_STACK_LEN;
+    throw errors.ERR_OVER_STACK_LEN();
   }
 
   return item;
@@ -187,7 +187,7 @@ export function bigIntZip(ints1: bigInt.BigInteger, ints2: bigInt.BigInteger, op
       nb = bigInt.max(ints1, ints2);
       break;
     default:
-      throw errors.ERR_NOT_SUPPORT_OPCODE;
+      throw errors.ERR_NOT_SUPPORT_OPCODE();
   }
   return nb;
 }
@@ -200,7 +200,7 @@ export function bigIntComp(bigint: bigInt.BigInteger, op: O.OpCode): boolean {
       nb = !bigint.isZero();
       break;
     default:
-      throw errors.ERR_NOT_SUPPORT_OPCODE;
+      throw errors.ERR_NOT_SUPPORT_OPCODE();
   }
   return nb;
 }
@@ -228,7 +228,7 @@ export function bigIntMultiComp(ints1: bigInt.BigInteger, ints2: bigInt.BigInteg
       nb = ints1.greaterOrEquals(ints2);
       break;
     default:
-      throw errors.ERR_NOT_SUPPORT_OPCODE;
+      throw errors.ERR_NOT_SUPPORT_OPCODE();
   }
   return nb;
 }
@@ -243,7 +243,7 @@ export function boolZip(bi1: boolean, bi2: boolean, op: O.OpCode): boolean {
       nb = bi1 || bi2;
       break;
     default:
-      throw errors.ERR_NOT_SUPPORT_OPCODE;
+      throw errors.ERR_NOT_SUPPORT_OPCODE();
   }
   return nb;
 }
@@ -328,6 +328,6 @@ export function hash(b: Buffer, op: O.OpCode): Buffer {
       rp.update(sh.digest());
       return rp.digest();
     default:
-      throw errors.ERR_NOT_SUPPORT_OPCODE;
+      throw errors.ERR_NOT_SUPPORT_OPCODE();
   }
 }

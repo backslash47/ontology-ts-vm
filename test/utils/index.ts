@@ -15,7 +15,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
+import * as bigInt from 'big-integer';
 import { readFileSync } from 'fs';
+import * as Long from 'long';
+import { bigIntToBytes } from '../../src/common/utils';
 import { EnvironmentOptions, ExecuteOptions, ScEnvironment } from '../../src/scEnvironment';
 import { InspectData } from '../../src/smartcontract/context';
 import { invokeContract } from './invokeBuilder';
@@ -34,6 +37,10 @@ export function opLogger(data: InspectData) {
 
 export function strToHex(value: string) {
   return new Buffer(value).toString('hex');
+}
+
+export function num2hex(num: Long) {
+  return bigIntToBytes(bigInt(num.toString())).toString('hex');
 }
 
 export function hexToStr(value: string) {

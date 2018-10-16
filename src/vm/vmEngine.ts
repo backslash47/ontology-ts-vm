@@ -116,7 +116,7 @@ export class VMEngine implements ExecutionEngine {
     const opExec = OpExecList.get(this.opCode);
 
     if (opExec === undefined) {
-      throw errors.ERR_NOT_SUPPORT_OPCODE;
+      throw errors.ERR_NOT_SUPPORT_OPCODE();
     }
     this.opExec = opExec;
   }

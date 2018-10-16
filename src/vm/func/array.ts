@@ -66,7 +66,7 @@ export function opPickItem(e: ExecutionEngine) {
     const i = bi.toJSNumber();
     const a = items.getArray();
     if (i < 0 || i >= a.length) {
-      throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+      throw errors.ERR_OVER_MAX_ARRAY_SIZE();
     }
     pushData(e, a[i]);
   } else if (isStructType(items)) {
@@ -74,13 +74,13 @@ export function opPickItem(e: ExecutionEngine) {
     const i = bi.toJSNumber();
     const s = items.getStruct();
     if (i < 0 || i >= s.length) {
-      throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+      throw errors.ERR_OVER_MAX_ARRAY_SIZE();
     }
     pushData(e, s[i]);
   } else if (isMapType(items)) {
     pushData(e, items.tryGetValue(index));
   } else {
-    throw errors.ERR_BAD_TYPE;
+    throw errors.ERR_BAD_TYPE();
   }
 }
 
@@ -101,7 +101,7 @@ export function opSetItem(e: ExecutionEngine) {
     const bi = index.getBigInteger();
     const i = bi.toJSNumber();
     if (i < 0 || i >= items.length) {
-      throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+      throw errors.ERR_OVER_MAX_ARRAY_SIZE();
     }
     items[i] = newItem;
   } else if (isStructType(item)) {
@@ -109,11 +109,11 @@ export function opSetItem(e: ExecutionEngine) {
     const bi = index.getBigInteger();
     const i = bi.toJSNumber();
     if (i < 0 || i >= items.length) {
-      throw errors.ERR_OVER_MAX_ARRAY_SIZE;
+      throw errors.ERR_OVER_MAX_ARRAY_SIZE();
     }
     items[i] = newItem;
   } else {
-    throw errors.ERR_BAD_TYPE;
+    throw errors.ERR_BAD_TYPE();
   }
 }
 
@@ -169,12 +169,12 @@ export function opRemove(e: ExecutionEngine) {
     item.remove(index);
   } else if (isArrayType(item) || isStructType(item)) {
     if (!isIntegerType(index)) {
-      throw errors.ERR_BAD_TYPE;
+      throw errors.ERR_BAD_TYPE();
     }
 
     item.removeAt(index.getBigInteger().toJSNumber());
   } else {
-    throw errors.ERR_BAD_TYPE;
+    throw errors.ERR_BAD_TYPE();
   }
 }
 
@@ -190,7 +190,7 @@ export function opHasKey(e: ExecutionEngine) {
     // correct implementation
     // pushData(e, item.contains(index));
   } else {
-    throw errors.ERR_BAD_TYPE;
+    throw errors.ERR_BAD_TYPE();
   }
 }
 
@@ -201,7 +201,7 @@ export function opKeys(e: ExecutionEngine) {
     const keys = Array.from(item.getMap().keys());
     pushData(e, new ArrayType(keys));
   } else {
-    throw errors.ERR_BAD_TYPE;
+    throw errors.ERR_BAD_TYPE();
   }
 }
 
@@ -224,6 +224,6 @@ export function opValues(e: ExecutionEngine) {
 
     pushData(e, new ArrayType(cloned));
   } else {
-    throw errors.ERR_BAD_TYPE;
+    throw errors.ERR_BAD_TYPE();
   }
 }
