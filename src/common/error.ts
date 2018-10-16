@@ -22,7 +22,9 @@ export class TracedError extends Error {
         return current;
       };
 
-      Error.captureStackTrace(this, TracedError);
+      if (Error.captureStackTrace !== undefined) {
+        Error.captureStackTrace(this, TracedError);
+      }
 
       // tslint:disable-next-line:no-unused-expression
       this.stack; // Invoke the getter for `stack`.
