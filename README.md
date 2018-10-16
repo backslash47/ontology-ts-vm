@@ -70,4 +70,4 @@ You will get the packaged code under '/lib'
 
 ## License
 
-This project is licensed under the LGPL License - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the LGPL License - see the [LICENSE.MD](LICENSE.MD) file for details.
