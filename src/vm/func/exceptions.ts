@@ -17,10 +17,12 @@
  */
 import * as errors from '../errors';
 import { ExecutionEngine } from '../interfaces/engine';
-import { popBoolean } from './common';
+import { popBoolean, popByteArray } from './common';
 
 export function opThrow(e: ExecutionEngine) {
-  throw errors.ERR_FAULT();
+  const message = popByteArray(e);
+
+  throw errors.ERR_FAULT(message.toString());
 }
 
 export function opThrowIfNot(e: ExecutionEngine) {

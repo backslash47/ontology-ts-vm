@@ -16,7 +16,6 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import 'babel-polyfill';
-import { isByteArrayType } from '../../src/vm/types/byteArray';
 import { isIntegerType } from '../../src/vm/types/integer';
 import { deployAndInvoke, loadContract } from '../utils';
 

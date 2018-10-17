@@ -22,7 +22,7 @@ export const ERR_BAD_TYPE = () => new TracedError('bad type');
 export const ERR_OVER_STACK_LEN = () => new TracedError('the count over the stack length');
 export const ERR_OVER_CODE_LEN = () => new TracedError('the count over the code length');
 export const ERR_UNDER_STACK_LEN = () => new TracedError('the count under the stack length');
-export const ERR_FAULT = () => new TracedError('the exceution meet fault');
+export const ERR_FAULT = (msg: string = '') => new TracedError(`the exceution meet fault: ${msg}`);
 export const ERR_NOT_SUPPORT_SERVICE = () => new TracedError('the service is not registered');
 export const ERR_NOT_SUPPORT_OPCODE = () => new TracedError('does not support the operation code');
 export const ERR_OVER_LIMIT_STACK = () => new TracedError('the stack over max size');
