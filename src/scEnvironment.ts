@@ -22,6 +22,7 @@ import { DeployCode } from './core/payload/deployCode';
 import { ST_CONTRACT } from './core/state/dataEntryPrefix';
 import { StateStore } from './core/state/stateStore';
 import { Transaction } from './core/transaction';
+import { LogCallback, NotificationCallback } from './event/notifyEvents';
 import { Inspect } from './smartcontract/context';
 import { RuntimeLedgerStore } from './smartcontract/runtime/runtimeLedgerStore';
 import { RuntimeStateStore } from './smartcontract/runtime/runtimeStateStore';
@@ -40,6 +41,8 @@ export interface ExecuteOptions {
   inspect?: Inspect;
   wallet?: Wallet;
   enableSecurity?: boolean;
+  notificationCallback?: NotificationCallback;
+  logCallback?: LogCallback;
 }
 
 export class ScEnvironment {
@@ -70,7 +73,9 @@ export class ScEnvironment {
       gas = Long.fromNumber(100000),
       inspect,
       wallet,
-      enableSecurity
+      enableSecurity,
+      notificationCallback,
+      logCallback
     }: ExecuteOptions = {}
   ) {
     if (wallet !== undefined) {
@@ -83,7 +88,9 @@ export class ScEnvironment {
       gas,
       stateStore: this.store,
       store: this.ledgerStore,
-      enableSecurity
+      enableSecurity,
+      notificationCallback,
+      logCallback
     });
 
     const vmService = sc.newExecuteEngine(code);

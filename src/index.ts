@@ -30,5 +30,7 @@ export { LedgerStore } from './core/ledgerStore';
 export { RuntimeLedgerStore } from './smartcontract/runtime/runtimeLedgerStore';
 export { RuntimeStateStore } from './smartcontract/runtime/runtimeStateStore';
 
+export { NotificationCallback, NotifyEventInfo, LogCallback, LogEventInfo } from './event/notifyEvents';
+
 // init native contracts
 init();

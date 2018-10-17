@@ -20,7 +20,7 @@ import { TracedError } from '../common/error';
 import { LedgerStore } from '../core/ledgerStore';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
-import { LogEventInfo, NotifyEventInfo } from '../event/notifyEvents';
+import { LogCallback, LogEventInfo, NotificationCallback, NotifyEventInfo } from '../event/notifyEvents';
 import { VMEngine } from '../vm/vmEngine';
 import { MAX_EXECUTE_ENGINE, VM_STEP_LIMIT } from './consts';
 import { Context, ContextRef, VmService } from './context';
@@ -35,6 +35,9 @@ export interface SmartContractConfig {
   tx: Transaction;
   gas: Long;
   enableSecurity?: boolean;
+
+  notificationCallback?: NotificationCallback;
+  logCallback?: LogCallback;
 }
 
 export class SmartContract implements ContextRef {
@@ -48,6 +51,9 @@ export class SmartContract implements ContextRef {
   private logs: LogEventInfo[];
   private gas: Long;
   private execStep: number;
+
+  private notificationCallback?: NotificationCallback;
+  private logCallback?: LogCallback;
 
   private enableSecurity: boolean;
 
@@ -64,6 +70,9 @@ export class SmartContract implements ContextRef {
     this.store = config.store !== undefined ? config.store : new RuntimeLedgerStore();
     this.stateStore = config.stateStore !== undefined ? config.stateStore : new RuntimeStateStore();
     this.enableSecurity = config.enableSecurity !== undefined ? config.enableSecurity : true;
+
+    this.notificationCallback = config.notificationCallback;
+    this.logCallback = config.logCallback;
   }
 
   getNotifications() {
@@ -163,7 +172,9 @@ export class SmartContract implements ContextRef {
       tx: this.tx,
       time: this.time,
       // height: this.config.height, - unused
-      engine: new VMEngine()
+      engine: new VMEngine(),
+      notificationCallback: this.notificationCallback,
+      logCallback: this.logCallback
     });
     return service;
   }

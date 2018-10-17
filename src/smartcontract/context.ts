@@ -19,7 +19,7 @@ import { Address } from '../common/address';
 import { LedgerStore } from '../core/ledgerStore';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
-import { LogEventInfo, NotifyEventInfo } from '../event/notifyEvents';
+import { LogEventInfo, NotificationCallback, NotifyEventInfo } from '../event/notifyEvents';
 import { ExecutionContext } from '../vm/executionContext';
 import { ExecutionEngine, RandomAccessStack } from '../vm/interfaces/engine';
 import { OpCode } from '../vm/opCode';
@@ -71,6 +71,8 @@ export interface VmService {
   addLog(event: LogEventInfo): void;
   getNotifications(): NotifyEventInfo[];
   getLogs(): LogEventInfo[];
+
+  getNotificationCallback(): NotificationCallback | undefined;
 }
 
 export interface Context {

@@ -19,7 +19,7 @@ import { Address } from '../common/address';
 import { TracedError } from '../common/error';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
-import { LogEventInfo, NotifyEventInfo } from '../event/notifyEvents';
+import { LogEventInfo, NotificationCallback, NotifyEventInfo } from '../event/notifyEvents';
 import { newStackItem } from '../vm/func/common';
 import { StackItem } from '../vm/types/stackItem';
 import { Reader } from '../vm/utils/reader';
@@ -40,6 +40,7 @@ interface NativeVmServiceOptions {
   time: number;
   // height: number; - unused
   serviceMap: Map<string, Handler>;
+  notificationCallback?: NotificationCallback;
 }
 
 export class NativeVmService {
@@ -55,6 +56,8 @@ export class NativeVmService {
 
   private serviceMap: Map<string, Handler>;
 
+  private notificationCallback?: NotificationCallback;
+
   constructor(options: NativeVmServiceOptions) {
     this.stateStore = options.stateStore;
     this.contextRef = options.contextRef;
@@ -65,6 +68,8 @@ export class NativeVmService {
     // this.height = options.height;
     this.notifications = [];
     this.logs = [];
+
+    this.notificationCallback = options.notificationCallback;
   }
 
   invoke(): Promise<StackItem | undefined> {
@@ -112,6 +117,10 @@ export class NativeVmService {
 
   addNotification(event: NotifyEventInfo) {
     this.notifications.push(event);
+
+    if (this.notificationCallback !== undefined) {
+      this.notificationCallback(event);
+    }
   }
 
   nativeCall(address: Address, method: string, args: Buffer): Promise<StackItem | undefined> {

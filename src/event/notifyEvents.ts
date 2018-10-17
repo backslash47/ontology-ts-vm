@@ -30,3 +30,6 @@ export interface LogEventInfo {
   tx: Uint256;
   message: string;
 }
+
+export type NotificationCallback = (event: NotifyEventInfo) => void;
+export type LogCallback = (event: LogEventInfo) => void;

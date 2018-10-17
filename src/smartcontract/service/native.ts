@@ -73,7 +73,8 @@ export function nativeInvoke(service: VmService, engine: ExecutionEngine) {
     // height: service.getHeight(),
     time: service.getTime(),
     contextRef: service.getContextRef(),
-    serviceMap: new Map()
+    serviceMap: new Map(),
+    notificationCallback: service.getNotificationCallback()
   });
 
   const result = native.invoke();

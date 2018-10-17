@@ -24,7 +24,7 @@ import { StateItem, StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
 import { PublicKey } from '../crypto/publicKey';
 import { Signature } from '../crypto/signature';
-import { LogEventInfo, NotifyEventInfo } from '../event/notifyEvents';
+import { LogCallback, LogEventInfo, NotificationCallback, NotifyEventInfo } from '../event/notifyEvents';
 import { MAX_BYTEARRAY_SIZE } from '../vm/consts';
 import { ExecutionContext } from '../vm/executionContext';
 import { evaluationStackCount, peekStackItem, popByteArray, pushData } from '../vm/func/common';
@@ -50,6 +50,8 @@ interface NeoVmServiceOptions {
   time: number;
   // height: number; - unused
   engine: ExecutionEngine;
+  notificationCallback?: NotificationCallback;
+  logCallback?: LogCallback;
 }
 
 export class NeoVmService implements VmService {
@@ -65,6 +67,9 @@ export class NeoVmService implements VmService {
   // private height: number; - unused
   private engine: ExecutionEngine;
 
+  private notificationCallback?: NotificationCallback;
+  private logCallback?: LogCallback;
+
   constructor(options: NeoVmServiceOptions) {
     this.store = options.store;
     this.stateStore = options.stateStore;
@@ -76,6 +81,8 @@ export class NeoVmService implements VmService {
     this.engine = options.engine;
     this.notifications = [];
     this.logs = [];
+    this.notificationCallback = options.notificationCallback;
+    this.logCallback = options.logCallback;
   }
 
   getTx() {
@@ -338,9 +345,21 @@ export class NeoVmService implements VmService {
 
   addNotification(event: NotifyEventInfo) {
     this.notifications.push(event);
+
+    if (this.notificationCallback !== undefined) {
+      this.notificationCallback(event);
+    }
   }
 
   addLog(event: LogEventInfo) {
     this.logs.push(event);
+
+    if (this.logCallback !== undefined) {
+      this.logCallback(event);
+    }
+  }
+
+  getNotificationCallback() {
+    return this.notificationCallback;
   }
 }
