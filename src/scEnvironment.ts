@@ -39,6 +39,7 @@ export interface ExecuteOptions {
   gas?: Long;
   inspect?: Inspect;
   wallet?: Wallet;
+  enableSecurity?: boolean;
 }
 
 export class ScEnvironment {
@@ -63,7 +64,14 @@ export class ScEnvironment {
 
   async execute(
     code: Buffer,
-    { time = 10, tx = new Transaction(), gas = Long.fromNumber(100000), inspect, wallet }: ExecuteOptions = {}
+    {
+      time = 10,
+      tx = new Transaction(),
+      gas = Long.fromNumber(100000),
+      inspect,
+      wallet,
+      enableSecurity
+    }: ExecuteOptions = {}
   ) {
     if (wallet !== undefined) {
       wallet.signTransaction(tx);
@@ -74,7 +82,8 @@ export class ScEnvironment {
       tx,
       gas,
       stateStore: this.store,
-      store: this.ledgerStore
+      store: this.ledgerStore,
+      enableSecurity
     });
 
     const vmService = sc.newExecuteEngine(code);

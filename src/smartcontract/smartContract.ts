@@ -34,6 +34,7 @@ export interface SmartContractConfig {
   time: number;
   tx: Transaction;
   gas: Long;
+  enableSecurity?: boolean;
 }
 
 export class SmartContract implements ContextRef {
@@ -48,6 +49,8 @@ export class SmartContract implements ContextRef {
   private gas: Long;
   private execStep: number;
 
+  private enableSecurity: boolean;
+
   constructor(config: SmartContractConfig) {
     this.contexts = [];
     this.notifications = [];
@@ -60,6 +63,7 @@ export class SmartContract implements ContextRef {
 
     this.store = config.store !== undefined ? config.store : new RuntimeLedgerStore();
     this.stateStore = config.stateStore !== undefined ? config.stateStore : new RuntimeStateStore();
+    this.enableSecurity = config.enableSecurity !== undefined ? config.enableSecurity : true;
   }
 
   getNotifications() {
@@ -174,7 +178,7 @@ export class SmartContract implements ContextRef {
    * @param SmartContract
    */
   checkWitness(address: Address) {
-    if (this.checkAccountAddress(address) || this.checkContractAddress(address)) {
+    if (!this.enableSecurity || this.checkAccountAddress(address) || this.checkContractAddress(address)) {
       return true;
     }
     return false;
