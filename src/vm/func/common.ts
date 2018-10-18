@@ -266,6 +266,8 @@ export function newStackItem(data: any): StackItem {
     stackItem = new BooleanType(data);
   } else if (data instanceof Buffer) {
     stackItem = new ByteArrayType(data);
+  } else if (data instanceof Uint8Array) {
+    stackItem = new ByteArrayType(Buffer.from(data.buffer));
   } else if (isIntegerType(data)) {
     stackItem = data;
   } else if (isBooleanType(data)) {

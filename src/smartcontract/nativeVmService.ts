@@ -72,7 +72,7 @@ export class NativeVmService {
     this.notificationCallback = options.notificationCallback;
   }
 
-  invoke(): Promise<StackItem | undefined> {
+  invoke(): StackItem | undefined {
     const contract = Contract.deserialize(new Reader(this.code));
     const addr = contract.address.toHexString();
 
@@ -105,7 +105,7 @@ export class NativeVmService {
       this.notifications = notifications;
       this.input = args;
 
-      return Promise.resolve(newStackItem(result));
+      return newStackItem(result);
     } catch (e) {
       throw new TracedError('[Invoke] Native serivce function execute error!', e);
     }
@@ -123,7 +123,7 @@ export class NativeVmService {
     }
   }
 
-  nativeCall(address: Address, method: string, args: Buffer): Promise<StackItem | undefined> {
+  nativeCall(address: Address, method: string, args: Buffer): StackItem | undefined {
     const c = new Contract({
       version: 0,
       address,
