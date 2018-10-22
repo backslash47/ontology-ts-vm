@@ -17,6 +17,7 @@
  */
 import * as Long from 'long';
 import { Address } from './common/address';
+import { Uint256 } from './common/uint256';
 import { LedgerStore } from './core/ledgerStore';
 import { DeployCode } from './core/payload/deployCode';
 import { ST_CONTRACT } from './core/state/dataEntryPrefix';
@@ -38,6 +39,7 @@ export interface ExecuteOptions {
   time?: number;
   tx?: Transaction;
   gas?: Long;
+  randomHash?: Buffer;
   inspect?: Inspect;
   wallet?: Wallet;
   enableSecurity?: boolean;
@@ -71,6 +73,7 @@ export class ScEnvironment {
       time = 10,
       tx = new Transaction(),
       gas = Long.fromNumber(100000),
+      randomHash,
       inspect,
       wallet,
       enableSecurity,
@@ -86,6 +89,7 @@ export class ScEnvironment {
       time,
       tx,
       gas,
+      randomHash: randomHash !== undefined ? new Uint256(randomHash) : undefined,
       stateStore: this.store,
       store: this.ledgerStore,
       enableSecurity,
