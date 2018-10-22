@@ -16,6 +16,7 @@
  * along with The ontology.  If not, see <http://www.gnu.org/licenses/>.
  */
 import { Address } from '../common/address';
+import { Uint256 } from '../common/uint256';
 import { LedgerStore } from '../core/ledgerStore';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
@@ -71,8 +72,9 @@ export interface VmService {
   addLog(event: LogEventInfo): void;
   getNotifications(): NotifyEventInfo[];
   getLogs(): LogEventInfo[];
-
   getNotificationCallback(): NotificationCallback | undefined;
+
+  getRandomHash(): Uint256;
 }
 
 export interface Context {

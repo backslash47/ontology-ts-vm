@@ -17,6 +17,7 @@
  */
 import { Address } from '../common/address';
 import { TracedError } from '../common/error';
+import { Uint256 } from '../common/uint256';
 import { LedgerStore } from '../core/ledgerStore';
 import { StateStore } from '../core/state/stateStore';
 import { Transaction } from '../core/transaction';
@@ -33,6 +34,7 @@ export interface SmartContractConfig {
   stateStore?: StateStore;
   time: number;
   tx: Transaction;
+  randomHash?: Uint256;
   gas: Long;
   enableSecurity?: boolean;
 
@@ -46,6 +48,7 @@ export class SmartContract implements ContextRef {
   private store: LedgerStore; // ledger store
   private time: number; // current block timestamp
   // height: number; // current block height - unused
+  private randomHash: Uint256;
   private tx: Transaction; // current transaction
   private notifications: NotifyEventInfo[]; // all execute smart contract event notify info
   private logs: LogEventInfo[];
@@ -70,6 +73,7 @@ export class SmartContract implements ContextRef {
     this.store = config.store !== undefined ? config.store : new RuntimeLedgerStore();
     this.stateStore = config.stateStore !== undefined ? config.stateStore : new RuntimeStateStore();
     this.enableSecurity = config.enableSecurity !== undefined ? config.enableSecurity : true;
+    this.randomHash = config.randomHash !== undefined ? config.randomHash : new Uint256();
 
     this.notificationCallback = config.notificationCallback;
     this.logCallback = config.logCallback;
@@ -172,6 +176,7 @@ export class SmartContract implements ContextRef {
       tx: this.tx,
       time: this.time,
       // height: this.config.height, - unused
+      randomHash: this.randomHash,
       engine: new VMEngine(),
       notificationCallback: this.notificationCallback,
       logCallback: this.logCallback

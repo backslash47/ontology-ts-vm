@@ -20,7 +20,7 @@ import { TracedError } from '../../common/error';
 import { bigIntFromBytes } from '../../common/utils';
 import { PublicKey } from '../../crypto/publicKey';
 import { MAX_BYTEARRAY_SIZE } from '../../vm/consts';
-import { popByteArray, popStackItem, pushData } from '../../vm/func/common';
+import { evaluationStackCount, popByteArray, popStackItem, pushData } from '../../vm/func/common';
 import { ExecutionEngine } from '../../vm/interfaces/engine';
 import { ArrayType, isArrayType } from '../../vm/types/array';
 import { BooleanType, isBooleanType } from '../../vm/types/boolean';
@@ -108,6 +108,31 @@ export function runtimeLog(service: VmService, engine: ExecutionEngine) {
 
 export function runtimeGetTrigger(service: VmService, engine: ExecutionEngine) {
   pushData(engine, 0);
+}
+
+export function runtimeBase58ToAddress(service: VmService, engine: ExecutionEngine) {
+  if (evaluationStackCount(engine) < 1) {
+    throw new TracedError('[RuntimeBase58ToAddress] Too few input parameters');
+  }
+  const item = popByteArray(engine);
+
+  const address = Address.fromBase58(item.toString());
+
+  pushData(engine, address.toArray());
+}
+
+export function runtimeAddressToBase58(service: VmService, engine: ExecutionEngine) {
+  if (evaluationStackCount(engine) < 1) {
+    throw new TracedError('[RuntimeAddressToBase58] Too few input parameters');
+  }
+  const item = popByteArray(engine);
+  const address = Address.parseFromBytes(item);
+
+  pushData(engine, new Buffer(address.toBase58()));
+}
+
+export function runtimeGetRandomHash(service: VmService, engine: ExecutionEngine) {
+  pushData(engine, service.getRandomHash().toArray());
 }
 
 export function serializeStackItem(item: StackItem): Buffer {

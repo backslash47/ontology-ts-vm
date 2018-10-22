@@ -93,6 +93,10 @@ export const RUNTIME_GETTRIGGER_NAME = 'System.Runtime.GetTrigger';
 export const RUNTIME_SERIALIZE_NAME = 'System.Runtime.Serialize';
 export const RUNTIME_DESERIALIZE_NAME = 'System.Runtime.Deserialize';
 
+export const RUNTIME_BASE58TOADDRESS_NAME = 'Ontology.Runtime.Base58ToAddress';
+export const RUNTIME_ADDRESSTOBASE58_NAME = 'Ontology.Runtime.AddressToBase58';
+export const RUNTIME_GETRANDOMHASH_NAME = 'Ontology.Runtime.GetRandomHash';
+
 export const NATIVE_INVOKE_NAME = 'Ontology.Native.Invoke';
 
 export const GETSCRIPTCONTAINER_NAME = 'System.ExecutionEngine.GetScriptContainer';

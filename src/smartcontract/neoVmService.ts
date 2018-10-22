@@ -17,6 +17,7 @@
  */
 import { Address } from '../common/address';
 import { TracedError } from '../common/error';
+import { Uint256 } from '../common/uint256';
 import { LedgerStore } from '../core/ledgerStore';
 import { isDeployCode } from '../core/payload/deployCode';
 import { ST_CONTRACT } from '../core/state/dataEntryPrefix';
@@ -49,6 +50,7 @@ interface NeoVmServiceOptions {
   tx: Transaction;
   time: number;
   // height: number; - unused
+  randomHash: Uint256;
   engine: ExecutionEngine;
   notificationCallback?: NotificationCallback;
   logCallback?: LogCallback;
@@ -65,6 +67,8 @@ export class NeoVmService implements VmService {
   private tx: Transaction;
   private time: number;
   // private height: number; - unused
+
+  private randomHash: Uint256;
   private engine: ExecutionEngine;
 
   private notificationCallback?: NotificationCallback;
@@ -78,6 +82,7 @@ export class NeoVmService implements VmService {
     this.tx = options.tx;
     this.time = options.time;
     // this.height = options.height;
+    this.randomHash = options.randomHash;
     this.engine = options.engine;
     this.notifications = [];
     this.logs = [];
@@ -115,6 +120,10 @@ export class NeoVmService implements VmService {
 
   getLogs() {
     return this.logs;
+  }
+
+  getRandomHash() {
+    return this.randomHash;
   }
 
   // Invoke a smart contract

@@ -44,6 +44,18 @@ export class Address {
     return Address.parseFromVmCode(prog);
   }
 
+  static fromBase58(encoded: string): Address {
+    const decoded = base58.decode(encoded);
+    const hexDecoded = new Buffer(decoded).slice(1, 20 + 1);
+
+    const address = new Address(hexDecoded);
+
+    if (encoded !== address.toBase58()) {
+      throw new Error('[Address.fromBase58] decode encoded verify failed');
+    }
+    return address;
+  }
+
   private value: Buffer;
 
   constructor(value: Buffer | string = '0000000000000000000000000000000000000000') {
