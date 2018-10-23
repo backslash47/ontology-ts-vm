@@ -37,6 +37,7 @@ export interface SmartContractConfig {
   randomHash?: Uint256;
   gas: Long;
   enableSecurity?: boolean;
+  enableGas?: boolean;
 
   notificationCallback?: NotificationCallback;
   logCallback?: LogCallback;
@@ -60,6 +61,8 @@ export class SmartContract implements ContextRef {
 
   private enableSecurity: boolean;
 
+  private enableGas: boolean;
+
   constructor(config: SmartContractConfig) {
     this.contexts = [];
     this.notifications = [];
@@ -73,6 +76,7 @@ export class SmartContract implements ContextRef {
     this.store = config.store !== undefined ? config.store : new RuntimeLedgerStore();
     this.stateStore = config.stateStore !== undefined ? config.stateStore : new RuntimeStateStore();
     this.enableSecurity = config.enableSecurity !== undefined ? config.enableSecurity : true;
+    this.enableGas = config.enableGas !== undefined ? config.enableGas : true;
     this.randomHash = config.randomHash !== undefined ? config.randomHash : new Uint256();
 
     this.notificationCallback = config.notificationCallback;
@@ -145,6 +149,10 @@ export class SmartContract implements ContextRef {
   }
 
   checkUseGas(gas: Long): boolean {
+    if (this.enableGas === false) {
+      return true;
+    }
+
     if (this.gas.lt(gas)) {
       return false;
     }

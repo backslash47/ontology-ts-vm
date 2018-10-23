@@ -43,6 +43,7 @@ export interface ExecuteOptions {
   inspect?: Inspect;
   wallet?: Wallet;
   enableSecurity?: boolean;
+  enableGas?: boolean;
   notificationCallback?: NotificationCallback;
   logCallback?: LogCallback;
 }
@@ -77,6 +78,7 @@ export class ScEnvironment {
       inspect,
       wallet,
       enableSecurity,
+      enableGas,
       notificationCallback,
       logCallback
     }: ExecuteOptions = {}
@@ -93,6 +95,7 @@ export class ScEnvironment {
       stateStore: this.store,
       store: this.ledgerStore,
       enableSecurity,
+      enableGas,
       notificationCallback,
       logCallback
     });
