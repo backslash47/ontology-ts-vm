@@ -32,5 +32,14 @@ export { RuntimeStateStore } from './smartcontract/runtime/runtimeStateStore';
 
 export { NotificationCallback, NotifyEventInfo, LogCallback, LogEventInfo } from './event/notifyEvents';
 
+export { StackItem } from './vm/types/stackItem';
+export { ArrayType, isArrayType } from './vm/types/array';
+export { ByteArrayType, isByteArrayType } from './vm/types/byteArray';
+export { BooleanType, isBooleanType } from './vm/types/boolean';
+export { IntegerType, isIntegerType } from './vm/types/integer';
+export { StructType, isStructType } from './vm/types/struct';
+export { InteropType, isInteropType } from './vm/types/interop';
+export { MapType, isMapType } from './vm/types/map';
+
 // init native contracts
 init();
