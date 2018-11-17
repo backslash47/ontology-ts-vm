@@ -1,6 +1,6 @@
 {
   "name": "ontology-ts-vm",
-  "version": "0.3.16",
+  "version": "0.3.17",
   "description": "",
   "main": "./lib/index.js",
   "types": "./lib/types/index.d.ts",

@@ -33,6 +33,10 @@ export class StorageItem extends StateBase {
     return this.value;
   }
 
+  setValue(value: Buffer) {
+    this.value = value;
+  }
+
   serialize(w: Writer) {
     super.serialize(w);
     w.writeVarBytes(this.value);
