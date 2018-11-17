@@ -41,5 +41,8 @@ export { StructType, isStructType } from './vm/types/struct';
 export { InteropType, isInteropType } from './vm/types/interop';
 export { MapType, isMapType } from './vm/types/map';
 
+export { DeployCode, isDeployCode } from './core/payload/deployCode';
+export { InvokeCode, isInvokeCode } from './core/payload/invokeCode';
+
 // init native contracts
 init();

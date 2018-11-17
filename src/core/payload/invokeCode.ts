@@ -45,3 +45,7 @@ export class InvokeCode implements StateValue {
     }
   }
 }
+
+export function isInvokeCode(item: any): item is InvokeCode {
+  return item instanceof InvokeCode;
+}
